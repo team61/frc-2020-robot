@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -42,7 +43,7 @@ public class DriveTrain extends SubsystemBase {
 
         mFrontRight = new PWMTalonSRX(Constants.mFrontRight);
         mRearRight = new PWMTalonSRX(Constants.mRearRight);
-        mLeftStack = new SpeedControllerGroup(mFrontRight, mRearRight);
+        mRightStack = new SpeedControllerGroup(mFrontRight, mRearRight);
 
         sPTOA = new Solenoid(Constants.pcmModule, Constants.sPTOA);
         sPTOB = new Solenoid(Constants.pcmModule, Constants.sPTOB);
@@ -73,21 +74,9 @@ public class DriveTrain extends SubsystemBase {
     /**
      * Movement commands
      * */
-
-    public void moveLeft(double speed) {
-        mLeftStack.set(speed);
-    }
-
-    public void moveRight(double speed) {
-        mRightStack.set(speed);
-    }
-
-    public void stopLeft() {
-        mLeftStack.stopMotor();
-    }
-
-    public void stopRight() {
-        mRightStack.stopMotor();
+    public void set(double leftSpeed, double rightSpeed) {
+        mLeftStack.set(leftSpeed);
+        mRightStack.set(rightSpeed);
     }
 
     /**
