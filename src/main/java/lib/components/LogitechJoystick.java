@@ -1,7 +1,5 @@
 package lib.components;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -34,11 +32,11 @@ public class LogitechJoystick extends Joystick {
         }
     }
 
-    public DoubleSupplier getYAxis() {
-        return () -> getAxis(getY());
+    public double getYAxis() {
+        return getAxis(getY());
     }
 
-    public DoubleSupplier getXAxis() {
-        return () -> getAxis(getX());
+    public double getXAxis() {
+        return getAxis(getX());
     }
 }

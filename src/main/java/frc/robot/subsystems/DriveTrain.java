@@ -42,7 +42,7 @@ public class DriveTrain extends SubsystemBase {
 
         mFrontRight = new PWMTalonSRX(Constants.mFrontRight);
         mRearRight = new PWMTalonSRX(Constants.mRearRight);
-        mLeftStack = new SpeedControllerGroup(mFrontRight, mRearRight);
+        mRightStack = new SpeedControllerGroup(mFrontRight, mRearRight);
 
         sPTOA = new Solenoid(Constants.pcmModule, Constants.sPTOA);
         sPTOB = new Solenoid(Constants.pcmModule, Constants.sPTOB);

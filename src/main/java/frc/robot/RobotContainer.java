@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.NormalDriveWithJoysticks;
 import lib.components.LogitechJoystick;
@@ -27,10 +28,11 @@ public class RobotContainer {
   private final LogitechJoystick jLeft = new LogitechJoystick(Constants.jLeft);
   private final LogitechJoystick jRight = new LogitechJoystick(Constants.jRight);
 
-  private final NormalDriveWithJoysticks m_normalDriveWithJoysticks = new NormalDriveWithJoysticks(m_driveTrain, jLeft.getYAxis(), jRight.getYAxis());
+  private final NormalDriveWithJoysticks m_normalDriveWithJoysticks = new NormalDriveWithJoysticks(m_driveTrain, () -> jLeft.getYAxis(), () ->jRight.getYAxis());
 
   private final ExampleCommand m_autoCommand = null;
 
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
 
 
   /**

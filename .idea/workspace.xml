@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="458cb8cf-5a01-47e7-bccb-95df12520f03" name="Default Changelist" comment="" />
+    <list default="true" id="a98901d7-6c65-4b7d-b483-cedf96f8b06e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExternalProjectsData">
-    <projectState path="$PROJECT_DIR$">
-      <ProjectState />
-    </projectState>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="1W0GJIQgBnU44RE5tgl0VRjMVd4" />
-  <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
-    <option name="showLibraryContents" value="true" />
-  </component>
+  <component name="ProjectId" id="1W1meazxADn2mppMhhivkDV3W2F" />
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -40,22 +37,12 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="458cb8cf-5a01-47e7-bccb-95df12520f03" name="Default Changelist" comment="" />
-      <created>1578279031149</created>
+      <changelist id="a98901d7-6c65-4b7d-b483-cedf96f8b06e" name="Default Changelist" comment="" />
+      <created>1578325570557</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1578279031149</updated>
+      <updated>1578325570557</updated>
     </task>
     <servers />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="277" y="56" key="SettingsEditor" timestamp="1578279234230">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="277" y="56" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1578279234230" />
-    <state x="465" y="238" key="com.intellij.ide.util.TipDialog" timestamp="1578279074595">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="465" y="238" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1578279074595" />
   </component>
 </project>
