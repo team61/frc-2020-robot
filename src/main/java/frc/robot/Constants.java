@@ -23,17 +23,25 @@ public final class Constants {
 	}
 
 	public static final class DriveConstants {
-		//Motor Ports
+		// Motor Ports
 		public static final int mFrontLeft = 5;
 		public static final int mRearLeft = 6;
 
 		public static final int mFrontRight = 1;
 		public static final int mRearRight = 2;
 
-		//Encoder Ports
+		// Encoder Ports
 		public static final int eLeftA = 2;
 		public static final int eLeftB = 3;
 		public static final int eRightA = 0;
 		public static final int eRightB = 1;
+
+		// Constants
+		public static final double kMaxSpeed = 3.0; // meters per second
+		public static final double kMaxAngularSpeed = 2 * Math.PI; // one rotation per second
+	  
+		public static final double kTrackWidth = 0.381 * 2; // meters
+		public static final double kWheelRadius = 0.0508; // meters
+		public static final int kEncoderResolution = 4096;
 	}
 }

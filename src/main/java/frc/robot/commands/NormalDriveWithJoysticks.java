@@ -23,5 +23,8 @@ public class NormalDriveWithJoysticks extends CommandBase {
     @Override
     public void execute() {
         m_driveTrain.tankDrive(m_left.getAsDouble(), m_right.getAsDouble());
+        // System.out.println(m_driveTrain.getPose2d().getTranslation() + " " + m_driveTrain.getPose2d().getRotation());
+        System.out.println(m_driveTrain.getDistanceTraveled());
+        // m_driveTrain.updateOdometry();
     }
 }
