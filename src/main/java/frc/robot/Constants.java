@@ -16,25 +16,24 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    	//Stick Ports
-	public static int jLeft = 0;
-	public static int jRight = 1;
+	public static final class OIConstants {
+		//Stick Ports
+		public static int jLeft = 0;
+		public static int jRight = 1;
+	}
 
-	//Motor Ports
-	public static final int mFrontLeft = 5;
-    public static final int mRearLeft = 6;
-    
-	public static final int mFrontRight = 1;
-	public static final int mRearRight = 2;
-	
-	//Encoder Ports
-	public static final int eLeftA = 2;
-	public static final int eLeftB = 3;
-	public static final int eRightA = 0;
-	public static final int eRightB = 1;
-	
-	// Solenoids
-	public static final int pcmModule = 7;
-	public static final int sPTOA = 0;
-	public static final int sPTOB = 1;
+	public static final class DriveConstants {
+		//Motor Ports
+		public static final int mFrontLeft = 5;
+		public static final int mRearLeft = 6;
+
+		public static final int mFrontRight = 1;
+		public static final int mRearRight = 2;
+
+		//Encoder Ports
+		public static final int eLeftA = 2;
+		public static final int eLeftB = 3;
+		public static final int eRightA = 0;
+		public static final int eRightB = 1;
+	}
 }

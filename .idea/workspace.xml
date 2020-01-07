@@ -1,58 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-<<<<<<< HEAD
-    <list default="true" id="a98901d7-6c65-4b7d-b483-cedf96f8b06e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-=======
-    <list default="true" id="458cb8cf-5a01-47e7-bccb-95df12520f03" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/FRC-2020-Main.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="feec35ff-01f2-4b71-b6ce-96102ea1b8ea" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/FRC-2020-Main.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FRC-2020-Main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FRC-2020-Main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/RobotContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/RobotContainer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/DriveTrain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/DriveTrain.java" afterDir="false" />
->>>>>>> 413d581018d3ff91ffa6505a44e1ecabaa566618
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-<<<<<<< HEAD
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-=======
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
   </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="1W0GJIQgBnU44RE5tgl0VRjMVd4" />
+  <component name="ProjectId" id="1W2nPiIzg78anBvqaeqssZRCeYs" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
->>>>>>> 413d581018d3ff91ffa6505a44e1ecabaa566618
   </component>
-  <component name="ProjectId" id="1W1meazxADn2mppMhhivkDV3W2F" />
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-<<<<<<< HEAD
-=======
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="show.unlinked.gradle.project.popup" value="true" />
->>>>>>> 413d581018d3ff91ffa6505a44e1ecabaa566618
+  </component>
+  <component name="RunManager">
+    <configuration name="FRC-2020-Main [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.FRC-2020-Main [build]" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ServiceViewManager">
     <option name="viewStates">
@@ -71,12 +91,34 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a98901d7-6c65-4b7d-b483-cedf96f8b06e" name="Default Changelist" comment="" />
-      <created>1578325570557</created>
+      <changelist id="feec35ff-01f2-4b71-b6ce-96102ea1b8ea" name="Default Changelist" comment="" />
+      <created>1578356534885</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1578325570557</updated>
+      <updated>1578356534885</updated>
     </task>
     <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="340" y="0" key="CommitChangelistDialog2" timestamp="1578357143758">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="340" y="0" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1578357143758" />
+    <state width="1493" height="190" key="GridCell.Tab.0.bottom" timestamp="1578357130867">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="190" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1578357130867" />
+    <state width="1493" height="190" key="GridCell.Tab.0.center" timestamp="1578357130867">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="190" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1578357130867" />
+    <state width="1493" height="190" key="GridCell.Tab.0.left" timestamp="1578357130867">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="190" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1578357130867" />
+    <state width="1493" height="190" key="GridCell.Tab.0.right" timestamp="1578357130867">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="190" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1578357130867" />
   </component>
 </project>

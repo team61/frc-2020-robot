@@ -15,6 +15,7 @@ import frc.robot.commands.NormalDriveWithJoysticks;
 import lib.components.LogitechJoystick;
 import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.OIConstants;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -25,10 +26,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_driveTrain = new DriveTrain();
-  private final LogitechJoystick jLeft = new LogitechJoystick(Constants.jLeft);
-  private final LogitechJoystick jRight = new LogitechJoystick(Constants.jRight);
+  private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
+  private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
 
-  private final NormalDriveWithJoysticks m_normalDriveWithJoysticks = new NormalDriveWithJoysticks(m_driveTrain, () -> jLeft.getYAxis(), () ->jRight.getYAxis());
+  private final NormalDriveWithJoysticks m_normalDriveWithJoysticks = new NormalDriveWithJoysticks(m_driveTrain, jLeft::getYAxis, jRight::getYAxis);
 
   private final ExampleCommand m_autoCommand = null;
 
