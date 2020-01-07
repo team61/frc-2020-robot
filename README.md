@@ -59,7 +59,7 @@ Since the season is close to over, we will most likely archive this project from
 
 ## Authors
 
-- **Kevin Downing** - *Head Programmer* and Author of Documentation - [KevinDowning](https://github.com/KevinDowning)
+- **Kevin Downing** - *Head Programmer* - [KevinDowning](https://github.com/KevinDowning)
 - **Thomas Buckley** - *Head Programmer* - [thomasbuckley](https://github.com/thomasabuckley)
 - **Daniel Cardone** - *Programmer* - [daniel-cardone]( https://github.com/orgs/Team61/people/daniel-cardone )
 - **Baraka  Consuegra** - *Shadowed Programmer* - [barakac]( https://github.com/orgs/Team61/people/barakac )
