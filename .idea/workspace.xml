@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="feec35ff-01f2-4b71-b6ce-96102ea1b8ea" name="Default Changelist" comment="Added classes to organize constants">
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Turret.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/lib/util/Util.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/commands/NormalDriveWithJoysticks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/commands/NormalDriveWithJoysticks.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/DriveTrain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/DriveTrain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

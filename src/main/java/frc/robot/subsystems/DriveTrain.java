@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -10,7 +9,12 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PWMTalonSRX;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.controller.PIDController;
 
 public class DriveTrain extends SubsystemBase {
 
@@ -32,7 +36,7 @@ public class DriveTrain extends SubsystemBase {
     protected Encoder m_leftEncoder = new Encoder(DriveConstants.eLeftA, DriveConstants.eLeftB, false);
     protected Encoder m_rightEncoder  = new Encoder(DriveConstants.eRightA, DriveConstants.eRightB, true);
 
-    private final AHRS m_ahrs = new AHRS(SPI.Port.kMXP);
+    private final AnalogGyro m_gyro = new AnalogGyro(DriveConstants.gDrive);
 
     private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftGroup, m_rightGroup);
 
@@ -41,9 +45,10 @@ public class DriveTrain extends SubsystemBase {
 
     private final DifferentialDriveOdometry m_odometry;
 
-    public DriveTrain() {
+    private final PIDController m_leftPIDController = new PIDController(1, 0, 0);
+    private final PIDController m_rightPIDController = new PIDController(1, 0, 0);
 
-        resetGryo();
+    public DriveTrain() {
 
         m_leftEncoder
                 .setDistancePerPulse(2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kEncoderResolution);
@@ -120,40 +125,14 @@ public class DriveTrain extends SubsystemBase {
      * 
      * @return The displacement in degrees from -180 to 180
      */
-    public double getYaw() {
-        return m_ahrs.getYaw();
-    }
+
 
     public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(m_ahrs.getYaw());
-    }
-
-    public double getPitch() {
-        return m_ahrs.getRoll();
-    } // The gyro was inserted sideways into the robot
-
-    public double getRoll() {
-        return m_ahrs.getPitch();
-    } // The gyro was inserted sideways into the robot
-
-    public double getAccelerationX() {
-        return m_ahrs.getRawAccelX();
-    }
-
-    public double getAccelerationY() {
-        return m_ahrs.getRawAccelY();
-    }
-
-    public double getAccelerationZ() {
-        return m_ahrs.getRawAccelZ();
+        return Rotation2d.fromDegrees(m_gyro.getAngle());
     }
 
     public void resetGryo() {
-        m_ahrs.reset();
-    }
-
-    public boolean isCalibrating() {
-        return m_ahrs.isCalibrating();
+        m_gyro.reset();
     }
 
     /**
@@ -162,8 +141,10 @@ public class DriveTrain extends SubsystemBase {
      * @param speeds The desired wheel speeds.
      */
     public void setSpeeds(final DifferentialDriveWheelSpeeds speeds) {
-        final double leftOutput = m_leftEncoder.getRate();
-        final double rightOutput = m_rightEncoder.getRate();
+        double leftOutput = m_leftPIDController.calculate(m_leftEncoder.getRate(),
+        speeds.leftMetersPerSecond);
+    double rightOutput = m_rightPIDController.calculate(m_rightEncoder.getRate(),
+        speeds.rightMetersPerSecond);
         m_leftGroup.set(leftOutput);
         m_rightGroup.set(rightOutput);
     }

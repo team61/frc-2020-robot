@@ -36,6 +36,9 @@ public final class Constants {
 		public static final int eRightA = 0;
 		public static final int eRightB = 1;
 
+		// Gyro
+		public static final int gDrive = 1;
+
 		// Constants
 		public static final double kMaxSpeed = 3.0; // meters per second
 		public static final double kMaxAngularSpeed = 2 * Math.PI; // one rotation per second
