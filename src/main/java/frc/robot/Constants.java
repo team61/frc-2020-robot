@@ -44,4 +44,9 @@ public final class Constants {
 		public static final double kWheelRadius = 0.0508; // meters
 		public static final int kEncoderResolution = 4096;
 	}
+
+	public static final class LiftConstants {
+		public static int liftSolenoidA = 0; // not configured yet lift system might change
+		public static int liftSolenoidB = 0; // not configured yet lift system might change
+	}
 }

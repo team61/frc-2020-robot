@@ -3,10 +3,12 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Turret {
+public class Turret extends SubsystemBase {
 
     private AHRS ahrs;
+
     public Turret() {
         try {
             ahrs = new AHRS(SPI.Port.kMXP);
@@ -17,9 +19,10 @@ public class Turret {
     }
 
     /**
-     *  Methods for Gyro Data
+     * Methods for Gyro Data
+     *
      * @return The displacement in degrees from -180 to 180
-     * */
+     */
     public double getYaw() {
         return ahrs.getYaw();
     }

@@ -32,7 +32,7 @@ public class DriveTrain extends SubsystemBase {
     protected Encoder m_leftEncoder = new Encoder(DriveConstants.eLeftA, DriveConstants.eLeftB, false);
     protected Encoder m_rightEncoder  = new Encoder(DriveConstants.eRightA, DriveConstants.eRightB, true);
 
-    private final AHRS m_ahrs = new AHRS(SPI.Port.kMXP);
+    private final AHRS m_ahrs = new AHRS(SPI.Port.kMXP); // NAVX
 
     private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftGroup, m_rightGroup);
 
