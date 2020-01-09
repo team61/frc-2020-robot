@@ -60,4 +60,9 @@ public final class Constants {
 		public static final double fieldLengthMeters = 15.98;
 		public static final double fieldHeightMeters = 8.21;
 	}
+
+	public static final class LiftConstants {
+		public static int liftSolenoidA = 0; // not configured yet lift system might change
+		public static int liftSolenoidB = 0; // not configured yet lift system might change
+	}
 }

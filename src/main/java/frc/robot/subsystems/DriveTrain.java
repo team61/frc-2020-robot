@@ -28,7 +28,11 @@ public class DriveTrain extends SubsystemBase {
     protected Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
     protected Encoder m_rightEncoder  = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
 
+<<<<<<< HEAD
+    private final AHRS m_ahrs = new AHRS(SPI.Port.kMXP); // NAVX
+=======
     private final AnalogGyro m_gyro = new AnalogGyro(DriveConstants.gDrive);
+>>>>>>> e286e2f69f6e312fad8d4c37097daece4432323d
 
     private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftGroup, m_rightGroup);
 
