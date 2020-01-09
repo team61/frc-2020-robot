@@ -7,13 +7,20 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants.  This class should not be used for any other purpose.  All constants should be
- * declared globally (i.e. public static).  Do not put anything functional in this class.
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean constants. This class should not be used for any other
+ * purpose. All constants should be declared globally (i.e. public static). Do
+ * not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
 	public static final class OIConstants {
@@ -30,21 +37,27 @@ public final class Constants {
 		public static final int mFrontRight = 1;
 		public static final int mRearRight = 2;
 
-		// Encoder Ports
-		public static final int eLeftA = 2;
-		public static final int eLeftB = 3;
-		public static final int eRightA = 0;
-		public static final int eRightB = 1;
-
 		// Gyro
-		public static final int gDrive = 1;
+		public static final int gDrive = 0;
 
-		// Constants
-		public static final double kMaxSpeed = 3.0; // meters per second
-		public static final double kMaxAngularSpeed = 2 * Math.PI; // one rotation per second
-	  
-		public static final double kTrackWidth = 0.381 * 2; // meters
-		public static final double kWheelRadius = 0.0508; // meters
-		public static final int kEncoderResolution = 4096;
+		public static final int[] kLeftEncoderPorts = new int[]{0, 1};
+		public static final int[] kRightEncoderPorts = new int[]{2, 3};
+		public static final boolean kLeftEncoderReversed = false;
+		public static final boolean kRightEncoderReversed = true;
+	
+		public static final double kTrackwidthMeters = 0.69;
+		public static final DifferentialDriveKinematics kDriveKinematics =
+			new DifferentialDriveKinematics(kTrackwidthMeters);
+	
+		public static final int kEncoderCPR = 1024;
+		public static final double kWheelDiameterMeters = 0.15;
+		public static final double kEncoderDistancePerPulse =
+			// Assumes the encoders are directly mounted on the wheel shafts
+			(kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
+
+		public static final Pose2d startingPosition = new Pose2d(new Translation2d(0, 0), new Rotation2d(0));
+
+		public static final double fieldLengthMeters = 15.98;
+		public static final double fieldHeightMeters = 8.21;
 	}
 }

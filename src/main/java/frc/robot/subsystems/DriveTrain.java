@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,13 +17,6 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 
 public class DriveTrain extends SubsystemBase {
 
-    private static final double WHEEL_DIAMETER = 8;
-    private static final double PULSE_PER_REVOLUTION = 1440;
-    private static final double ENCODER_GEAR_RATIO = 1;
-    private static final double GEAR_RATIO = 12.75;
-
-    private static final double distancePerPulse = Math.PI * WHEEL_DIAMETER / PULSE_PER_REVOLUTION / ENCODER_GEAR_RATIO / GEAR_RATIO;
-
     protected SpeedController m_frontLeft = new PWMTalonSRX(DriveConstants.mFrontLeft);
     protected SpeedController m_rearLeft = new PWMTalonSRX(DriveConstants.mRearLeft);
     protected SpeedControllerGroup m_leftGroup = new SpeedControllerGroup(m_frontLeft, m_rearLeft);
@@ -33,15 +25,12 @@ public class DriveTrain extends SubsystemBase {
     protected SpeedController m_rearRight = new PWMTalonSRX(DriveConstants.mRearRight);
     protected SpeedControllerGroup m_rightGroup = new SpeedControllerGroup(m_frontRight, m_rearRight);
 
-    protected Encoder m_leftEncoder = new Encoder(DriveConstants.eLeftA, DriveConstants.eLeftB, false);
-    protected Encoder m_rightEncoder  = new Encoder(DriveConstants.eRightA, DriveConstants.eRightB, true);
+    protected Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
+    protected Encoder m_rightEncoder  = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
 
     private final AnalogGyro m_gyro = new AnalogGyro(DriveConstants.gDrive);
 
     private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftGroup, m_rightGroup);
-
-    private final DifferentialDriveKinematics m_kinematics = new DifferentialDriveKinematics(
-            DriveConstants.kTrackWidth);
 
     private final DifferentialDriveOdometry m_odometry;
 
@@ -50,20 +39,24 @@ public class DriveTrain extends SubsystemBase {
 
     public DriveTrain() {
 
-        m_leftEncoder
-                .setDistancePerPulse(2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kEncoderResolution);
-        m_rightEncoder
-                .setDistancePerPulse(2 * Math.PI * DriveConstants.kWheelRadius / DriveConstants.kEncoderResolution);
+        m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+        m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
 
         m_leftEncoder.reset();
         m_rightEncoder.reset();
 
-        m_odometry = new DifferentialDriveOdometry(getHeading());
+        m_odometry = new DifferentialDriveOdometry(getHeading(), DriveConstants.startingPosition);
     }
 
     /**
      * Movement commands
      */
+
+    @Override
+    public void periodic() {
+      // Update the odometry in the periodic block
+      updateOdometry();
+    }
 
     public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
         m_differentialDrive.tankDrive(leftSpeed, rightSpeed, squaredInputs);
@@ -90,8 +83,8 @@ public class DriveTrain extends SubsystemBase {
      **/
 
     public void setDistancePerPulse() {
-        m_leftEncoder.setDistancePerPulse(distancePerPulse);
-        m_rightEncoder.setDistancePerPulse(distancePerPulse);
+        m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+        m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     }
 
     public double getLeftEncoder() {
@@ -120,6 +113,10 @@ public class DriveTrain extends SubsystemBase {
         return (getLeftEncoder() + getRightEncoder()) / 2;
     }
 
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+      }
+
     /**
      * Methods for Gyro Data
      * 
@@ -143,8 +140,10 @@ public class DriveTrain extends SubsystemBase {
     public void setSpeeds(final DifferentialDriveWheelSpeeds speeds) {
         double leftOutput = m_leftPIDController.calculate(m_leftEncoder.getRate(),
         speeds.leftMetersPerSecond);
-    double rightOutput = m_rightPIDController.calculate(m_rightEncoder.getRate(),
+        
+        double rightOutput = m_rightPIDController.calculate(m_rightEncoder.getRate(),
         speeds.rightMetersPerSecond);
+
         m_leftGroup.set(leftOutput);
         m_rightGroup.set(rightOutput);
     }
@@ -157,7 +156,7 @@ public class DriveTrain extends SubsystemBase {
      */
     @SuppressWarnings("ParameterName")
     public void drive(final double xSpeed, final double rot) {
-        final DifferentialDriveWheelSpeeds wheelSpeeds = m_kinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, rot));
+        final DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, rot));
         setSpeeds(wheelSpeeds);
   }
 
@@ -165,10 +164,20 @@ public class DriveTrain extends SubsystemBase {
    * Updates the field-relative position.
    */
 
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    m_leftGroup.setVoltage(leftVolts);
+    m_rightGroup.setVoltage(-rightVolts);
+  }
+
    public Pose2d getPose2d() {
        return m_odometry.getPoseMeters();
    }
   public void updateOdometry() {
     m_odometry.update(getHeading(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    m_odometry.resetPosition(pose, getHeading());
   }
 }
