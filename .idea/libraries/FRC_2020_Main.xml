@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="FRC-2020-Main">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/build/libs/FRC-2020-Main.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
