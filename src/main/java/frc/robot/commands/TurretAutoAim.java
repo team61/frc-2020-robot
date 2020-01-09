@@ -21,7 +21,6 @@ public class TurretAutoAim extends CommandBase {
     public TurretAutoAim(Turret turret, DriveTrain driveTrain) {
         m_turret = turret;
         m_driveTrain = driveTrain;
-        m_controller.enableContinuousInput(-180, 180);
         addRequirements(turret);
     }
 
@@ -29,8 +28,10 @@ public class TurretAutoAim extends CommandBase {
     public void execute() {
         double dx = TurretConstants.goalPosition.getX() - m_driveTrain.getPose2d().getTranslation().getX();
         double dy = TurretConstants.goalPosition.getY() - m_driveTrain.getPose2d().getTranslation().getY();
-    
-        double goal = m_driveTrain.getAngle() + Math.toDegrees(Math.atan(dy/dx));
+        double angleToPowerPort = m_driveTrain.getAngle() + Math.toDegrees(Math.atan(dy/dx));
+
+        double goal = (angleToPowerPort <= TurretConstants.kUpperLimit && angleToPowerPort >= TurretConstants.kLowerLimit) ?
+            angleToPowerPort : Math.copySign(TurretConstants.kRange, m_driveTrain.getAngle());
         System.out.println(goal);
         m_controller.setGoal(goal);
 

@@ -86,6 +86,9 @@ public final class Constants {
 		public static final double kMaxVel = 1.75; // Placeholder that is subject to change
 		public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
 
+		public static final double kRange = 180; // in degrees
+		public static final double kUpperLimit = kRange/2;
+		public static final double kLowerLimit = -kRange/2;
 		public static final Translation2d goalPosition = new Translation2d(4, 3); // Placeholder that is subject to change
 	}
 
