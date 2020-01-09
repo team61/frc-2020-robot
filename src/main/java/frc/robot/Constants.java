@@ -27,6 +27,8 @@ public final class Constants {
 		//Stick Ports
 		public static int jLeft = 0;
 		public static int jRight = 1;
+		public static int jTurretHeading = 2;
+		public static int jTurretAngle = 3;
 	}
 
 	public static final class DriveConstants {

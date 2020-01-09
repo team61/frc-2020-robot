@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.commands.NormalTurretWithJoysticks;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.NormalDriveWithJoysticks;
 import frc.robot.commands.TurretAutoAim;
@@ -29,11 +30,16 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_driveTrain = new DriveTrain();
   private final Turret m_turret = new Turret();
+
   private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
   private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
 
+  private final LogitechJoystick jTurretHeading = new LogitechJoystick(OIConstants.jTurretHeading);
+  private final LogitechJoystick jTurretAngle = new LogitechJoystick(OIConstants.jTurretAngle);
+
   private final NormalDriveWithJoysticks m_normalDriveWithJoysticks = new NormalDriveWithJoysticks(m_driveTrain, jLeft::getYAxis, jRight::getYAxis);
   private final TurretAutoAim m_turretAutoAim = new TurretAutoAim(m_turret, m_driveTrain);
+  private final NormalTurretWithJoysticks m_normalTurretWithJoysticks = new NormalTurretWithJoysticks(m_turret, jTurretHeading::getYAxis);
 
   private final ExampleCommand m_autoCommand = null;
 
