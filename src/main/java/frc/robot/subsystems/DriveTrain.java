@@ -28,11 +28,9 @@ public class DriveTrain extends SubsystemBase {
     protected Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
     protected Encoder m_rightEncoder  = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
 
-<<<<<<< HEAD
-    private final AHRS m_ahrs = new AHRS(SPI.Port.kMXP); // NAVX
-=======
-    private final AnalogGyro m_gyro = new AnalogGyro(DriveConstants.gDrive);
->>>>>>> e286e2f69f6e312fad8d4c37097daece4432323d
+    /* NAVX is not support for simulation so when real tests are run switch to navX and for simulation use AnalogGyro */
+    //private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // NAVX
+    private final AnalogGyro m_gyro = new AnalogGyro(DriveConstants.kGyroPort);
 
     private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftGroup, m_rightGroup);
 
@@ -52,15 +50,15 @@ public class DriveTrain extends SubsystemBase {
         m_odometry = new DifferentialDriveOdometry(getHeading(), DriveConstants.startingPosition);
     }
 
-    /**
-     * Movement commands
-     */
-
     @Override
     public void periodic() {
       // Update the odometry in the periodic block
       updateOdometry();
     }
+
+    /**
+     * Drive Methods
+     */
 
     public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
         m_differentialDrive.tankDrive(leftSpeed, rightSpeed, squaredInputs);
@@ -77,6 +75,11 @@ public class DriveTrain extends SubsystemBase {
     public void stopTankDrive() {
         tankDrive(0);
     }
+
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+        m_leftGroup.setVoltage(leftVolts);
+        m_rightGroup.setVoltage(-rightVolts);
+      }
 
     public void setMaxOutput(final double maxOutput) {
         m_differentialDrive.setMaxOutput(maxOutput);
@@ -117,10 +120,6 @@ public class DriveTrain extends SubsystemBase {
         return (getLeftEncoder() + getRightEncoder()) / 2;
     }
 
-    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
-      }
-
     /**
      * Methods for Gyro Data
      * 
@@ -128,13 +127,19 @@ public class DriveTrain extends SubsystemBase {
      */
 
 
+    public double getAngle() {
+        return m_gyro.getAngle();
+    }
+
     public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(m_gyro.getAngle());
+        return Rotation2d.fromDegrees(getAngle());
     }
 
     public void resetGryo() {
         m_gyro.reset();
     }
+
+    /** Methods for Kinematics */
 
     /**
      * Sets the desired wheel speeds.
@@ -152,6 +157,10 @@ public class DriveTrain extends SubsystemBase {
         m_rightGroup.set(rightOutput);
     }
 
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+      }
+
     /**
      * Drives the robot with the given linear velocity and angular velocity.
      *
@@ -165,13 +174,8 @@ public class DriveTrain extends SubsystemBase {
   }
 
   /**
-   * Updates the field-relative position.
+   * Odometry and Kinematics
    */
-
-  public void tankDriveVolts(double leftVolts, double rightVolts) {
-    m_leftGroup.setVoltage(leftVolts);
-    m_rightGroup.setVoltage(-rightVolts);
-  }
 
    public Pose2d getPose2d() {
        return m_odometry.getPoseMeters();

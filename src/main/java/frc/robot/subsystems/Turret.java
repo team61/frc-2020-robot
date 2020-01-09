@@ -1,57 +1,42 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
-import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.PWMTalonSRX;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.TurretConstants;
 
 public class Turret extends SubsystemBase {
 
-    private AHRS ahrs;
+    private AnalogGyro m_gyro = new AnalogGyro(TurretConstants.kGyroPort);
+
+    protected SpeedController m_motor = new PWMTalonSRX(TurretConstants.kMotorPort);
 
     public Turret() {
-        try {
-            ahrs = new AHRS(SPI.Port.kMXP);
-        } catch (RuntimeException ex) {
-            DriverStation.reportError("Error installing navX MXP: " + ex.getMessage(), true);
-        }
         resetGryo();
     }
 
+public void setSpeed(double speed) {
+    m_motor.set(speed);
+}
+
     /**
      * Methods for Gyro Data
-     *
+     * 
      * @return The displacement in degrees from -180 to 180
      */
-    public double getYaw() {
-        return ahrs.getYaw();
+
+
+    public double getAngle() {
+        return m_gyro.getAngle();
     }
 
-    public double getPitch() {
-        return ahrs.getRoll();
-    } // The gyro was inserted sideways into the robot
-
-    public double getRoll() {
-        return ahrs.getPitch();
-    } // The gyro was inserted sideways into the robot
-
-    public double getAccelerationX() {
-        return ahrs.getRawAccelX();
+    public Rotation2d getHeading() {
+        return Rotation2d.fromDegrees(m_gyro.getAngle());
     }
-
-    public double getAccelerationY() {
-        return ahrs.getRawAccelY();
-    }
-
-    public double getAccelerationZ() {
-        return ahrs.getRawAccelZ();
-    }
-
+    
     public void resetGryo() {
-        ahrs.reset();
-    }
-
-    public boolean isCalibrating() {
-        return ahrs.isCalibrating();
+        m_gyro.reset();
     }
 }

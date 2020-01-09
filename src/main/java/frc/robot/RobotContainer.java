@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.NormalDriveWithJoysticks;
+import frc.robot.commands.TurretAutoAim;
 import lib.components.LogitechJoystick;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Turret;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 
@@ -26,10 +28,12 @@ import frc.robot.Constants.OIConstants;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_driveTrain = new DriveTrain();
+  private final Turret m_turret = new Turret();
   private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
   private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
 
   private final NormalDriveWithJoysticks m_normalDriveWithJoysticks = new NormalDriveWithJoysticks(m_driveTrain, jLeft::getYAxis, jRight::getYAxis);
+  private final TurretAutoAim m_turretAutoAim = new TurretAutoAim(m_turret, m_driveTrain);
 
   private final ExampleCommand m_autoCommand = null;
 
@@ -41,6 +45,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     m_driveTrain.setDefaultCommand(m_normalDriveWithJoysticks);
+    m_turret.setDefaultCommand(m_turretAutoAim);
     // Configure the button bindings
     configureButtonBindings();
   }
