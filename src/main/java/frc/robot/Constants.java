@@ -55,6 +55,7 @@ public final class Constants {
 	
 		// Kinematics
 		public static final double kTrackwidthMeters = 0.69; // Placeholder that is subject to change
+		public static final double kTrackheightMeters = 0.94; // Placeholder that is subject to change
 		
 		public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
 
@@ -89,7 +90,13 @@ public final class Constants {
 		public static final double kRange = 180; // in degrees
 		public static final double kUpperLimit = kRange/2;
 		public static final double kLowerLimit = -kRange/2;
-		public static final Translation2d goalPosition = new Translation2d(4, 3); // Placeholder that is subject to change
+
+		public static final Translation2d goalPosition = new Translation2d(-4, 4); // Placeholder that is subject to change
+
+		//public static final double kXDistanceFromRobot = DriveConstants.kTrackheightMeters/2; // Width is for y and height is for x because x is foward in the coordinate map
+		public static final double kXDistanceFromRobot = 0; // Width is for y and height is for x because x is foward in the coordinate map
+
+		public static final double kYDistanceFromRobot = 0;
 	}
 
 	public static final class MiscellaneousConstants {

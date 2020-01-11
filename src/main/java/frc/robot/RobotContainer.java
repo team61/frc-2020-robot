@@ -33,7 +33,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_driveTrain = new DriveTrain();
-  private final Turret m_turret = new Turret();
+  private final Turret m_turret = new Turret(m_driveTrain);
 
   private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
   private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
