@@ -1,0 +1,11 @@
+[
+  {
+    "name": "FRC-2020-Main (in project FRC-2020-Main)",
+    "file": "C:\\Users\\Kevin Downing\\Robotics\\Robots\\FRC-2020-Main\\build\\libs\\FRC-2020-Main.jar",
+    "extensions": [
+      "C:\\Users\\Kevin Downing\\Robotics\\Robots\\FRC-2020-Main\\build\\tmp\\expandedArchives\\halsim_gui-2020.1.2-windowsx86-64.zip_0ded91afab576f356c80ba4c4e7b8310\\windows\\x86-64\\shared\\halsim_gui.dll"
+    ],
+    "librarydir": "C:\\Users\\Kevin Downing\\Robotics\\Robots\\FRC-2020-Main\\build\\tmp\\jniExtractDir",
+    "mainclass": "frc.robot.Main"
+  }
+]

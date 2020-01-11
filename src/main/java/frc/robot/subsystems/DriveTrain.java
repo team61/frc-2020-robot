@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
@@ -180,6 +181,19 @@ public class DriveTrain extends SubsystemBase {
    public Pose2d getPose2d() {
        return m_odometry.getPoseMeters();
    }
+
+   public Translation2d getTranslation2d() {
+       return getPose2d().getTranslation();
+   }
+
+   public double getX() {
+       return getTranslation2d().getX();
+   }
+
+   public double getY() {
+    return getTranslation2d().getY();
+}
+
   public void updateOdometry() {
     m_odometry.update(getHeading(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
   }

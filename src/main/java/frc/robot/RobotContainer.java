@@ -7,9 +7,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.commands.NormalTurretWithJoysticks;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.NormalDriveWithJoysticks;
 import frc.robot.commands.TurretAutoAim;
@@ -18,6 +21,8 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Turret;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -28,17 +33,23 @@ import frc.robot.Constants.OIConstants;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_driveTrain = new DriveTrain();
-  private final Turret m_turret = new Turret();
+  private final Turret m_turret = new Turret(m_driveTrain);
+
   private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
   private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
 
+  private final LogitechJoystick jTurretHeading = new LogitechJoystick(OIConstants.jTurretHeading);
+  private final LogitechJoystick jTurretAngle = new LogitechJoystick(OIConstants.jTurretAngle);
+
   private final NormalDriveWithJoysticks m_normalDriveWithJoysticks = new NormalDriveWithJoysticks(m_driveTrain, jLeft::getYAxis, jRight::getYAxis);
   private final TurretAutoAim m_turretAutoAim = new TurretAutoAim(m_turret, m_driveTrain);
+  private final NormalTurretWithJoysticks m_normalTurretWithJoysticks = new NormalTurretWithJoysticks(m_turret, jTurretHeading::getYAxis);
 
   private final ExampleCommand m_autoCommand = null;
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  private NetworkTableEntry m_maxSpeed;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -46,6 +57,24 @@ public class RobotContainer {
   public RobotContainer() {
     m_driveTrain.setDefaultCommand(m_normalDriveWithJoysticks);
     m_turret.setDefaultCommand(m_turretAutoAim);
+
+    m_maxSpeed = Shuffleboard.getTab("Configuration")
+                           .add("Max Speed", 1)
+                           .withWidget("Number Slider")
+                           .withPosition(1, 1)
+                           .withSize(2, 1)
+                           .getEntry();
+
+    // Add the tank drive and encoders to a 'Drivebase' tab
+    ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");
+    driveBaseTab.add("Tank Drive", m_driveTrain);
+    // Put both encoders in a list layout
+    ShuffleboardLayout encoders = driveBaseTab.getLayout("List Layout", "Encoders")
+                                              .withPosition(0, 0)
+                                              .withSize(2, 2);
+    encoders.add("Left Encoder", m_driveTrain.getLeftEncoder());
+    encoders.add("Right Encoder", m_driveTrain.getRightEncoder());
+
     // Configure the button bindings
     configureButtonBindings();
   }
