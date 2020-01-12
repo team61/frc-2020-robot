@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import jaci.pathfinder.followers.EncoderFollower;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -39,6 +41,11 @@ public class DriveTrain extends SubsystemBase {
 
     private final PIDController m_leftPIDController = new PIDController(1, 0, 0);
     private final PIDController m_rightPIDController = new PIDController(1, 0, 0);
+
+    public EncoderFollower m_left_follower;
+    public EncoderFollower m_right_follower;
+
+    public Notifier m_follower_notifier;
 
     public DriveTrain() {
 
@@ -73,6 +80,14 @@ public class DriveTrain extends SubsystemBase {
         tankDrive(speed, speed);
     }
 
+    public void setRightSpeed(double speed) {
+        m_rightGroup.set(speed);
+    }
+
+    public void setLeftSpeed(double speed) {
+        m_leftGroup.set(speed);
+    }
+
     public void stopTankDrive() {
         tankDrive(0);
     }
@@ -95,12 +110,20 @@ public class DriveTrain extends SubsystemBase {
         m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     }
 
-    public double getLeftEncoder() {
+    public double getLeftEncoderDistance() {
         return m_leftEncoder.getDistance();
     }
 
-    public double getRightEncoder() {
+    public double getRightEncoderDistance() {
         return m_rightEncoder.getDistance();
+    }
+
+    public int getRightEncoder() {
+        return m_rightEncoder.get();
+    }
+
+    public int getLeftEncoder() {
+        return m_leftEncoder.get();
     }
 
     public void resetLeftEncoder() {
@@ -118,7 +141,7 @@ public class DriveTrain extends SubsystemBase {
 
 
     public double getDistanceTraveled() {
-        return (getLeftEncoder() + getRightEncoder()) / 2;
+        return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2;
     }
 
     /**

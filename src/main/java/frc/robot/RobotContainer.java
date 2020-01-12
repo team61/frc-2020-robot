@@ -72,8 +72,8 @@ public class RobotContainer {
     ShuffleboardLayout encoders = driveBaseTab.getLayout("List Layout", "Encoders")
                                               .withPosition(0, 0)
                                               .withSize(2, 2);
-    encoders.add("Left Encoder", m_driveTrain.getLeftEncoder());
-    encoders.add("Right Encoder", m_driveTrain.getRightEncoder());
+    encoders.add("Left Encoder", m_driveTrain.getLeftEncoderDistance());
+    encoders.add("Right Encoder", m_driveTrain.getRightEncoderDistance());
 
     // Configure the button bindings
     configureButtonBindings();

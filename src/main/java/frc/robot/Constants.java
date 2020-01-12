@@ -23,7 +23,11 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+	/* SI Units are used */
+
 	public static final class OIConstants {
+
 		//Stick Ports
 		public static int jLeft = 0;
 		public static int jRight = 1;
@@ -32,6 +36,38 @@ public final class Constants {
 	}
 
 	public static final class DriveConstants {
+
+		// Robot Infomation
+		public static final double kTrackwidth = 0.69; // Meters
+		public static final double kTrackheight = 0.94; // Meters
+
+		public static final double kWheelDiameter = 0.15; // Meters
+
+		public static final double kMaxVelocity = 5; // Meters per second
+
+		public static final double kMaxAcceleration = 3; // Meters per second squared
+
+		// Autonomous Infomation
+		public static final double fieldLength = 15.98; // Meters
+		public static final double fieldHeight = 8.21; // Meters
+
+		// Kinematics
+		public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
+
+		// Odometry
+		public static final Pose2d startingPosition = new Pose2d(new Translation2d(0, 0), new Rotation2d(0)); // Placeholder that is subject to change
+
+		// Paths
+		private static final String kLeftToGoal = "LeftToGoal";
+
+		// Encoder Infomation
+		public static final int kEncoderCPR = 1024; // Placeholder that is subject to change
+
+		public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (double) kEncoderCPR;
+
+		public static final boolean kLeftEncoderReversed = false;
+		public static final boolean kRightEncoderReversed = true;
+
 		// Motor Ports
 		public static final int mFrontLeft = 5;
 		public static final int mRearLeft = 6;
@@ -39,31 +75,13 @@ public final class Constants {
 		public static final int mFrontRight = 1;
 		public static final int mRearRight = 2;
 
-		// Gyro
+		// Gyro Port
 		public static final int kGyroPort = 0; // Placeholder that is subject to change
 
-		// Encoders
+		// Encoder Ports
 		public static final int[] kLeftEncoderPorts = new int[]{0, 1};
 		public static final int[] kRightEncoderPorts = new int[]{2, 3};
-
-		public static final boolean kLeftEncoderReversed = false;
-		public static final boolean kRightEncoderReversed = true;
-
-		public static final int kEncoderCPR = 1024; // Placeholder that is subject to change
-		public static final double kWheelDiameterMeters = 0.15; // Placeholder that is subject to change
-		public static final double kEncoderDistancePerPulse = (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
 	
-		// Kinematics
-		public static final double kTrackwidthMeters = 0.69; // Placeholder that is subject to change
-		public static final double kTrackheightMeters = 0.94; // Placeholder that is subject to change
-		
-		public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
-
-		// Odometry
-		public static final Pose2d startingPosition = new Pose2d(new Translation2d(0, 0), new Rotation2d(0)); // Placeholder that is subject to change
-
-		public static final double fieldLengthMeters = 15.98;
-		public static final double fieldHeightMeters = 8.21;
 	}
 
 	public static final class LiftConstants {
