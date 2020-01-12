@@ -11,7 +11,7 @@ In order to get started with this project you will need the required software pr
 The individual downloads can also be found here:
 1. Java SE Development Kit 11 (http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 2. Text editor or IDE. The officially supported text editor is Visual Studio Code with the WPILib plugin found here:
-https://marketplace.visualstudio.com/items?itemName=wpilibsuite.vscode-wpilib An alternative is to use [Intellij IDEA] (https://www.jetbrains.com/idea/)
+https://marketplace.visualstudio.com/items?itemName=wpilibsuite.vscode-wpilib An alternative is to use (Intellij IDEA) [https://www.jetbrains.com/idea/]
 2. FRC 2019 Update Suite (http://www.ni.com/download/first-robotics-software-2017/7904/en/)
 4. CTRE Framework (http://www.ctr-electronics.com/hro.html#product_tabs_technical_resources)
 
