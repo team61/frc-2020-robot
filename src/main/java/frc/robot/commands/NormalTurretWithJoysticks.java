@@ -19,7 +19,6 @@ public class NormalTurretWithJoysticks extends CommandBase {
 
     @Override
     public void execute() {
-
         m_turret.setSpeed(m_x.getAsDouble());
     }
 }

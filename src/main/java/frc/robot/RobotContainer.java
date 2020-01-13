@@ -7,21 +7,17 @@
 
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.NormalTurretWithJoysticks;
-import frc.robot.commands.NormalDriveWithJoysticks;
+import frc.robot.commands.TankDrive;
 import frc.robot.commands.TurretAutoAim;
 import lib.components.LogitechJoystick;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Turret;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -40,7 +36,7 @@ public class RobotContainer {
   private final LogitechJoystick jTurretHeading = new LogitechJoystick(OIConstants.jTurretHeading);
   private final LogitechJoystick jTurretAngle = new LogitechJoystick(OIConstants.jTurretAngle);
 
-  private final NormalDriveWithJoysticks m_normalDriveWithJoysticks = new NormalDriveWithJoysticks(m_driveTrain, jLeft::getYAxis, jRight::getYAxis);
+  private final TankDrive m_normalDriveWithJoysticks = new TankDrive(m_driveTrain, jLeft::getYAxis, jRight::getYAxis);
   private final TurretAutoAim m_turretAutoAim = new TurretAutoAim(m_turret, m_driveTrain);
   private final NormalTurretWithJoysticks m_normalTurretWithJoysticks = new NormalTurretWithJoysticks(m_turret, jTurretHeading::getYAxis);
 
