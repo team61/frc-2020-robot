@@ -1,57 +1,64 @@
 # 2020 FIRST Robot
 
-## Getting Started
-
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### Prerequisites
+## Setup Instructions
 
-The items required to use this project:
+1. Clone this repository.
+2. Run `./gradlew` to download Gradle along with the required WPILib and Vender libraries.
+3. Run `./gradlew tasks` to view of available tasks.
 
-1. FRC 2019 Update Suite (http://www.ni.com/download/first-robotics-software-2017/7904/en/)
-2. Java SE Development Kit 8 (http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-3. Any IDE. We prefer Intellij IDEA (https://www.jetbrains.com/idea/)
-4. CTRE Framework (http://www.ctr-electronics.com/hro.html#product_tabs_technical_resources)
+### Setting up text editor or IDE
 
-### Installing
+#### Visual Studio Code (Official IDE)
 
-A step by step installation guide to run this program on the Team 61 FRC Robot
+1. Get the WPILib extension for easiest use from the VSCode Marketplace - Requires Java 11 or greater
 
-1. Get the FRC 2019 Update Suite by visiting [their website](http://www.ni.com/download/first-robotics-software-2017/7904/en/) and downloading the Update Suite. A encryption key may be necessary, if so, for 2019 it is: '$Robots&in#SPACE!!'. Be sure to uninstall any previous version of National Instruments software before starting. Extract the package that you have downloaded, and run the installer. For testing purposes, it is not necessary to activate the software if asked.
-2. Download the installer for the Java SE Development Kit 8 (any other version will not function properly with the 2018/2019 code) from [this website.](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) Make sure that the version downloaded fit the operating system of the computer you are testing on. Run the installer.
-3. Next, download the IDE you plan on using and run the installer if there is any.
-4. You might have to now set your JAVA_HOME variable, and if you do not know how to do this, you may find out [here](https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/).
-5. Next, download the installer for the CTRE Toolsuite Legacy v4 from [this website](http://www.ctr-electronics.com/hro.html#product_tabs_technical_resources).
 
-## Setting up Intellij IDEA (Windows users only)
 
-If you are not familiar with any IDE, and are having trouble using this program with an IDE, you can follow this step-by-step guide on setting up a workspace with Intellij IDEA. Although Visual Studio Code is the recommended IDE for FRC development, we primarily used IDEA and can therefore best write a guide on setting up IDEA. If you are interested in Visual Studio Code, there are some setup tutorials [here](https://wpilib.screenstepslive.com/s/currentCS/m/java/c/57246).
+#### Setting up Intellij IDEA
 
-1. Download and install Intellij IDEA. The download link can be found [here](https://www.jetbrains.com/idea/). Installation should be pretty easy if the installer is used.
-2. Open the 'build.gradle' file within the project and add the line: 'id "idea"' to the plugins section if it is not already there.
-3. Shift + right click on the directory you have pulled from this Github page, and open a Powershell window at the directory. Type the commands that follow to set up the IDEA environment:
+*Note: Intellij IDEA isn't directly supported by FRC and may run into issues. Visual Studio Code is the support text editor for FRC.*
+
+1. Open the `build.gradle` file within the project and add the line: `id "idea"` to the plugins section if not already there.
+2. Type the following commands to set up the IDEA environment:
 
 ```
 ./gradlew build
 ./gradlew idea
 ```
 
-1. The last step is to open IDEA, and click open on the Welcome screen or File | Open on the main menu, and select the project directory. You should now be able to work on the project within IDEA. If you are struggling with using IDEA, there is a good tutorial [here](https://www.jetbrains.com/help/idea/using-code-editor.html).
 
-## Deployment
 
-To run the robot code, connect your computer to the RoboRIO, either by USB or Ethernet/radio. Next, open a powershell window at the project directory, and type the command:
+### Deployment
 
-```
-./gradlew deploy
-```
+Here are a set of instructions for uploading code to your robot: 
 
-The console in Driver Station is very helpful in debugging issues in a scenario where this does not properly work. Many useful messages can be found to help with problems that might be run into.
+1. connect your computer to the RoboRIO, either by USB or Ethernet/radio. 
+2. Then run the command `./gradlew deploy` .
+
+If you run into any issues use the console in Driver Station to help with debugging.
+
+## Code Highlights
+
+* Tracking position on the field
+
+  Through kinematics, odometry and absolute measures such as with vision and check points, the robot is able to accurately track it's position on the field.
+
+* Turret locked onto power port
+
+  Based on the coordinate system the robot has on the field, the turret is able to constantly face in the direction of any of the power ports as long as the turret is within range (200° view).  When not even view the turret heading is based on how close a side is to being in view. 
+
+* Cubic splined paths
+
+  Rather than making a move-stop-turn approach, we're using cubic splined paths which created smooth curves on the points we need to travel. This significantly increases the speed at which we travel.
 
 ## Built With
 
-- [Java JDK](http://www.oracle.com/technetwork/java/javase/overview/index.html) - The language we used
+- [Java JDK  11](http://www.oracle.com/technetwork/java/javase/overview/index.html) - The language we used
 - [WPILib](http://first.wpi.edu/FRC/roborio/release/docs/java/) - Libraries to program the FRC Robot
+- [Shuffle Board]()
+- [Path Weaver]()
 
 ## Contributing
 
@@ -74,5 +81,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 ## Acknowledgments
 
-- Many thanks to FRC Team 5188 for their guide on [setting up the PixyCam with the RoboRio](https://github.com/FRC5188/ArduinoPixyAndRoboRIO).
-- Thanks to the [previous 2015 Team 61 Programming Team](https://github.com/BVT-Team-61) for their helpful documentation and source code
+- Thanks Team 254 on their countless tutorials on path planning, trajectories and vision cam.

@@ -48,31 +48,12 @@ public class RobotContainer {
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  private NetworkTableEntry m_maxSpeed;
-
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     m_driveTrain.setDefaultCommand(m_normalDriveWithJoysticks);
     m_turret.setDefaultCommand(m_turretAutoAim);
-
-    m_maxSpeed = Shuffleboard.getTab("Configuration")
-                           .add("Max Speed", 1)
-                           .withWidget("Number Slider")
-                           .withPosition(1, 1)
-                           .withSize(2, 1)
-                           .getEntry();
-
-    // Add the tank drive and encoders to a 'Drivebase' tab
-    ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");
-    driveBaseTab.add("Tank Drive", m_driveTrain);
-    // Put both encoders in a list layout
-    ShuffleboardLayout encoders = driveBaseTab.getLayout("List Layout", "Encoders")
-                                              .withPosition(0, 0)
-                                              .withSize(2, 2);
-    encoders.add("Left Encoder", m_driveTrain.getLeftEncoderDistance());
-    encoders.add("Right Encoder", m_driveTrain.getRightEncoderDistance());
 
     // Configure the button bindings
     configureButtonBindings();
