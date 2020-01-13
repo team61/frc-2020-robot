@@ -27,9 +27,9 @@ public class DriveTrain extends SubsystemBase {
     protected Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
     protected Encoder m_rightEncoder  = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
 
-    private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // NAVX
+    private AHRS m_ahrs; // NAVX
 
-    private final DifferentialDriveOdometry m_odometry;
+    private DifferentialDriveOdometry m_odometry;
 
     public EncoderFollower m_left_follower;
     public EncoderFollower m_right_follower;
@@ -45,6 +45,13 @@ public class DriveTrain extends SubsystemBase {
         m_rightEncoder.reset();
 
         m_odometry = new DifferentialDriveOdometry(getHeading(), DriveConstants.startingPosition);
+
+        try {
+            m_ahrs = new AHRS(SPI.Port.kMXP);
+        } catch (RuntimeException ex) {
+            DriverStation.reportError("Error installing navX MXP: " + ex.getMessage(), true);
+        }
+        resetGryo();
     }
 
     @Override
@@ -128,22 +135,43 @@ public class DriveTrain extends SubsystemBase {
     }
 
     /**
-     * Methods for Gyro Data
-     * 
+     *  Methods for Gyro Data
      * @return The displacement in degrees from -180 to 180
-     */
-
-
-    public double getAngle() {
-        return m_gyro.getAngle();
+     * */
+    public double getYaw() {
+        return m_ahrs.getYaw();
     }
 
-    public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(getAngle());
+    public double getPitch() {
+        return m_ahrs.getRoll();
+    } // The gyro was inserted sideways into the robot
+
+    public double getRoll() {
+        return m_ahrs.getPitch();
+    } // The gyro was inserted sideways into the robot
+
+    public double getAccelerationX() {
+        return m_ahrs.getRawAccelX();
+    }
+
+    public double getAccelerationY() {
+        return m_ahrs.getRawAccelY();
+    }
+
+    public double getAccelerationZ() {
+        return m_ahrs.getRawAccelZ();
     }
 
     public void resetGryo() {
-        m_gyro.reset();
+        m_ahrs.reset();
+    }
+
+    public boolean isCalibrating() {
+        return m_ahrs.isCalibrating();
+    }
+
+    public Rotation2d getHeading() {
+        return Rotation2d.fromDegrees(getYaw());
     }
 
 
