@@ -31,9 +31,6 @@ public class DriveTrain extends SubsystemBase {
 
     private final DifferentialDriveOdometry m_odometry;
 
-    private final PIDController m_leftPIDController = new PIDController(1, 0, 0);
-    private final PIDController m_rightPIDController = new PIDController(1, 0, 0);
-
     public EncoderFollower m_left_follower;
     public EncoderFollower m_right_follower;
 
@@ -60,17 +57,13 @@ public class DriveTrain extends SubsystemBase {
      * Drive Methods
      */
 
-    public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
-        if (squaredInputs) {
-            tankDrive(leftSpeed * leftSpeed,rightSpeed * rightSpeed);
-        } else {
-            tankDrive(leftSpeed, rightSpeed);
-        }
-    }
-
     public void tankDrive(final double leftSpeed, final double rightSpeed) {
         setLeftSpeed(leftSpeed);
         setRightSpeed(rightSpeed);
+    }
+
+    public void tankDriveSquared(final double leftSpeed, final double rightSpeed) {
+            tankDrive(leftSpeed * leftSpeed,rightSpeed * rightSpeed);
     }
 
     public void tankDrive(final double speed) {
