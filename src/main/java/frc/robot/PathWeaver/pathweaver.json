@@ -3,6 +3,6 @@
   "maxVelocity": 6.0,
   "maxAcceleration": 2.0,
   "wheelBase": 0.2,
-  "gameName": "Destination: Deep Space",
+  "gameName": "Infinite Recharge",
   "outputDir": ".."
 }

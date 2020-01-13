@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -9,36 +13,31 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PWMTalonSRX;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import jaci.pathfinder.followers.EncoderFollower;
 import edu.wpi.first.wpilibj.controller.PIDController;
 
 public class DriveTrain extends SubsystemBase {
 
-    protected SpeedController m_frontLeft = new PWMTalonSRX(DriveConstants.mFrontLeft);
-    protected SpeedController m_rearLeft = new PWMTalonSRX(DriveConstants.mRearLeft);
-    protected SpeedControllerGroup m_leftGroup = new SpeedControllerGroup(m_frontLeft, m_rearLeft);
+    protected TalonSRX m_frontLeft = new TalonSRX(DriveConstants.mFrontLeft);
+    protected TalonSRX m_rearLeft = new TalonSRX(DriveConstants.mRearLeft);
 
-    protected SpeedController m_frontRight = new PWMTalonSRX(DriveConstants.mFrontRight);
-    protected SpeedController m_rearRight = new PWMTalonSRX(DriveConstants.mRearRight);
-    protected SpeedControllerGroup m_rightGroup = new SpeedControllerGroup(m_frontRight, m_rearRight);
+    protected TalonSRX m_frontRight = new TalonSRX(DriveConstants.mFrontRight);
+    protected TalonSRX m_rearRight = new TalonSRX(DriveConstants.mRearRight);
 
     protected Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
     protected Encoder m_rightEncoder  = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
 
-    /* NAVX is not support for simulation so when real tests are run switch to navX and for simulation use AnalogGyro */
-    //private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // NAVX
-    private final AnalogGyro m_gyro = new AnalogGyro(DriveConstants.kGyroPort);
-
-    private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftGroup, m_rightGroup);
+    private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // NAVX
 
     private final DifferentialDriveOdometry m_odometry;
 
     private final PIDController m_leftPIDController = new PIDController(1, 0, 0);
     private final PIDController m_rightPIDController = new PIDController(1, 0, 0);
+
+    public EncoderFollower m_left_follower;
+    public EncoderFollower m_right_follower;
+
+    public Notifier m_follower_notifier;
 
     public DriveTrain() {
 
@@ -62,28 +61,34 @@ public class DriveTrain extends SubsystemBase {
      */
 
     public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
-        m_differentialDrive.tankDrive(leftSpeed, rightSpeed, squaredInputs);
+        if (squaredInputs) {
+            tankDrive(leftSpeed * leftSpeed,rightSpeed * rightSpeed);
+        } else {
+            tankDrive(leftSpeed, rightSpeed);
+        }
     }
 
     public void tankDrive(final double leftSpeed, final double rightSpeed) {
-        tankDrive(leftSpeed, rightSpeed, true);
+        setLeftSpeed(leftSpeed);
+        setRightSpeed(rightSpeed);
     }
 
     public void tankDrive(final double speed) {
         tankDrive(speed, speed);
     }
 
-    public void stopTankDrive() {
-        tankDrive(0);
+    public void setRightSpeed(double speed) {
+        m_frontRight.set(ControlMode.PercentOutput, speed);
+        m_rearRight.set(ControlMode.PercentOutput, speed);
     }
 
-    public void tankDriveVolts(double leftVolts, double rightVolts) {
-        m_leftGroup.setVoltage(leftVolts);
-        m_rightGroup.setVoltage(-rightVolts);
-      }
+    public void setLeftSpeed(double speed) {
+        m_frontLeft.set(ControlMode.PercentOutput, speed);
+        m_rearLeft.set(ControlMode.PercentOutput, speed);
+    }
 
-    public void setMaxOutput(final double maxOutput) {
-        m_differentialDrive.setMaxOutput(maxOutput);
+    public void stopTankDrive() {
+        tankDrive(0);
     }
 
     /**
@@ -95,12 +100,20 @@ public class DriveTrain extends SubsystemBase {
         m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     }
 
-    public double getLeftEncoder() {
+    public double getLeftEncoderDistance() {
         return m_leftEncoder.getDistance();
     }
 
-    public double getRightEncoder() {
+    public double getRightEncoderDistance() {
         return m_rightEncoder.getDistance();
+    }
+
+    public int getRightEncoder() {
+        return m_rightEncoder.get();
+    }
+
+    public int getLeftEncoder() {
+        return m_leftEncoder.get();
     }
 
     public void resetLeftEncoder() {
@@ -118,7 +131,7 @@ public class DriveTrain extends SubsystemBase {
 
 
     public double getDistanceTraveled() {
-        return (getLeftEncoder() + getRightEncoder()) / 2;
+        return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2;
     }
 
     /**
@@ -140,42 +153,9 @@ public class DriveTrain extends SubsystemBase {
         m_gyro.reset();
     }
 
-    /** Methods for Kinematics */
-
-    /**
-     * Sets the desired wheel speeds.
-     *
-     * @param speeds The desired wheel speeds.
-     */
-    public void setSpeeds(final DifferentialDriveWheelSpeeds speeds) {
-        double leftOutput = m_leftPIDController.calculate(m_leftEncoder.getRate(),
-        speeds.leftMetersPerSecond);
-        
-        double rightOutput = m_rightPIDController.calculate(m_rightEncoder.getRate(),
-        speeds.rightMetersPerSecond);
-
-        m_leftGroup.set(leftOutput);
-        m_rightGroup.set(rightOutput);
-    }
-
-    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
-      }
-
-    /**
-     * Drives the robot with the given linear velocity and angular velocity.
-     *
-     * @param xSpeed Linear velocity in m/s.
-     * @param rot    Angular velocity in rad/s.
-     */
-    @SuppressWarnings("ParameterName")
-    public void drive(final double xSpeed, final double rot) {
-        final DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, rot));
-        setSpeeds(wheelSpeeds);
-  }
 
   /**
-   * Odometry and Kinematics
+   * Odometry
    */
 
    public Pose2d getPose2d() {

@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.NormalTurretWithJoysticks;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.NormalDriveWithJoysticks;
 import frc.robot.commands.TurretAutoAim;
 import lib.components.LogitechJoystick;
@@ -45,11 +44,9 @@ public class RobotContainer {
   private final TurretAutoAim m_turretAutoAim = new TurretAutoAim(m_turret, m_driveTrain);
   private final NormalTurretWithJoysticks m_normalTurretWithJoysticks = new NormalTurretWithJoysticks(m_turret, jTurretHeading::getYAxis);
 
-  private final ExampleCommand m_autoCommand = null;
+  private final Command m_autoCommand = null;
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-
-  private NetworkTableEntry m_maxSpeed;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -57,23 +54,6 @@ public class RobotContainer {
   public RobotContainer() {
     m_driveTrain.setDefaultCommand(m_normalDriveWithJoysticks);
     m_turret.setDefaultCommand(m_turretAutoAim);
-
-    m_maxSpeed = Shuffleboard.getTab("Configuration")
-                           .add("Max Speed", 1)
-                           .withWidget("Number Slider")
-                           .withPosition(1, 1)
-                           .withSize(2, 1)
-                           .getEntry();
-
-    // Add the tank drive and encoders to a 'Drivebase' tab
-    ShuffleboardTab driveBaseTab = Shuffleboard.getTab("Drivebase");
-    driveBaseTab.add("Tank Drive", m_driveTrain);
-    // Put both encoders in a list layout
-    ShuffleboardLayout encoders = driveBaseTab.getLayout("List Layout", "Encoders")
-                                              .withPosition(0, 0)
-                                              .withSize(2, 2);
-    encoders.add("Left Encoder", m_driveTrain.getLeftEncoder());
-    encoders.add("Right Encoder", m_driveTrain.getRightEncoder());
 
     // Configure the button bindings
     configureButtonBindings();
