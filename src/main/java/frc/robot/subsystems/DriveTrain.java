@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-import jaci.pathfinder.followers.EncoderFollower;
 import edu.wpi.first.wpilibj.controller.PIDController;
 
 public class DriveTrain extends SubsystemBase {
@@ -31,8 +30,8 @@ public class DriveTrain extends SubsystemBase {
 
     private DifferentialDriveOdometry m_odometry;
 
-    public EncoderFollower m_left_follower;
-    public EncoderFollower m_right_follower;
+//    public EncoderFollower m_left_follower;
+//    public EncoderFollower m_right_follower;
 
     public Notifier m_follower_notifier;
 
@@ -162,6 +161,10 @@ public class DriveTrain extends SubsystemBase {
         return m_ahrs.getRawAccelZ();
     }
 
+    public double getAngle() {
+        return m_ahrs.getAngle();
+    }
+
     public void resetGryo() {
         m_ahrs.reset();
     }
@@ -203,4 +206,6 @@ public class DriveTrain extends SubsystemBase {
     resetEncoders();
     m_odometry.resetPosition(pose, getHeading());
   }
+
+
 }
