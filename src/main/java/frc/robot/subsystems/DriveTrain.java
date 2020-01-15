@@ -3,37 +3,33 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-import edu.wpi.first.wpilibj.controller.PIDController;
+
+// speed controlller 3
 
 public class DriveTrain extends SubsystemBase {
 
+    public Notifier m_follower_notifier;
     protected TalonSRX m_frontLeft = new TalonSRX(DriveConstants.mFrontLeft);
     protected TalonSRX m_rearLeft = new TalonSRX(DriveConstants.mRearLeft);
-
     protected TalonSRX m_frontRight = new TalonSRX(DriveConstants.mFrontRight);
     protected TalonSRX m_rearRight = new TalonSRX(DriveConstants.mRearRight);
-
     protected Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
-    protected Encoder m_rightEncoder  = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
-
+    protected Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
     private AHRS m_ahrs; // NAVX
-
-    private DifferentialDriveOdometry m_odometry;
 
 //    public EncoderFollower m_left_follower;
 //    public EncoderFollower m_right_follower;
-
-    public Notifier m_follower_notifier;
+    private DifferentialDriveOdometry m_odometry;
 
     public DriveTrain() {
 
@@ -55,8 +51,8 @@ public class DriveTrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-      // Update the odometry in the periodic block
-      updateOdometry();
+        // Update the odometry in the periodic block
+        updateOdometry();
     }
 
     /**
@@ -69,7 +65,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void tankDriveSquared(final double leftSpeed, final double rightSpeed) {
-        tankDrive(leftSpeed * Math.abs(leftSpeed),rightSpeed * Math.abs(rightSpeed));
+        tankDrive(leftSpeed * Math.abs(leftSpeed), rightSpeed * Math.abs(rightSpeed));
     }
 
     public void tankDrive(final double speed) {
@@ -134,9 +130,10 @@ public class DriveTrain extends SubsystemBase {
     }
 
     /**
-     *  Methods for Gyro Data
+     * Methods for Gyro Data
+     *
      * @return The displacement in degrees from -180 to 180
-     * */
+     */
     public double getYaw() {
         return m_ahrs.getYaw();
     }
@@ -177,35 +174,30 @@ public class DriveTrain extends SubsystemBase {
         return Rotation2d.fromDegrees(getYaw());
     }
 
+    public Pose2d getPose2d() {
+        return m_odometry.getPoseMeters();
+    }
 
-  /**
-   * Odometry
-   */
+    public Translation2d getTranslation2d() {
+        return getPose2d().getTranslation();
+    }
 
-   public Pose2d getPose2d() {
-       return m_odometry.getPoseMeters();
-   }
+    public double getX() {
+        return getTranslation2d().getX();
+    }
 
-   public Translation2d getTranslation2d() {
-       return getPose2d().getTranslation();
-   }
+    public double getY() {
+        return getTranslation2d().getY();
+    }
 
-   public double getX() {
-       return getTranslation2d().getX();
-   }
+    public void updateOdometry() {
+        m_odometry.update(getHeading(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+    }
 
-   public double getY() {
-    return getTranslation2d().getY();
-}
-
-  public void updateOdometry() {
-    m_odometry.update(getHeading(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
-  }
-
-  public void resetOdometry(Pose2d pose) {
-    resetEncoders();
-    m_odometry.resetPosition(pose, getHeading());
-  }
+    public void resetOdometry(Pose2d pose) {
+        resetEncoders();
+        m_odometry.resetPosition(pose, getHeading());
+    }
 
 
 }

@@ -40,7 +40,8 @@ public class Climb extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (extend) mLift.extend(); else mLift.retract();
+        if (extend) mLift.extend();
+        else mLift.retract();
         end(false);
     }
 
