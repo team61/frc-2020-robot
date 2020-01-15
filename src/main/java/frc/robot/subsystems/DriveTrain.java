@@ -69,7 +69,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void tankDriveSquared(final double leftSpeed, final double rightSpeed) {
-            tankDrive(leftSpeed * leftSpeed,rightSpeed * rightSpeed);
+        tankDrive(leftSpeed * Math.abs(leftSpeed),rightSpeed * Math.abs(rightSpeed));
     }
 
     public void tankDrive(final double speed) {
