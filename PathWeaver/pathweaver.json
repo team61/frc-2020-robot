@@ -1,8 +1,0 @@
-{
-  "lengthUnit": "Meter",
-  "maxVelocity": 5.0,
-  "maxAcceleration": 3.0,
-  "wheelBase": 0.62,
-  "gameName": "INFINITE RECHARGE",
-  "outputDir": "../src/main/java/frc/robot/PathWeaver"
-}

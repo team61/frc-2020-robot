@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -14,21 +13,18 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
-// speed controlller 3
-
 public class DriveTrain extends SubsystemBase {
 
-    public Notifier m_follower_notifier;
-    protected TalonSRX m_frontLeft = new TalonSRX(DriveConstants.mFrontLeft);
-    protected TalonSRX m_rearLeft = new TalonSRX(DriveConstants.mRearLeft);
-    protected TalonSRX m_frontRight = new TalonSRX(DriveConstants.mFrontRight);
-    protected TalonSRX m_rearRight = new TalonSRX(DriveConstants.mRearRight);
+    protected TalonSRX m_leftMaster = new TalonSRX(DriveConstants.kLeftMasterPort);
+    protected TalonSRX m_leftSlave = new TalonSRX(DriveConstants.kLeftSlavePort);
+    protected TalonSRX m_rightMaster = new TalonSRX(DriveConstants.kRightMasterPort);
+    protected TalonSRX m_rightSlave = new TalonSRX(DriveConstants.kRightSlavePort);
+
     protected Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
     protected Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
+
     private AHRS m_ahrs; // NAVX
 
-//    public EncoderFollower m_left_follower;
-//    public EncoderFollower m_right_follower;
     private DifferentialDriveOdometry m_odometry;
 
     public DriveTrain() {
@@ -39,7 +35,7 @@ public class DriveTrain extends SubsystemBase {
         m_leftEncoder.reset();
         m_rightEncoder.reset();
 
-        m_odometry = new DifferentialDriveOdometry(getHeading(), DriveConstants.startingPosition);
+        m_odometry = new DifferentialDriveOdometry(getHeading(), DriveConstants.kStartingPosition);
 
         try {
             m_ahrs = new AHRS(SPI.Port.kMXP);
@@ -51,13 +47,12 @@ public class DriveTrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // Update the odometry in the periodic block
         updateOdometry();
     }
 
     /**
      * Drive Methods
-     */
+     * */
 
     public void tankDrive(final double leftSpeed, final double rightSpeed) {
         setLeftSpeed(leftSpeed);
@@ -73,13 +68,13 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void setRightSpeed(double speed) {
-        m_frontRight.set(ControlMode.PercentOutput, speed);
-        m_rearRight.set(ControlMode.PercentOutput, speed);
+        m_rightMaster.set(ControlMode.PercentOutput, speed);
+        m_rightSlave.set(ControlMode.PercentOutput, speed);
     }
 
     public void setLeftSpeed(double speed) {
-        m_frontLeft.set(ControlMode.PercentOutput, speed);
-        m_rearLeft.set(ControlMode.PercentOutput, speed);
+        m_leftMaster.set(ControlMode.PercentOutput, speed);
+        m_leftSlave.set(ControlMode.PercentOutput, speed);
     }
 
     public void stopTankDrive() {
@@ -124,7 +119,6 @@ public class DriveTrain extends SubsystemBase {
         resetLeftEncoder();
     }
 
-
     public double getDistanceTraveled() {
         return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2;
     }
@@ -134,17 +128,18 @@ public class DriveTrain extends SubsystemBase {
      *
      * @return The displacement in degrees from -180 to 180
      */
+
     public double getYaw() {
         return m_ahrs.getYaw();
     }
 
     public double getPitch() {
-        return m_ahrs.getRoll();
-    } // The gyro was inserted sideways into the robot
+        return m_ahrs.getPitch();
+    }
 
     public double getRoll() {
-        return m_ahrs.getPitch();
-    } // The gyro was inserted sideways into the robot
+        return m_ahrs.getRoll();
+    }
 
     public double getAccelerationX() {
         return m_ahrs.getRawAccelX();
@@ -158,10 +153,6 @@ public class DriveTrain extends SubsystemBase {
         return m_ahrs.getRawAccelZ();
     }
 
-    public double getAngle() {
-        return m_ahrs.getAngle();
-    }
-
     public void resetGryo() {
         m_ahrs.reset();
     }
@@ -170,12 +161,16 @@ public class DriveTrain extends SubsystemBase {
         return m_ahrs.isCalibrating();
     }
 
-    public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(getYaw());
-    }
+    /**
+     * Odometry methods
+     * */
 
     public Pose2d getPose2d() {
         return m_odometry.getPoseMeters();
+    }
+
+    public Rotation2d getHeading() {
+        return Rotation2d.fromDegrees(getYaw());
     }
 
     public Translation2d getTranslation2d() {
@@ -198,6 +193,4 @@ public class DriveTrain extends SubsystemBase {
         resetEncoders();
         m_odometry.resetPosition(pose, getHeading());
     }
-
-
 }
