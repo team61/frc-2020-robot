@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -15,17 +17,25 @@ import frc.robot.Constants.DriveConstants;
 
 public class DriveTrain extends SubsystemBase {
 
-    protected TalonSRX m_leftMaster = new TalonSRX(DriveConstants.kLeftMasterPort);
-    protected TalonSRX m_leftSlave = new TalonSRX(DriveConstants.kLeftSlavePort);
-    protected TalonSRX m_rightMaster = new TalonSRX(DriveConstants.kRightMasterPort);
-    protected TalonSRX m_rightSlave = new TalonSRX(DriveConstants.kRightSlavePort);
+    private static DriveTrain m_instance;
 
-    protected Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
-    protected Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
+    private WPI_TalonSRX m_frontLeft = new WPI_TalonSRX(DriveConstants.kFrontLeftPort);
+    private WPI_TalonSRX m_rearLeft = new WPI_TalonSRX(DriveConstants.kRearLeftPort);
+    private SpeedControllerGroup m_left = new SpeedControllerGroup(m_frontLeft, m_rearLeft);
+
+    private WPI_TalonSRX m_frontRight = new WPI_TalonSRX(DriveConstants.kFrontRightPort);
+    private WPI_TalonSRX m_rearRight = new WPI_TalonSRX(DriveConstants.kRearRightPort);
+    private SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_rearRight);
+
+
+    private Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
+    private Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
 
     private AHRS m_ahrs; // NAVX
 
     private DifferentialDriveOdometry m_odometry;
+
+    private DifferentialDrive m_differentialDrive = new DifferentialDrive(m_left, m_right);
 
     public DriveTrain() {
 
@@ -50,17 +60,24 @@ public class DriveTrain extends SubsystemBase {
         updateOdometry();
     }
 
+    public static DriveTrain getInstance() {
+        if (m_instance == null) {
+            m_instance = new DriveTrain();
+        }
+
+        return m_instance;
+    }
+
     /**
      * Drive Methods
      * */
 
-    public void tankDrive(final double leftSpeed, final double rightSpeed) {
-        setLeftSpeed(leftSpeed);
-        setRightSpeed(rightSpeed);
+    public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
+        m_differentialDrive.tankDrive(leftSpeed, rightSpeed, squaredInputs);
     }
 
-    public void tankDriveSquared(final double leftSpeed, final double rightSpeed) {
-        tankDrive(leftSpeed * Math.abs(leftSpeed), rightSpeed * Math.abs(rightSpeed));
+    public void tankDrive(final double leftSpeed, final double rightSpeed) {
+        tankDrive(leftSpeed, rightSpeed, false);
     }
 
     public void tankDrive(final double speed) {
@@ -68,13 +85,13 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void setRightSpeed(double speed) {
-        m_rightMaster.set(ControlMode.PercentOutput, speed);
-        m_rightSlave.set(ControlMode.PercentOutput, speed);
+        m_frontRight.set(ControlMode.PercentOutput, speed);
+        m_rearRight.set(ControlMode.PercentOutput, speed);
     }
 
     public void setLeftSpeed(double speed) {
-        m_leftMaster.set(ControlMode.PercentOutput, speed);
-        m_leftSlave.set(ControlMode.PercentOutput, speed);
+        m_frontLeft.set(ControlMode.PercentOutput, speed);
+        m_rearLeft.set(ControlMode.PercentOutput, speed);
     }
 
     public void stopTankDrive() {

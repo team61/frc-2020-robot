@@ -24,7 +24,7 @@ import lib.components.LogitechJoystick;
  */
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private final DriveTrain m_driveTrain = new DriveTrain();
+    private final DriveTrain m_driveTrain = DriveTrain.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);

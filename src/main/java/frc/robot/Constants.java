@@ -58,10 +58,10 @@ public final class Constants {
         public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(0, 0), new Rotation2d(0)); // Placeholder that is subject to change
 
         // Motor Ports
-        public static final int kLeftMasterPort = 5;
-        public static final int kLeftSlavePort = 6;
-        public static final int kRightMasterPort = 1;
-        public static final int kRightSlavePort = 2;
+        public static final int kFrontLeftPort = 5;
+        public static final int kRearLeftPort = 6;
+        public static final int kFrontRightPort = 1;
+        public static final int kRearRightPort = 2;
 
         // Encoder Ports
         public static final int[] kLeftEncoderPorts = new int[]{0, 1};

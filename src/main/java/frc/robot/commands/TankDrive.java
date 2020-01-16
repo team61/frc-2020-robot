@@ -28,7 +28,7 @@ public class TankDrive extends CommandBase {
 
     @Override
     public void execute() {
-        m_driveTrain.tankDriveSquared(m_left.getAsDouble(), m_right.getAsDouble());
+        m_driveTrain.tankDrive(m_left.getAsDouble(), m_right.getAsDouble(), true);
     }
 
     // Called once the command ends or is interrupted.
