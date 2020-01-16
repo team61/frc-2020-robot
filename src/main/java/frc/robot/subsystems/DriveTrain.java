@@ -6,18 +6,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.AutoConstants;
 
 public class DriveTrain extends SubsystemBase {
 
@@ -41,11 +38,6 @@ public class DriveTrain extends SubsystemBase {
 
     private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_left, m_right);
 
-    private final PIDController m_leftPIDController = new PIDController(1, 0, 0);
-    private final PIDController m_rightPIDController = new PIDController(1, 0, 0);
-
-    private final TrapezoidProfile.Constraints m_constraints = new TrapezoidProfile.Constraints(DriveConstants.kMaxVelocity, DriveConstants.kMaxAcceleration);
-
     public DriveTrain() {
 
         m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
@@ -54,7 +46,7 @@ public class DriveTrain extends SubsystemBase {
         m_leftEncoder.reset();
         m_rightEncoder.reset();
 
-        m_odometry = new DifferentialDriveOdometry(getHeading(), DriveConstants.kStartingPosition);
+        m_odometry = new DifferentialDriveOdometry(getHeading(), AutoConstants.kStartingPosition);
 
         try {
             m_ahrs = new AHRS(SPI.Port.kMXP);
@@ -218,23 +210,8 @@ public class DriveTrain extends SubsystemBase {
         return getTranslation2d().getY();
     }
 
-    public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
-        double leftOutput = m_leftPIDController.calculate(m_leftEncoder.getRate(),
-                speeds.leftMetersPerSecond);
-        double rightOutput = m_rightPIDController.calculate(m_rightEncoder.getRate(),
-                speeds.rightMetersPerSecond);
-        m_left.set(leftOutput);
-        m_right.set(rightOutput);
-    }
-
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
-    }
-
-    @SuppressWarnings("ParameterName")
-    public void drive(double xSpeed, double rot) {
-        DifferentialDriveWheelSpeeds wheelSpeeds = DriveConstants.kDriveKinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, rot));
-        setSpeeds(wheelSpeeds);
     }
 
     public void updateOdometry() {

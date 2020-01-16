@@ -35,11 +35,29 @@ public final class Constants {
 
     public static final class DriveConstants {
 
+        public static final double kWheelDiameter = 0.15; // Meters
+
+        // Encoder Information
+        public static final int kEncoderCPR = 1024; // Placeholder that is subject to change
+        public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (double) kEncoderCPR;
+        public static final boolean kLeftEncoderReversed = false;
+        public static final boolean kRightEncoderReversed = true;
+
+        // Motor Ports
+        public static final int kFrontLeftPort = 5;
+        public static final int kRearLeftPort = 6;
+        public static final int kFrontRightPort = 1;
+        public static final int kRearRightPort = 2;
+
+        // Encoder Ports
+        public static final int[] kLeftEncoderPorts = new int[]{0, 1};
+        public static final int[] kRightEncoderPorts = new int[]{2, 3};
+    }
+
+    public static final class AutoConstants {
         // Robot Infomation
         public static final double kTrackwidth = 0.69; // Meters
-        public static final double kTrackheight = 0.94; // Meters
-
-        public static final double kWheelDiameter = 0.15; // Meters
+        public static final double kWheelBase = 0.94; // Meters
 
         public static final double kMaxVelocity = 5; // Meters per second
 
@@ -64,23 +82,6 @@ public final class Constants {
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = 0.7;
 
-        // Encoder Information
-        public static final int kEncoderCPR = 1024; // Placeholder that is subject to change
-        public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (double) kEncoderCPR;
-        public static final boolean kLeftEncoderReversed = false;
-        public static final boolean kRightEncoderReversed = true;
-
         public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(0, 0), new Rotation2d(0)); // Placeholder that is subject to change
-
-        // Motor Ports
-        public static final int kFrontLeftPort = 5;
-        public static final int kRearLeftPort = 6;
-        public static final int kFrontRightPort = 1;
-        public static final int kRearRightPort = 2;
-
-        // Encoder Ports
-        public static final int[] kLeftEncoderPorts = new int[]{0, 1};
-        public static final int[] kRightEncoderPorts = new int[]{2, 3};
-
     }
 }
