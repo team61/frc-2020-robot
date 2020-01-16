@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Launcher;
 
 public class LauncherAutoAim extends CommandBase {
+
     private Launcher m_launcher;
 
     public LauncherAutoAim(Launcher launcher) {

@@ -5,13 +5,13 @@ import frc.robot.subsystems.Turret;
 
 import java.util.function.DoubleSupplier;
 
-public class NormalTurretWithJoysticks extends CommandBase {
+public class TurretWithJoysticks extends CommandBase {
 
     private Turret m_turret;
 
     private DoubleSupplier m_x;
 
-    public NormalTurretWithJoysticks(Turret turret, DoubleSupplier x) {
+    public TurretWithJoysticks(Turret turret, DoubleSupplier x) {
         m_turret = turret;
         m_x = x;
 

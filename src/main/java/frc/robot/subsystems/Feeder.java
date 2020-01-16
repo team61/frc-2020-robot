@@ -14,9 +14,6 @@ public class Feeder extends SubsystemBase {
 
     private LimitSwitch m_limitSwitch = new LimitSwitch(FeederConstants.kLimitSwitchPort);
 
-    private TrapezoidProfile.Constraints m_constrants = new TrapezoidProfile.Constraints(FeederConstants.kMaxVel, FeederConstants.kMaxAcc);
-
-
     public static Feeder getInstance() {
         if (m_instance == null) {
             m_instance = new Feeder();

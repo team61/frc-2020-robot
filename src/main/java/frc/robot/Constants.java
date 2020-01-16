@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -92,6 +93,8 @@ public final class Constants {
         public static final double kMaxVel = 1.75; // Placeholder that is subject to change
         public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
 
+        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVel, kMaxAcc);
+
         public static final double kRange = 180; // in degrees
         public static final double kUpperLimit = kRange/2;
         public static final double kLowerLimit = -kRange/2;
@@ -104,6 +107,8 @@ public final class Constants {
         // Constraints
         public static final double kMaxVel = 1.75; // Placeholder that is subject to change
         public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
+
+        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVel, kMaxAcc);
     }
 
     public static final class FeederConstants {
@@ -114,11 +119,14 @@ public final class Constants {
         // Constraints
         public static final double kMaxVel = 1.75; // Placeholder that is subject to change
         public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
+
+        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVel, kMaxAcc);
     }
 
     public static final class LauncherConstants {
-        public static final int kMotorA = 10; // Place holder
-        public static final int kMotorB = 11; // Place holder
+        public static final int kMotorAPort = 10; // Place holder
+        public static final int kMotorBPort = 11; // Place holder
+        public static final int kServoPort = 0; // Place holder
         public static final int kLimitSwitchPort = 1; // Place holder
 
         public static final double kFastLauncherSpeedPer = 0.5; // Place holder
@@ -127,6 +135,8 @@ public final class Constants {
         // Constraints
         public static final double kMaxVel = 1.75; // Placeholder that is subject to change
         public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
+
+        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVel, kMaxAcc);
     }
 
     public static final class MiscellaneousConstants {

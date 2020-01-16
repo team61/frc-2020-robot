@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,13 +12,13 @@ public class Launcher extends SubsystemBase {
 
     private static Launcher m_instance;
 
-    private WPI_TalonSRX m_motorA = new WPI_TalonSRX(LauncherConstants.kMotorA);
-    private WPI_TalonSRX m_motorB = new WPI_TalonSRX(LauncherConstants.kMotorB);
+    private WPI_TalonSRX m_motorA = new WPI_TalonSRX(LauncherConstants.kMotorAPort);
+    private WPI_TalonSRX m_motorB = new WPI_TalonSRX(LauncherConstants.kMotorBPort);
     private SpeedControllerGroup m_motorGroup = new SpeedControllerGroup(m_motorA, m_motorB);
 
-    private LimitSwitch m_limitSwitch = new LimitSwitch(LauncherConstants.kLimitSwitchPort);
+    private Servo m_servo = new Servo(LauncherConstants.kServoPort);
 
-    private TrapezoidProfile.Constraints m_constrants = new TrapezoidProfile.Constraints(LauncherConstants.kMaxVel, LauncherConstants.kMaxAcc);
+    private LimitSwitch m_limitSwitch = new LimitSwitch(LauncherConstants.kLimitSwitchPort);
 
     private double speed;
 

@@ -12,8 +12,6 @@ public class Intake extends SubsystemBase {
 
     private WPI_TalonSRX m_motor = new WPI_TalonSRX(IntakeConstants.kMotorPort);
 
-    private TrapezoidProfile.Constraints m_constrants = new TrapezoidProfile.Constraints(IntakeConstants.kMaxVel, IntakeConstants.kMaxAcc);
-
     public static Intake getInstance() {
         if (m_instance == null) {
             m_instance = new Intake();
