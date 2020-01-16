@@ -45,16 +45,31 @@ public final class Constants {
 
         public static final double kMaxAcceleration = 3; // Meters per second squared
 
-        // Encoder Infomation
+        public static final double kMaxVoltage = 10;
+
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
+
+
+        // Characterization
+
+        // Feedforward
+        public static final double kS = 0; // Volts
+        public static final double kV = 0; // Volts seconds per meters
+        public static final double kA = 0; // Volts seconds per meters squared
+
+        // Feedback
+        public static final double kP = 0; // Volts seconds per meter
+
+        // Ramsete Controller
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
+
+        // Encoder Information
         public static final int kEncoderCPR = 1024; // Placeholder that is subject to change
         public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (double) kEncoderCPR;
         public static final boolean kLeftEncoderReversed = false;
         public static final boolean kRightEncoderReversed = true;
 
-        // Kinematics
-        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
-
-        // Odometry
         public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(0, 0), new Rotation2d(0)); // Placeholder that is subject to change
 
         // Motor Ports
