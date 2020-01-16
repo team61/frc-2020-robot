@@ -11,9 +11,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.TankDrive;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.Constants.LauncherConstants;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
 
 /**
@@ -24,10 +28,18 @@ import lib.components.LogitechJoystick;
  */
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private final DriveTrain m_driveTrain = new DriveTrain();
+    private final DriveTrain m_driveTrain = DriveTrain.getInstance();
+    private final Intake m_intake = Intake.getInstance();
+    private final Feeder m_feeder = Feeder.getInstance();
+    private final Turret m_turret = Turret.getInstance();
+    private final Launcher m_launcher = Launcher.getInstance();
+    private final Shooter m_shooter = Shooter.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
+
+    private final LogitechJoystick jTurretAngle = new LogitechJoystick(OIConstants.jTurretAngle);
+    private final LogitechJoystick jTurretHeading = new LogitechJoystick(OIConstants.jTurretHeading);
 
     private final Command m_autoCommand = null;
 
@@ -38,6 +50,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         m_driveTrain.setDefaultCommand(new TankDrive(m_driveTrain, jLeft::getYAxis, jRight::getYAxis));
+        m_turret.setDefaultCommand(new TurretAutoAim(m_turret, m_shooter::getYaw, m_driveTrain::getX,  m_driveTrain::getY, m_driveTrain::getYaw));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -50,6 +63,12 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        jRight.btn_1.toggleWhenPressed(new ContinuousIntake(m_intake));
+
+        jTurretHeading.btn_1.whileHeld(
+            new ConditionalCommand(new Launch(m_launcher), new Feed(m_feeder), m_feeder::isSwitchSet), false);
+
+        jTurretHeading.btn_2.whenPressed(new SwitchLaunchSpeed(m_launcher));
     }
 
 

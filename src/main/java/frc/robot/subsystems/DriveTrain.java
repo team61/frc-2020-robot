@@ -15,13 +15,15 @@ import frc.robot.Constants.DriveConstants;
 
 public class DriveTrain extends SubsystemBase {
 
-    protected TalonSRX m_leftMaster = new TalonSRX(DriveConstants.kLeftMasterPort);
-    protected TalonSRX m_leftSlave = new TalonSRX(DriveConstants.kLeftSlavePort);
-    protected TalonSRX m_rightMaster = new TalonSRX(DriveConstants.kRightMasterPort);
-    protected TalonSRX m_rightSlave = new TalonSRX(DriveConstants.kRightSlavePort);
+    private static DriveTrain m_instance;
 
-    protected Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
-    protected Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
+    private TalonSRX m_leftMaster = new TalonSRX(DriveConstants.kLeftMasterPort);
+    private TalonSRX m_leftSlave = new TalonSRX(DriveConstants.kLeftSlavePort);
+    private TalonSRX m_rightMaster = new TalonSRX(DriveConstants.kRightMasterPort);
+    private TalonSRX m_rightSlave = new TalonSRX(DriveConstants.kRightSlavePort);
+
+    private Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
+    private Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
 
     private AHRS m_ahrs; // NAVX
 
@@ -50,6 +52,14 @@ public class DriveTrain extends SubsystemBase {
         updateOdometry();
     }
 
+    public static DriveTrain getInstance() {
+        if (m_instance == null) {
+            m_instance = new DriveTrain();
+        }
+
+        return m_instance;
+    }
+
     /**
      * Drive Methods
      * */
@@ -60,7 +70,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public void tankDriveSquared(final double leftSpeed, final double rightSpeed) {
-        tankDrive(leftSpeed * Math.abs(leftSpeed), rightSpeed * Math.abs(rightSpeed));
+        tankDrive(Math.copySign(leftSpeed * leftSpeed, leftSpeed), Math.copySign(rightSpeed * rightSpeed, rightSpeed));
     }
 
     public void tankDrive(final double speed) {

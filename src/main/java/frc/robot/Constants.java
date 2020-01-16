@@ -31,6 +31,8 @@ public final class Constants {
         //Stick Ports
         public static int jLeft = 0;
         public static int jRight = 1;
+        public static int jTurretHeading = 2;
+        public static int jTurretAngle = 3;
     }
 
     public static final class DriveConstants {
@@ -66,6 +68,68 @@ public final class Constants {
         // Encoder Ports
         public static final int[] kLeftEncoderPorts = new int[]{0, 1};
         public static final int[] kRightEncoderPorts = new int[]{2, 3};
+    }
 
+    public static final class ShooterConstants {
+        public static final Translation2d goalPosition = new Translation2d(-4, 4); // Placeholder that is subject to change
+
+        //public static final double kXDistanceFromRobot = DriveConstants.kTrackheightMeters/2; // Width is for y and height is for x because x is foward in the coordinate map
+        public static final double kDistanceFromRobot = 0.3;
+
+        public static final double kAngleFromRobot = 0;
+    }
+
+    public static final class TurretConstants {
+        // Motor
+        public static final int kMotorPort = 7; // Placeholder that is subject to change
+
+        // PID
+        public static final double kP = 0; // Placeholder that is subject to change
+        public static final double kI = 0; // Placeholder that is subject to change
+        public static final double kD = 0; // Placeholder that is subject to change
+
+        // Constraints
+        public static final double kMaxVel = 1.75; // Placeholder that is subject to change
+        public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
+
+        public static final double kRange = 180; // in degrees
+        public static final double kUpperLimit = kRange/2;
+        public static final double kLowerLimit = -kRange/2;
+    }
+
+    public static final class IntakeConstants {
+        public static final int kMotorPort = 8; // Place holder
+
+        public static final double kIntakeSpeedPer = 0.5;
+        // Constraints
+        public static final double kMaxVel = 1.75; // Placeholder that is subject to change
+        public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
+    }
+
+    public static final class FeederConstants {
+        public static final int kMotorPort = 9; // Place holder
+        public static final int kLimitSwitchPort = 0; // Place holder
+
+        public static final double kFeederSpeedPer = 0.5;
+        // Constraints
+        public static final double kMaxVel = 1.75; // Placeholder that is subject to change
+        public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
+    }
+
+    public static final class LauncherConstants {
+        public static final int kMotorA = 10; // Place holder
+        public static final int kMotorB = 11; // Place holder
+        public static final int kLimitSwitchPort = 1; // Place holder
+
+        public static final double kFastLauncherSpeedPer = 0.5; // Place holder
+        public static final double kSlowLauncherSpeedPer = 1; // Place holder
+
+        // Constraints
+        public static final double kMaxVel = 1.75; // Placeholder that is subject to change
+        public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
+    }
+
+    public static final class MiscellaneousConstants {
+        public static final double kDt = 0.02;
     }
 }

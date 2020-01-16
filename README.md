@@ -57,8 +57,8 @@ If you run into any issues use the console in Driver Station to help with debugg
 
 - [Java JDK  11](http://www.oracle.com/technetwork/java/javase/overview/index.html) - The language we used
 - [WPILib](http://first.wpi.edu/FRC/roborio/release/docs/java/) - Libraries to program the FRC Robot
-- [Shuffle Board]()
-- [Path Weaver]()
+- [Shuffle Board](https://github.com/wpilibsuite/PathWeaver) - A board to display robot data in real time
+- [Path Weaver](https://github.com/wpilibsuite/shuffleboard) - A program to illustrate trajectories and paths on the field
 
 ## Contributing
 
@@ -82,3 +82,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 ## Acknowledgments
 
 - Thanks Team 254 on their countless tutorials on path planning, trajectories and vision cam.
+- Thanks Team 2102 for helping us create code for the LIDARLite sensor
