@@ -38,8 +38,9 @@ public final class Constants {
         public static final double kWheelDiameter = 0.15; // Meters
 
         // Encoder Information
-        public static final int kEncoderCPR = 1024; // Placeholder that is subject to change
-        public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (double) kEncoderCPR;
+        public static final int kEncoderCPR = 1024; // cycles/pulses per revolution
+        public static final double gearRatio = 1; // This is 1 if the encoder is directly mounted to the wheel shaft which it should to account for slip
+        public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (gearRatio * kEncoderCPR);
         public static final boolean kLeftEncoderReversed = false;
         public static final boolean kRightEncoderReversed = true;
 
