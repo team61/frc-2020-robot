@@ -50,6 +50,14 @@ public class Launcher extends SubsystemBase {
         return speed;
     }
 
+    public void setAngle(double angle) {
+        m_servo.setAngle(angle);
+    }
+
+    public double getAngle() {
+        return m_servo.getAngle();
+    }
+
     public boolean isSwitchSet() {
         return m_limitSwitch.isSwitchSet();
     }
