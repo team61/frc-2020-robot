@@ -20,7 +20,7 @@ public class TurretWithJoysticks extends CommandBase {
 
     @Override
     public void execute() {
-        m_turret.set(m_x.getAsDouble());
+        m_turret.setHeadingSpeed(m_x.getAsDouble());
     }
 
     // Returns true when the command should end.
@@ -32,6 +32,6 @@ public class TurretWithJoysticks extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_turret.stop();
+        m_turret.stopHeading();
     }
 }

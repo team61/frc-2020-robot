@@ -15,7 +15,7 @@ public class Launch extends CommandBase {
 
     @Override
     public void execute() {
-        m_launcher.set(m_launcher.getSpeed());
+        m_launcher.set(m_launcher.getMaxSpeed());
     }
 
     // Returns true when the command should end.

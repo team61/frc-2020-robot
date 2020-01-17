@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.subsystems.Launcher;
@@ -17,7 +16,7 @@ public class SwitchLaunchSpeed extends InstantCommand {
 
     @Override
     public void execute() {
-        m_launcher.setSpeed((m_launcher.getSpeed() == LauncherConstants.kFastLauncherSpeedPer) ? LauncherConstants.kSlowLauncherSpeedPer : LauncherConstants.kFastLauncherSpeedPer);
+        m_launcher.setMaxSpeed((m_launcher.getMaxSpeed() == LauncherConstants.kFastSpeed) ? LauncherConstants.kSlowSpeed : LauncherConstants.kFastSpeed);
     }
 
     // Called once the command ends or is interrupted.

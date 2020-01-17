@@ -33,7 +33,6 @@ public class RobotContainer {
     private final Feeder m_feeder = Feeder.getInstance();
     private final Turret m_turret = Turret.getInstance();
     private final Launcher m_launcher = Launcher.getInstance();
-    private final Shooter m_shooter = Shooter.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
@@ -50,7 +49,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         m_driveTrain.setDefaultCommand(new TankDrive(m_driveTrain, jLeft::getYAxis, jRight::getYAxis));
-        m_turret.setDefaultCommand(new TurretAutoAim(m_turret, m_shooter::getYaw, m_driveTrain::getX,  m_driveTrain::getY, m_driveTrain::getYaw));
+        m_turret.setDefaultCommand(new TurretAutoAim(m_turret, m_driveTrain::getX,  m_driveTrain::getY, m_driveTrain::getYaw, m_launcher::getMaxSpeed));
 
         // Configure the button bindings
         configureButtonBindings();
