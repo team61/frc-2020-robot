@@ -72,5 +72,7 @@ public final class Constants {
         public static final int kSolenoidAPort = 0; // Placeholder
         public static final int kSolenoidBPort = 0; // Placeholder
 
+        public static final int kCompressorPort = 0; // Placeholder
+
     }
 }
