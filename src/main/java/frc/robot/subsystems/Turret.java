@@ -37,16 +37,26 @@ public class Turret extends SubsystemBase {
         m_heading.set(speed);
     }
 
-    public void stopHeading() {
-        setHeadingSpeed(0);
-    }
-
     public void setAngleSpeed(double speed) {
         m_angle.set(speed);
     }
 
+    public void set(double headingSpeed, double angleSpeed) {
+        setHeadingSpeed(headingSpeed);
+        setAngleSpeed(angleSpeed);
+    }
+
+    public void stopHeading() {
+        setHeadingSpeed(0);
+    }
+
     public void stopAngle() {
         setHeadingSpeed(0);
+    }
+
+    public void stop() {
+        stopHeading();
+        stopAngle();
     }
 
     /**

@@ -12,10 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.LauncherConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
@@ -49,7 +46,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         m_driveTrain.setDefaultCommand(new TankDrive(m_driveTrain, jLeft::getYAxis, jRight::getYAxis));
-        m_turret.setDefaultCommand(new TurretAutoAim(m_turret, m_driveTrain::getX,  m_driveTrain::getY, m_driveTrain::getYaw, m_launcher::getMaxSpeed));
+        m_turret.setDefaultCommand(new TurretAutoAim(m_turret, m_driveTrain::getX,  m_driveTrain::getY, m_driveTrain::getYaw, m_launcher::getTargetSpeedPer));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -62,10 +59,10 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        jRight.btn_1.toggleWhenPressed(new ContinuousIntake(m_intake));
+        jRight.btn_1.toggleWhenPressed(new OptimizedIntake(m_intake));
 
         jTurretHeading.btn_1.whileHeld(
-            new ConditionalCommand(new Launch(m_launcher), new Feed(m_feeder), m_feeder::isSwitchSet), false);
+            new ConditionalCommand(new OptimizedLaunch(m_launcher), new OptimizedFeed(m_feeder), m_feeder::isSwitchSet), false);
 
         jTurretHeading.btn_2.whenPressed(new SwitchLaunchSpeed(m_launcher));
     }

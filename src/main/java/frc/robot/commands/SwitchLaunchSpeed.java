@@ -16,12 +16,8 @@ public class SwitchLaunchSpeed extends InstantCommand {
 
     @Override
     public void execute() {
-        m_launcher.setMaxSpeed((m_launcher.getMaxSpeed() == LauncherConstants.kFastSpeed) ? LauncherConstants.kSlowSpeed : LauncherConstants.kFastSpeed);
-    }
+        m_launcher.setTargetSpeedPer((m_launcher.getTargetSpeedPer() == LauncherConstants.kFastSpeedPer) ? LauncherConstants.kSlowSpeedPer : LauncherConstants.kFastSpeedPer);
+        m_launcher.setTargetSpeedPer((m_launcher.getTargetSpeedPer() == LauncherConstants.kFastSpeedRPM) ? LauncherConstants.kSlowSpeedRPM : LauncherConstants.kFastSpeedRPM);
 
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted) {
-        m_launcher.stop();
     }
 }

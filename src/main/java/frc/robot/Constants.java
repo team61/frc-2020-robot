@@ -84,6 +84,12 @@ public final class Constants {
         public static final double kAngleFromRobot = 0;
 
         public static final class HeaderConstants {
+            // Characterization
+
+            // Feedforward
+            public static final double kS = 0; // Volts
+            public static final double kV = 0; // Volts seconds per meters
+            public static final double kA = 0; // Volts seconds per meters squared
             // PID
             public static final double kP = 0; // Placeholder that is subject to change
             public static final double kI = 0; // Placeholder that is subject to change
@@ -101,6 +107,15 @@ public final class Constants {
         }
 
         public static final class AngleConstants {
+
+            // Characterization
+
+            // Feedforward
+            public static final double kS = 0; // Volts
+            public static final double kCos = 0; // Volts seconds per radians squared
+            public static final double kV = 0; // Volts seconds per radians
+            public static final double kA = 0; // Volts seconds per radians squared
+
             // PID
             public static final double kP = 0; // Placeholder that is subject to change
             public static final double kI = 0; // Placeholder that is subject to change
@@ -121,7 +136,26 @@ public final class Constants {
     public static final class IntakeConstants {
         public static final int kMotorPort = 8; // Placeholder
 
+        public static final int[] kEncoderPorts = new int[]{0, 1};
+
+        public static final boolean kEncoderReversed = false;
+
         public static final double kIntakeSpeedPer = 0.5;
+
+        public static final double kIntakeSpeedRPM = 1500;
+
+        // Characterization
+
+        // Feedforward
+        public static final double kS = 0; // Volts
+        public static final double kV = 0; // Volts seconds per meters
+        public static final double kA = 0; // Volts seconds per meters squared
+
+        // PID
+        public static final double kP = 0; // Placeholder that is subject to change
+        public static final double kI = 0; // Placeholder that is subject to change
+        public static final double kD = 0; // Placeholder that is subject to change
+
         // Constraints
         public static final double kMaxVel = 1.75; // Placeholder that is subject to change
         public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
@@ -131,36 +165,64 @@ public final class Constants {
 
     public static final class FeederConstants {
         public static final int kMotorPort = 9; // Placeholder
+
         public static final int kLimitSwitchPort = 0; // Placeholder
 
+        public static final int[] kEncoderPorts = new int[]{0, 1};
+
+        public static final boolean kEncoderReversed = false;
+
         public static final double kFeederSpeedPer = 0.5;
-        // Constraints
-        public static final double kMaxVel = 1.75; // Placeholder that is subject to change
-        public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
 
-        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVel, kMaxAcc);
-    }
+        public static final double kFeederSpeedRPM = 1500;
 
-    public static final class LauncherConstants {
-        public static final int kFlywheelMotorAPort = 10; // Placeholder
-        public static final int kFlywheelMotorBPort = 11; // Placeholder
+        // Characterization
 
-        public static final int kLimitSwitchPort = 1; // Placeholder
-
-        public static final double kFastSpeed = 0.5; // Placeholder
-        public static final double kSlowSpeed = 1; // Placeholder
-
-        // Constraints
-        public static final double kMaxVel = 1.75; // Placeholder that is subject to change
-        public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
+        // Feedforward
+        public static final double kS = 0; // Volts
+        public static final double kV = 0; // Volts seconds per meters
+        public static final double kA = 0; // Volts seconds per meters squared
 
         // PID
         public static final double kP = 0; // Placeholder that is subject to change
         public static final double kI = 0; // Placeholder that is subject to change
         public static final double kD = 0; // Placeholder that is subject to change
-        
 
-        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVel, kMaxAcc);
+        // Constraints
+        public static final double kMaxVel = 1.75; // Placeholder that is subject to change
+        public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
+
+    }
+
+    public static final class LauncherConstants {
+        public static final int kFlywheelMotorAPort = 10; // Placeholder
+        public static final int kFlywheelMotorBPort = 11; // Placeholder
+        public static final int[] kEncoderPorts = new int[]{0, 1};
+
+        public static final boolean kEncoderReversed = false;
+
+        public static final int kLimitSwitchPort = 1; // Placeholder
+
+        // Constraints
+        public static final double kFastSpeedPer = 0.6; // Placeholder
+        public static final double kSlowSpeedPer = 0.3; // Placeholder
+
+        public static final double kFastSpeedRPM = 2000; // Placeholder
+        public static final double kSlowSpeedRPM = 1500; // Placeholder
+
+        public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
+
+        // Characterization
+
+        // Feedforward
+        public static final double kS = 0; // Volts
+        public static final double kV = 0; // Volts seconds per meters
+        public static final double kA = 0; // Volts seconds per meters squared
+
+        // PID
+        public static final double kP = 0; // Placeholder that is subject to change
+        public static final double kI = 0; // Placeholder that is subject to change
+        public static final double kD = 0; // Placeholder that is subject to change
     }
 
     public static final class PhysicsConstants {

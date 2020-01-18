@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.PhysicsConstants;
 import frc.robot.Constants.TurretConstants;
@@ -13,8 +15,16 @@ public class TurretAutoAim extends CommandBase {
 
     private Turret m_turret;
 
-    private ProfiledPIDController m_headingController;
-    private ProfiledPIDController m_angleController;
+    private ProfiledPIDController m_headingController = new ProfiledPIDController(
+            TurretConstants.HeaderConstants.kP, TurretConstants.HeaderConstants.kI, TurretConstants.HeaderConstants.kD,
+            TurretConstants.HeaderConstants.kConstraints, MiscellaneousConstants.kDt);
+
+    private ProfiledPIDController m_angleController =  new ProfiledPIDController(
+            TurretConstants.AngleConstants.kP, TurretConstants.AngleConstants.kI, TurretConstants.AngleConstants.kD,
+            TurretConstants.AngleConstants.kConstraints, MiscellaneousConstants.kDt);
+
+    private SimpleMotorFeedforward m_headingFeedforward = new SimpleMotorFeedforward(TurretConstants.HeaderConstants.kS, TurretConstants.HeaderConstants.kV, TurretConstants.HeaderConstants.kA);
+    private ArmFeedforward m_angleFeedforward = new ArmFeedforward(TurretConstants.AngleConstants.kS, TurretConstants.AngleConstants.kCos, TurretConstants.AngleConstants.kV, TurretConstants.AngleConstants.kA);
 
     private DoubleSupplier m_driveTrainX;
     private DoubleSupplier m_driveTrainY;
@@ -30,17 +40,13 @@ public class TurretAutoAim extends CommandBase {
         m_driveTrainHeading = driveTrainHeading;
         m_launchSpeed = launchSpeed;
 
-        m_headingController =
-        new ProfiledPIDController(
-                TurretConstants.HeaderConstants.kP, TurretConstants.HeaderConstants.kI, TurretConstants.HeaderConstants.kD,
-                TurretConstants.HeaderConstants.kConstraints, MiscellaneousConstants.kDt);
-
-        m_angleController =
-                new ProfiledPIDController(
-                        TurretConstants.AngleConstants.kP, TurretConstants.AngleConstants.kI, TurretConstants.AngleConstants.kD,
-                        TurretConstants.AngleConstants.kConstraints, MiscellaneousConstants.kDt);
-
         addRequirements(turret);
+    }
+
+    @Override
+    public void initialize() {
+        m_headingController.setTolerance(1);
+        m_angleController.setTolerance(1);
     }
 
     @Override
@@ -80,8 +86,14 @@ public class TurretAutoAim extends CommandBase {
     }
 
     @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    @Override
     public void end(boolean interrupted) {
         m_turret.stopHeading();
+        m_turret.stopAngle();
     }
 }
 
