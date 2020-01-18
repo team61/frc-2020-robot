@@ -78,11 +78,17 @@ public class TurretAutoAim extends CommandBase {
                             (angleAwayFromGoal < -180) ? angleAwayFromGoal + 360 : angleAwayFromGoal;
         }
 
-        m_turret.setHeadingSpeed(m_headingController.calculate(m_turret.getYaw(), turretHeading));
+        m_turret.setHeadingSpeed(
+                m_headingFeedforward.calculate(
+                        m_headingController.getSetpoint().position, m_headingController.getSetpoint().velocity)
+                        + m_headingController.calculate(m_turret.getYaw(), turretHeading));
 
         double turretAngle = Math.asin(PhysicsConstants.kG/m_launchSpeed.getAsDouble() + TurretConstants.goalHeight)/2;
 
-        m_turret.setAngleSpeed(m_angleController.calculate(m_turret.getPitch(), turretAngle));
+        m_turret.setAngleSpeed(
+                m_angleFeedforward.calculate(
+                        m_angleController.getSetpoint().position, m_angleController.getSetpoint().velocity)
+                        + m_angleController.calculate(m_turret.getPitch(), turretAngle));
     }
 
     @Override
