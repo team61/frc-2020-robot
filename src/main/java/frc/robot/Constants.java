@@ -66,6 +66,11 @@ public final class Constants {
         // Encoder Ports
         public static final int[] kLeftEncoderPorts = new int[]{0, 1};
         public static final int[] kRightEncoderPorts = new int[]{2, 3};
+    }
+
+    public static final class LiftConstants {
+        public static final int kSolenoidAPort = 0; // Placeholder
+        public static final int kSolenoidBPort = 0; // Placeholder
 
     }
 }

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Lift;
 import lib.components.LogitechJoystick;
 
 /**
@@ -25,6 +26,7 @@ import lib.components.LogitechJoystick;
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final DriveTrain m_driveTrain = new DriveTrain();
+    private final Lift m_lift = Lift.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
