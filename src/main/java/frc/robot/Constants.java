@@ -76,8 +76,9 @@ public final class Constants {
         public static final int kHeadingMotorPort = 7; // Placeholder that is subject to change
         public static final int kAngleMotorPort = 11; // Placeholder
 
-        public static final Translation2d goalPosition = new Translation2d(-4, 4); // Placeholder that is subject to change
+        public static final Translation2d goalPosition = new Translation2d(0, 4); // Placeholder that is subject to change
         public static final double goalHeight = 20; // placeholder that is subject to change
+        public static final double turretHeight = 5;
 
         public static final double kDistanceFromRobot = 0.3;
 
