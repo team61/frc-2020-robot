@@ -52,16 +52,18 @@ public class TurretAutoAim extends CommandBase {
 
     @Override
     public void execute() {
+
+        double driveTrainHeading = m_driveTrainHeading.getAsDouble();
         // Finds displacements for turret coordinates to goal
-        double dx = (m_driveTrainX.getAsDouble() + Math.cos(TurretConstants.kAngleFromRobot + m_driveTrainHeading.getAsDouble()) * TurretConstants.kDistanceFromRobot) + TurretConstants.goalPosition.getX();
-        double dy = (m_driveTrainY.getAsDouble() + Math.sin(TurretConstants.kAngleFromRobot  + m_driveTrainHeading.getAsDouble()) * TurretConstants.kDistanceFromRobot) + TurretConstants.goalPosition.getY();
+        double dx = (m_driveTrainX.getAsDouble() + Math.cos(TurretConstants.kAngleFromRobot + driveTrainHeading) * TurretConstants.kDistanceFromRobot) + TurretConstants.goalPosition.getX();
+        double dy = (m_driveTrainY.getAsDouble() + Math.sin(TurretConstants.kAngleFromRobot  + driveTrainHeading) * TurretConstants.kDistanceFromRobot) + TurretConstants.goalPosition.getY();
         double dh = Math.sqrt(dx*dx + dy*dy);
 
         // Angle between the turret point and the goal point on the field
         double turretHeadingToGoal = new Rotation2d(dx, dy).getDegrees();
 
         // Angle between drive train heading and goal
-        double DriveTrainToGoalAngle = Rotation2d.fromDegrees(turretHeadingToGoal).minus(Rotation2d.fromDegrees(m_driveTrainHeading.getAsDouble())).getDegrees();
+        double DriveTrainToGoalAngle = Rotation2d.fromDegrees(turretHeadingToGoal).minus(Rotation2d.fromDegrees(driveTrainHeading)).getDegrees();
 
         // Boolean that tests whether the turret is in range of the goal
         boolean notInRange = 180 - TurretConstants.HeaderConstants.kRange/2 <= Math.abs(DriveTrainToGoalAngle); // Note: turret is located on the back of the drive train
@@ -71,8 +73,8 @@ public class TurretAutoAim extends CommandBase {
                         Rotation2d.fromDegrees(TurretConstants.HeaderConstants.kRange - 2 * DriveTrainToGoalAngle))).getDegrees();
 
         double turretToGoalHeight = TurretConstants.goalHeight - TurretConstants.turretHeight;
-
-        double turretAngle = (Math.acos((PhysicsConstants.kG * dh * dh + turretToGoalHeight)/(Math.sqrt(turretToGoalHeight * turretToGoalHeight + dh * dh))) + Math.atan(dh / turretToGoalHeight)) / 2;
+        double launchSpeed = m_launchSpeed.getAsDouble();
+        double turretAngle = (Math.acos(((PhysicsConstants.kG * dh * dh) / (launchSpeed * launchSpeed) + turretToGoalHeight)/(Math.sqrt(turretToGoalHeight * turretToGoalHeight + dh * dh))) + Math.atan(dh / turretToGoalHeight)) / 2;
 
         // Sets speed of heading and angle motors based on feedforward and pid controllers
 
