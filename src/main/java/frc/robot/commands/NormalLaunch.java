@@ -28,6 +28,5 @@ public class NormalLaunch extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         m_launcher.stop();
-
     }
 }

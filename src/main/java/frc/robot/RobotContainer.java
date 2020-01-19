@@ -63,7 +63,8 @@ public class RobotContainer {
         jRight.btn_1.toggleWhenPressed(new OptimizedIntake(m_intake));
 
         jTurretHeading.btn_1.whileHeld(
-            new ParallelCommandGroup(new OptimizedLaunch(m_launcher, true), new OptimizedFeed(m_feeder)));
+            new ParallelCommandGroup(new OptimizedLaunch(m_launcher), new OptimizedFeed(m_feeder)));
+
     }
 
 
