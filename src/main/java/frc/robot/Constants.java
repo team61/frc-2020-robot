@@ -223,6 +223,9 @@ public final class Constants {
         public static final double kFastBallSpeed = 20; // Placeholder
         public static final double kSlowBallSpeed = 12; // Placeholder
 
+        public static final double kSlowDistanceRange = 3; // Placeholder
+
+        // Constraints
         public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
 
         /* Characterization */

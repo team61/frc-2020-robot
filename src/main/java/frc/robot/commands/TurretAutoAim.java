@@ -78,7 +78,7 @@ public class TurretAutoAim extends CommandBase {
                 : (Rotation2d.fromDegrees(turretHeadingToGoal).plus(
                         Rotation2d.fromDegrees(TurretConstants.HeaderConstants.kRange - 2 * DriveTrainToGoalAngle))).getDegrees();
 
-        m_setLaunchSpeed.accept((dh >= 3) ? LauncherConstants.kFastSpeedRPM : LauncherConstants.kSlowSpeedRPM);
+        m_setLaunchSpeed.accept((dh >= LauncherConstants.kSlowDistanceRange) ? LauncherConstants.kFastSpeedRPM : LauncherConstants.kSlowSpeedRPM);
 
         double turretToGoalHeight = TurretConstants.goalHeight - TurretConstants.turretHeight;
 
