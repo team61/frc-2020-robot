@@ -13,18 +13,8 @@ public class OptimizedLaunch extends CommandBase {
     private SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(LauncherConstants.kS, LauncherConstants.kV, LauncherConstants.kA);
     private PIDController m_controller = new PIDController(LauncherConstants.kP, LauncherConstants.kI, LauncherConstants.kD);
 
-    boolean isContinuous;
-
-    public OptimizedLaunch(Launcher launcher, boolean isContinuous) {
-        m_launcher = launcher;
-        this.isContinuous = isContinuous;
-
-        addRequirements(launcher);
-    }
-
     public OptimizedLaunch(Launcher launcher) {
         m_launcher = launcher;
-        this.isContinuous = false;
 
         addRequirements(launcher);
     }
@@ -38,14 +28,15 @@ public class OptimizedLaunch extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return m_launcher.isSwitchSet() && !isContinuous;
+        return m_launcher.isSwitchSet();
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_launcher.stop();
-        m_controller.reset();
-
+        if (interrupted) {
+            m_launcher.stop();
+            m_controller.reset();
+        }
     }
 }
