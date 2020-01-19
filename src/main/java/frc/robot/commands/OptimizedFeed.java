@@ -22,13 +22,13 @@ public class OptimizedFeed extends CommandBase {
 
     @Override
     public void execute() {
-        m_feeder.setVoltage(m_feedforward.calculate(FeederConstants.kFeederSpeedRPM, FeederConstants.kMaxAcc) + m_controller.calculate(m_feeder.getEncoderRate(), FeederConstants.kFeederSpeedRPM));
-    }
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return m_feeder.isSwitchSet();
+        if (!m_feeder.isSwitchSet()) {
+            m_feeder.setVoltage(
+                    m_feedforward.calculate(FeederConstants.kFeederSpeedRPM, FeederConstants.kMaxAcc)
+                            + m_controller.calculate(m_feeder.getEncoderRate(), FeederConstants.kFeederSpeedRPM));
+        } else {
+            end(true);
+        }
     }
 
     // Called once the command ends or is interrupted.
@@ -36,6 +36,5 @@ public class OptimizedFeed extends CommandBase {
     public void end(boolean interrupted) {
         m_feeder.stop();
         m_controller.reset();
-
     }
 }
