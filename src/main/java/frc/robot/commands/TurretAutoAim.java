@@ -5,11 +5,12 @@ import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.LauncherConstants;
 import frc.robot.Constants.PhysicsConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.MiscellaneousConstants;
 import frc.robot.subsystems.Turret;
-
+import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 
 public class TurretAutoAim extends CommandBase {
@@ -30,16 +31,19 @@ public class TurretAutoAim extends CommandBase {
     private DoubleSupplier m_driveTrainX;
     private DoubleSupplier m_driveTrainY;
     private DoubleSupplier m_driveTrainHeading;
-
     private DoubleSupplier m_launchSpeed;
 
-    public TurretAutoAim(Turret turret, DoubleSupplier driveTrainX, DoubleSupplier driveTrainY, DoubleSupplier driveTrainHeading, DoubleSupplier launchSpeed) {
+    private DoubleConsumer m_setLaunchSpeed;
+
+    public TurretAutoAim(Turret turret, DoubleSupplier driveTrainX, DoubleSupplier driveTrainY, DoubleSupplier driveTrainHeading, DoubleSupplier launchSpeed, DoubleConsumer setLaunchSpeed) {
         m_turret = turret;
 
         m_driveTrainX = driveTrainX;
         m_driveTrainY = driveTrainY;
         m_driveTrainHeading = driveTrainHeading;
         m_launchSpeed = launchSpeed;
+
+        m_setLaunchSpeed = setLaunchSpeed;
 
         addRequirements(turret);
     }
@@ -68,13 +72,25 @@ public class TurretAutoAim extends CommandBase {
         // Boolean that tests whether the turret is in range of the goal
         boolean notInRange = 180 - TurretConstants.HeaderConstants.kRange/2 <= Math.abs(DriveTrainToGoalAngle); // Note: turret is located on the back of the drive train
 
+        // Decides turretHeading based on whether in range of goal
         double turretHeading = (notInRange) ? turretHeadingToGoal
+                // This heading moves closer to depending on how close a side is to the goal
                 : (Rotation2d.fromDegrees(turretHeadingToGoal).plus(
                         Rotation2d.fromDegrees(TurretConstants.HeaderConstants.kRange - 2 * DriveTrainToGoalAngle))).getDegrees();
 
+        m_setLaunchSpeed.accept((dh >= 3) ? LauncherConstants.kFastSpeedRPM : LauncherConstants.kSlowSpeedRPM);
+
         double turretToGoalHeight = TurretConstants.goalHeight - TurretConstants.turretHeight;
-        double launchSpeed = m_launchSpeed.getAsDouble();
-        double turretAngle = (Math.acos(((PhysicsConstants.kG * dh * dh) / (launchSpeed * launchSpeed) + turretToGoalHeight)/(Math.sqrt(turretToGoalHeight * turretToGoalHeight + dh * dh))) + Math.atan(dh / turretToGoalHeight)) / 2;
+
+        // Chooses ball speed depending on which speed is selected on the launcher
+        double ballSpeed = (m_launchSpeed.getAsDouble() == LauncherConstants.kFastSpeedRPM) ? LauncherConstants.kFastBallSpeed : LauncherConstants.kSlowBallSpeed;
+
+        // Kinematic formula to calculate angle of turret
+        double turretAngle =
+                (Math.acos(
+                        ((PhysicsConstants.kG * dh * dh) / (ballSpeed * ballSpeed) + turretToGoalHeight)
+                                /(Math.sqrt(turretToGoalHeight * turretToGoalHeight + dh * dh)))
+                        + Math.atan(dh / turretToGoalHeight)) / 2;
 
         // Sets speed of heading and angle motors based on feedforward and pid controllers
 

@@ -72,20 +72,22 @@ public final class Constants {
     }
 
     public static final class TurretConstants {
-        // Motor
+
+        // Ports
         public static final int kHeadingMotorPort = 7; // Placeholder that is subject to change
         public static final int kAngleMotorPort = 11; // Placeholder
 
+        // Map Information
         public static final Translation2d goalPosition = new Translation2d(0, 4); // Placeholder that is subject to change
         public static final double goalHeight = 20; // placeholder that is subject to change
         public static final double turretHeight = 5;
 
         public static final double kDistanceFromRobot = 0.3;
-
         public static final double kAngleFromRobot = 0;
 
         public static final class HeaderConstants {
-            // Characterization
+
+            /* Characterization */
 
             // Feedforward
             public static final double kS = 0; // Volts
@@ -109,7 +111,7 @@ public final class Constants {
 
         public static final class AngleConstants {
 
-            // Characterization
+            /* Characterization */
 
             // Feedforward
             public static final double kS = 0; // Volts
@@ -135,12 +137,15 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
+
+        // Ports
         public static final int kMotorPort = 8; // Placeholder
 
         public static final int[] kEncoderPorts = new int[]{0, 1};
 
         public static final boolean kEncoderReversed = false;
 
+        // Speeds
         public static final double kIntakeSpeedPer = 0.5;
 
         public static final double kIntakeSpeedRPM = 1500;
@@ -165,6 +170,8 @@ public final class Constants {
     }
 
     public static final class FeederConstants {
+
+        // Ports
         public static final int kMotorPort = 9; // Placeholder
 
         public static final int kLimitSwitchPort = 0; // Placeholder
@@ -173,11 +180,12 @@ public final class Constants {
 
         public static final boolean kEncoderReversed = false;
 
-        public static final double kFeederSpeedPer = 0.5;
+        // Speeds
+        public static final double kFeederSpeedPer = 0.5; // Placeholder
 
-        public static final double kFeederSpeedRPM = 1500;
+        public static final double kFeederSpeedRPM = 1500; // Placeholder
 
-        // Characterization
+        /* Characterization */
 
         // Feedforward
         public static final double kS = 0; // Volts
@@ -198,22 +206,26 @@ public final class Constants {
     public static final class LauncherConstants {
         public static final int kFlywheelMotorAPort = 10; // Placeholder
         public static final int kFlywheelMotorBPort = 11; // Placeholder
-        public static final int[] kEncoderPorts = new int[]{0, 1};
+        public static final int[] kEncoderPorts = new int[]{0, 1}; // Placeholder
 
         public static final boolean kEncoderReversed = false;
 
         public static final int kLimitSwitchPort = 1; // Placeholder
 
-        // Constraints
+        // Launcher Speeds
         public static final double kFastSpeedPer = 0.6; // Placeholder
         public static final double kSlowSpeedPer = 0.3; // Placeholder
 
         public static final double kFastSpeedRPM = 2000; // Placeholder
         public static final double kSlowSpeedRPM = 1500; // Placeholder
 
+        // Ball Speeds
+        public static final double kFastBallSpeed = 20; // Placeholder
+        public static final double kSlowBallSpeed = 12; // Placeholder
+
         public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
 
-        // Characterization
+        /* Characterization */
 
         // Feedforward
         public static final double kS = 0; // Volts

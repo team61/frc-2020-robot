@@ -46,7 +46,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         m_driveTrain.setDefaultCommand(new TankDrive(m_driveTrain, jLeft::getYAxis, jRight::getYAxis));
-        m_turret.setDefaultCommand(new TurretAutoAim(m_turret, m_driveTrain::getX,  m_driveTrain::getY, m_driveTrain::getYaw, m_launcher::getTargetSpeedPer));
+        m_turret.setDefaultCommand(new TurretAutoAim(m_turret, m_driveTrain::getX,  m_driveTrain::getY, m_driveTrain::getYaw, m_launcher::getTargetSpeedRPM, m_launcher::setTargetSpeedRPM));
 
         // Configure the button bindings
         configureButtonBindings();
