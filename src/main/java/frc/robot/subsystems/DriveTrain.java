@@ -46,14 +46,15 @@ public class DriveTrain extends SubsystemBase {
         m_leftEncoder.reset();
         m_rightEncoder.reset();
 
-        m_odometry = new DifferentialDriveOdometry(getHeading(), AutoConstants.kStartingPosition);
-
         try {
             m_ahrs = new AHRS(SPI.Port.kMXP);
         } catch (RuntimeException ex) {
             DriverStation.reportError("Error installing navX MXP: " + ex.getMessage(), true);
         }
         resetGryo();
+
+        m_odometry = new DifferentialDriveOdometry(getHeading(), AutoConstants.kStartingPosition);
+        m_differentialDrive.setSafetyEnabled(false);
     }
 
     @Override

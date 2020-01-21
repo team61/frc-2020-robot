@@ -38,7 +38,7 @@ public final class Constants {
         public static final double kWheelDiameter = 0.15; // Meters
 
         // Encoder Information
-        public static final int kEncoderCPR = 1024; // cycles/pulses per revolution
+        public static final int kEncoderCPR = 360; // cycles/pulses per revolution
         public static final double gearRatio = 1; // This is 1 if the encoder is directly mounted to the wheel shaft which it should to account for slip
         public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (gearRatio * kEncoderCPR);
         public static final boolean kLeftEncoderReversed = false;
@@ -51,8 +51,8 @@ public final class Constants {
         public static final int kRearRightPort = 2;
 
         // Encoder Ports
-        public static final int[] kLeftEncoderPorts = new int[]{0, 1};
-        public static final int[] kRightEncoderPorts = new int[]{2, 3};
+        public static final int[] kLeftEncoderPorts = new int[]{2, 3};
+        public static final int[] kRightEncoderPorts = new int[]{0, 1};
     }
 
     public static final class AutoConstants {
@@ -72,12 +72,12 @@ public final class Constants {
         // Characterization
 
         // Feedforward
-        public static final double kS = 0; // Volts
-        public static final double kV = 0; // Volts seconds per meters
-        public static final double kA = 0; // Volts seconds per meters squared
+        public static final double kS = 0.323; // Volts
+        public static final double kV = 0.895; // Volts seconds per meters
+        public static final double kA = 0.177; // Volts seconds per meters squared
 
         // Feedback
-        public static final double kP = 0; // Volts seconds per meter
+        public static final double kP = 17.8; // Volts seconds per meter
 
         // Ramsete Controller
         public static final double kRamseteB = 2;

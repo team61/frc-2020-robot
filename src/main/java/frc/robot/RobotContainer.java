@@ -72,7 +72,7 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() throws IOException {
+    public Command getAutonomousCommand() {
         // Create a voltage constraint to ensure we don't accelerate too fast
         DifferentialDriveVoltageConstraint autoVoltageConstraint =
                 new DifferentialDriveVoltageConstraint(
@@ -107,7 +107,7 @@ public class RobotContainer {
                 config
         );
 
-        Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/TestPath.wpilib.json"));
+//        Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/TestPath.wpilib.json"));
 
         RamseteCommand ramseteCommand = new RamseteCommand(
                 exampleTrajectory,
