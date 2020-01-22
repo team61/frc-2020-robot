@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -13,6 +15,8 @@ public class Intake extends SubsystemBase {
 
     private Encoder m_encoder = new Encoder(IntakeConstants.kEncoderPorts[0], IntakeConstants.kEncoderPorts[1], IntakeConstants.kEncoderReversed);
 
+    private SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(IntakeConstants.kS, IntakeConstants.kV, IntakeConstants.kA);
+    private PIDController m_controller = new PIDController(IntakeConstants.kP, IntakeConstants.kI, IntakeConstants.kD);
 
     public static Intake getInstance() {
         if (m_instance == null) {
@@ -30,6 +34,12 @@ public class Intake extends SubsystemBase {
         m_motor.setVoltage(voltage);
     }
 
+    public void setSpeed(double speed) {
+        setVoltage(
+                m_feedforward.calculate(speed, IntakeConstants.kMaxAcc)
+                        + m_controller.calculate(getEncoderRate(), speed));
+    }
+
     public void stop() {
         set(0);
     }
@@ -40,5 +50,17 @@ public class Intake extends SubsystemBase {
 
     public double getEncoderRate() {
         return m_encoder.getRate();
+    }
+
+    public void resetEncoder() {
+        m_encoder.reset();
+    }
+
+    public void resetController() {
+        m_controller.reset();
+    }
+
+    public boolean atSetpoint() {
+        return m_controller.atSetpoint();
     }
 }

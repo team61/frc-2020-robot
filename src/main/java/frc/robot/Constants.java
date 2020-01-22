@@ -173,8 +173,8 @@ public final class Constants {
 
         // Ports
         public static final int kMotorPort = 9; // Placeholder
-
-        public static final int kLimitSwitchPort = 0; // Placeholder
+        public static final int[] kSolenoidPorts = {1, 2, 3};
+        public static final int[] kLimitSwitchPorts = {1, 2, 3};
 
         public static final int[] kEncoderPorts = new int[]{0, 1};
 

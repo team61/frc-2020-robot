@@ -3,7 +3,11 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.FeederConstants;
@@ -15,9 +19,22 @@ public class Feeder extends SubsystemBase {
 
     private WPI_TalonSRX m_motor = new WPI_TalonSRX(FeederConstants.kMotorPort);
 
-    private LimitSwitch m_limitSwitch = new LimitSwitch(FeederConstants.kLimitSwitchPort);
-
     private Encoder m_encoder = new Encoder(FeederConstants.kEncoderPorts[0], FeederConstants.kEncoderPorts[1], FeederConstants.kEncoderReversed);
+
+    private Solenoid[] solenoids = new Solenoid[FeederConstants.kSolenoidPorts.length];
+
+    private LimitSwitch[] limitSwitches = new LimitSwitch[FeederConstants.kLimitSwitchPorts.length];
+
+    private SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(FeederConstants.kS, FeederConstants.kV, FeederConstants.kA);
+
+    public Feeder() {
+        for(byte i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
+            solenoids[i] = new Solenoid(FeederConstants.kSolenoidPorts[i]);
+        }
+        for(byte i = 0; i < FeederConstants.kLimitSwitchPorts.length; i++) {
+            limitSwitches[i] = new LimitSwitch(FeederConstants.kLimitSwitchPorts[i]);
+        }
+    }
 
     public static Feeder getInstance() {
         if (m_instance == null) {
@@ -25,6 +42,14 @@ public class Feeder extends SubsystemBase {
         }
 
         return m_instance;
+    }
+
+    public void setSolenoidState(int solenoid, boolean solenoidState) {
+        solenoids[solenoid].set(solenoidState);
+    }
+
+    public boolean isSwitchSet(int limitSwitch) {
+        return limitSwitches[limitSwitch].isSwitchSet();
     }
 
     public void set(double speed) {
@@ -35,12 +60,13 @@ public class Feeder extends SubsystemBase {
         m_motor.setVoltage(voltage);
     }
 
-    public void stop() {
-        set(0);
+    public void setSpeed(double speed) {
+        setVoltage(
+                m_feedforward.calculate(speed, FeederConstants.kMaxAcc));
     }
 
-    public boolean isSwitchSet() {
-        return m_limitSwitch.isSwitchSet();
+    public void stop() {
+        set(0);
     }
 
     public int getEncoder() {

@@ -10,6 +10,8 @@ import frc.robot.Constants.PhysicsConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.MiscellaneousConstants;
 import frc.robot.subsystems.Turret;
+import lib.util.Util;
+
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 
@@ -35,6 +37,21 @@ public class TurretAutoAim extends CommandBase {
 
     private DoubleConsumer m_setLaunchSpeed;
 
+    private final double turretToGoalHeight = TurretConstants.goalHeight - TurretConstants.turretHeight;
+
+    private double dx = 0;
+    private double dy = 0;
+    private double dh = 0;
+
+    private double driveTrainHeading = 0;
+    private double driveTrainX = 0;
+    private double driveTrainY = 0;
+
+    private double ballSpeed = 0;
+
+    private double turretHeading = 0;
+    private double turretAngle = 0;
+
     public TurretAutoAim(Turret turret, DoubleSupplier driveTrainX, DoubleSupplier driveTrainY, DoubleSupplier driveTrainHeading, DoubleSupplier launchSpeed, DoubleConsumer setLaunchSpeed) {
         m_turret = turret;
 
@@ -52,17 +69,30 @@ public class TurretAutoAim extends CommandBase {
     public void initialize() {
         m_headingController.setTolerance(1);
         m_angleController.setTolerance(1);
+        update();
     }
 
-    @Override
-    public void execute() {
+    private void updateDriveTrainInfo() {
+        driveTrainHeading = m_driveTrainHeading.getAsDouble();
+        driveTrainX = m_driveTrainX.getAsDouble();
+        driveTrainY = m_driveTrainY.getAsDouble();
+    }
 
-        double driveTrainHeading = m_driveTrainHeading.getAsDouble();
-        // Finds displacements for turret coordinates to goal
-        double dx = (m_driveTrainX.getAsDouble() + Math.cos(TurretConstants.kAngleFromRobot + driveTrainHeading) * TurretConstants.kDistanceFromRobot) + TurretConstants.goalPosition.getX();
-        double dy = (m_driveTrainY.getAsDouble() + Math.sin(TurretConstants.kAngleFromRobot  + driveTrainHeading) * TurretConstants.kDistanceFromRobot) + TurretConstants.goalPosition.getY();
-        double dh = Math.sqrt(dx*dx + dy*dy);
+    // Finds displacements for turret coordinates to goal
+    private void updateDisplacement() {
+        dx = (driveTrainX + Math.cos(TurretConstants.kAngleFromRobot + driveTrainHeading) * TurretConstants.kDistanceFromRobot) + TurretConstants.goalPosition.getX();
+        dy = (driveTrainY + Math.sin(TurretConstants.kAngleFromRobot  + driveTrainHeading) * TurretConstants.kDistanceFromRobot) + TurretConstants.goalPosition.getY();
+        dh = Math.sqrt(dx*dx + dy*dy);
+    }
 
+    private void updateBallSpeed() {
+        // Changes ball speed depending on how close the shooter is to the goal
+        m_setLaunchSpeed.accept((dh > LauncherConstants.kSlowDistanceRange) ? LauncherConstants.kFastSpeedRPM : LauncherConstants.kSlowSpeedRPM);
+        // Chooses ball speed depending on which speed is selected on the launcher
+        ballSpeed = (m_launchSpeed.getAsDouble() == LauncherConstants.kFastSpeedRPM) ? LauncherConstants.kFastBallSpeed : LauncherConstants.kSlowBallSpeed;
+    }
+
+    private void updateTurretHeading() {
         // Angle between the turret point and the goal point on the field
         double turretHeadingToGoal = new Rotation2d(dx, dy).getDegrees();
 
@@ -70,30 +100,44 @@ public class TurretAutoAim extends CommandBase {
         double DriveTrainToGoalAngle = Rotation2d.fromDegrees(turretHeadingToGoal).minus(Rotation2d.fromDegrees(driveTrainHeading)).getDegrees();
 
         // Boolean that tests whether the turret is in range of the goal
-        boolean notInRange = 180 - TurretConstants.HeaderConstants.kRange/2 <= Math.abs(DriveTrainToGoalAngle); // Note: turret is located on the back of the drive train
+        boolean inRange = TurretConstants.HeaderConstants.kRange/2 >= Math.abs(DriveTrainToGoalAngle);
 
         // Decides turretHeading based on whether in range of goal
-        double turretHeading = (notInRange) ? turretHeadingToGoal
+        turretHeading = (inRange) ? turretHeadingToGoal
                 // This heading moves closer to depending on how close a side is to the goal
                 : (Rotation2d.fromDegrees(turretHeadingToGoal).plus(
-                        Rotation2d.fromDegrees(TurretConstants.HeaderConstants.kRange - 2 * DriveTrainToGoalAngle))).getDegrees();
+                Rotation2d.fromDegrees(TurretConstants.HeaderConstants.kRange - 2 * DriveTrainToGoalAngle))).getDegrees();
+    }
 
-        m_setLaunchSpeed.accept((dh > LauncherConstants.kSlowDistanceRange) ? LauncherConstants.kFastSpeedRPM : LauncherConstants.kSlowSpeedRPM);
-
-        double turretToGoalHeight = TurretConstants.goalHeight - TurretConstants.turretHeight;
-
-        // Chooses ball speed depending on which speed is selected on the launcher
-        double ballSpeed = (m_launchSpeed.getAsDouble() == LauncherConstants.kFastSpeedRPM) ? LauncherConstants.kFastBallSpeed : LauncherConstants.kSlowBallSpeed;
-
+    private void updateTurretAngle() {
         // Kinematic formula to calculate angle of turret
-        double turretAngle =
+        turretAngle =
                 (Math.acos(
                         ((PhysicsConstants.kG * dh * dh) / (ballSpeed * ballSpeed) + turretToGoalHeight)
                                 /(Math.sqrt(turretToGoalHeight * turretToGoalHeight + dh * dh)))
                         + Math.atan(dh / turretToGoalHeight)) / 2;
+    }
+
+    private void update() {
+        // This order can't be changed as they build off of each other
+        updateDriveTrainInfo();
+        updateDisplacement();
+        updateBallSpeed();
+        updateTurretHeading();
+        updateTurretAngle();
+    }
+
+    @Override
+    public void execute() {
+
+        // If driveTrain values change then update all calculations
+        // This is here to improve efficiency by not having to run unnecessary calculations when the driveTrain isn't moving
+        if (Util.epsilonEquals(driveTrainX, m_driveTrainX.getAsDouble()) || Util.epsilonEquals(driveTrainY, m_driveTrainY.getAsDouble()) ||
+                Util.epsilonEquals(driveTrainHeading, m_driveTrainHeading.getAsDouble())) {
+            update();
+        }
 
         // Sets speed of heading and angle motors based on feedforward and pid controllers
-
         m_turret.setHeadingSpeed(
                 m_headingFeedforward.calculate(
                         m_headingController.getSetpoint().position, m_headingController.getSetpoint().velocity)
@@ -116,4 +160,3 @@ public class TurretAutoAim extends CommandBase {
         m_turret.stopAngle();
     }
 }
-

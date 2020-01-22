@@ -3,7 +3,10 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.LauncherConstants;
 import lib.components.LimitSwitch;
 
@@ -19,8 +22,11 @@ public class Launcher extends SubsystemBase {
 
     private LimitSwitch m_limitSwitch = new LimitSwitch(LauncherConstants.kLimitSwitchPort);
 
-    private double targetSpeedPer;
-    private double targetSpeedRPM;
+    private SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(LauncherConstants.kS, LauncherConstants.kV, LauncherConstants.kA);
+    private PIDController m_controller = new PIDController(LauncherConstants.kP, LauncherConstants.kI, LauncherConstants.kD);
+
+    double targetSpeedPer;
+    double targetSpeedRPM;
 
     public Launcher() {
         m_flywheelB.follow(m_flywheelA);
@@ -40,6 +46,12 @@ public class Launcher extends SubsystemBase {
 
     public void setVoltage(double voltage) {
         m_flywheel.setVoltage(voltage);
+    }
+
+    public void setSpeed(double speed) {
+        setVoltage(
+                m_feedforward.calculate(speed, Constants.IntakeConstants.kMaxAcc)
+                        + m_controller.calculate(getEncoderRate(), speed));
     }
 
     public void stop() {
@@ -72,5 +84,9 @@ public class Launcher extends SubsystemBase {
 
     public double getEncoderRate() {
         return m_encoder.getRate();
+    }
+
+    public void resetController() {
+        m_controller.reset();
     }
 }
