@@ -15,20 +15,36 @@ public class OptimizedFeed extends CommandBase {
     }
 
     @Override
-    public void execute() {
-        double feederSpeedRPM = 0;
-        if (!m_feeder.isSwitchSet()) {
-            feederSpeedRPM = FeederConstants.kFeederSpeedRPM;
-        } else {
-            feederSpeedRPM = 0;
+    public void initialize() {
+        for (int i = 0; i < FeederConstants.kLimitSwitchPorts.length; i++) {
+            m_feeder.setSolenoidState(i, true);
         }
-        m_feeder.setSpeed(feederSpeedRPM);
+    }
+
+    @Override
+    public void execute() {
+
+        int limitSwitchPort = (FeederConstants.kLimitSwitchPorts.length - 1) - m_feeder.getNumPowerCells();
+        if (m_feeder.isSwitchSet(limitSwitchPort) && m_feeder.getSolenoidState(limitSwitchPort)) {
+            m_feeder.setSolenoidState(limitSwitchPort, false);
+
+            m_feeder.setNumPowerCells(m_feeder.getNumPowerCells() + 1);
+        }
+
+        m_feeder.set(FeederConstants.kFeederSpeedPer);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return m_feeder.getNumPowerCells() == 3;
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         m_feeder.stop();
-        m_feeder.resetController();
+        if (interrupted) {
+            m_feeder.setNumPowerCells(0);
+        }
     }
 }

@@ -188,14 +188,22 @@ public final class Constants {
         /* Characterization */
 
         // Feedforward
-        public static final double kS = 0; // Volts
-        public static final double kV = 0; // Volts seconds per meters
-        public static final double kA = 0; // Volts seconds per meters squared
+        public static final double kS_Feeder = 0; // Volts
+        public static final double kV_Feeder = 0; // Volts seconds per meters
+        public static final double kA_Feeder = 0; // Volts seconds per meters squared
+
+        public static final double kS_Belt = 0; // Volts
+        public static final double kV_Belt = 0; // Volts seconds per meters
+        public static final double kA_Belt = 0; // Volts seconds per meters squared
 
         // PID
-        public static final double kP = 0; // Placeholder that is subject to change
-        public static final double kI = 0; // Placeholder that is subject to change
-        public static final double kD = 0; // Placeholder that is subject to change
+        public static final double kP_Feeder = 0; // Placeholder that is subject to change
+        public static final double kI_Feeder = 0; // Placeholder that is subject to change
+        public static final double kD_Feeder = 0; // Placeholder that is subject to change
+
+        public static final double kP_Belt = 0; // Placeholder that is subject to change
+        public static final double kI_Belt = 0; // Placeholder that is subject to change
+        public static final double kD_Belt = 0; // Placeholder that is subject to change
 
         // Constraints
         public static final double kMaxVel = 1.75; // Placeholder that is subject to change
