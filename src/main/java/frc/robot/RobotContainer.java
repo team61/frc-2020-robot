@@ -9,12 +9,26 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.trajectory.*;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.DriveTrain;
 import lib.components.LogitechJoystick;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -24,7 +38,7 @@ import lib.components.LogitechJoystick;
  */
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private final DriveTrain m_driveTrain = new DriveTrain();
+    private final DriveTrain m_driveTrain = DriveTrain.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
@@ -59,7 +73,59 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
-        return m_autoCommand;
+        // Create a voltage constraint to ensure we don't accelerate too fast
+        DifferentialDriveVoltageConstraint autoVoltageConstraint =
+                new DifferentialDriveVoltageConstraint(
+                        new SimpleMotorFeedforward(AutoConstants.kS,
+                                AutoConstants.kV,
+                                AutoConstants.kA),
+                        AutoConstants.kDriveKinematics,
+                        AutoConstants.kMaxVoltage);
+
+        // Create config for trajectory
+        TrajectoryConfig config =
+                // Add constraints to trajectory
+                new TrajectoryConfig(AutoConstants.kMaxVelocity,
+                        AutoConstants.kMaxAcceleration)
+                        // Add kinematics to ensure max speed is actually obeyed
+                        .setKinematics(AutoConstants.kDriveKinematics)
+                        // Apply the voltage constraint
+                        .addConstraint(autoVoltageConstraint);
+
+        // An example trajectory to follow.  All units in meters.
+        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(0, 0, new Rotation2d(0)),
+                // Pass through these two interior waypoints, making an 's' curve path
+                List.of(
+                        new Translation2d(1, 1),
+                        new Translation2d(2, -1)
+                ),
+                // End 3 meters straight ahead of where we started, facing forward
+                new Pose2d(3, 0, new Rotation2d(0)),
+                // Pass config
+                config
+        );
+
+//        Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/TestPath.wpilib.json"));
+
+        RamseteCommand ramseteCommand = new RamseteCommand(
+                exampleTrajectory,
+                m_driveTrain::getPose2d,
+                new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+                new SimpleMotorFeedforward(AutoConstants.kS,
+                        AutoConstants.kV,
+                        AutoConstants.kA),
+                AutoConstants.kDriveKinematics,
+                m_driveTrain::getWheelSpeeds,
+                new PIDController(AutoConstants.kP, 0, 0),
+                new PIDController(AutoConstants.kP, 0, 0),
+                // RamseteCommand passes volts to the callback
+                m_driveTrain::tankDriveVolts,
+                m_driveTrain
+        );
+
+        // Run path following command, then stop at the end.
+        return ramseteCommand.andThen(m_driveTrain::stopTankDrive);
     }
 }
