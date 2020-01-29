@@ -1,44 +1,39 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveSubsystem;
 
 import java.util.function.DoubleSupplier;
 
 public class TankDrive extends CommandBase {
 
-    private DriveTrain m_driveTrain;
+    private DriveSubsystem m_driveSubsystem;
 
     private DoubleSupplier m_left;
     private DoubleSupplier m_right;
 
-    public TankDrive(DriveTrain driveTrain, DoubleSupplier left, DoubleSupplier right) {
-        m_driveTrain = driveTrain;
+    public TankDrive(DriveSubsystem driveSubsystem, DoubleSupplier left, DoubleSupplier right) {
+        m_driveSubsystem = driveSubsystem;
         m_left = left;
         m_right = right;
 
-        addRequirements(driveTrain);
-    }
-
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {
-
+        addRequirements(driveSubsystem);
     }
 
     @Override
     public void execute() {
-        m_driveTrain.tankDrive(m_left.getAsDouble(), m_right.getAsDouble(), true);
-    }
-
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted) {
+        m_driveSubsystem.tankDrive(m_left.getAsDouble(), m_right.getAsDouble(), true);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
         return false;
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        m_driveSubsystem.stopTankDrive();
     }
 }

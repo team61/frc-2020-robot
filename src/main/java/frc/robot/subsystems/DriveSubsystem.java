@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AutoConstants;
 
-public class DriveTrain extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase {
 
-    private static DriveTrain m_instance;
+    private static DriveSubsystem m_instance;
 
     private final WPI_TalonSRX m_frontLeft = new WPI_TalonSRX(DriveConstants.kFrontLeftPort);
     private final WPI_TalonSRX m_rearLeft = new WPI_TalonSRX(DriveConstants.kRearLeftPort);
@@ -38,7 +38,7 @@ public class DriveTrain extends SubsystemBase {
 
     private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_left, m_right);
 
-    public DriveTrain() {
+    public DriveSubsystem() {
 
         m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
         m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
@@ -62,9 +62,9 @@ public class DriveTrain extends SubsystemBase {
         updateOdometry();
     }
 
-    public static DriveTrain getInstance() {
+    public static DriveSubsystem getInstance() {
         if (m_instance == null) {
-            m_instance = new DriveTrain();
+            m_instance = new DriveSubsystem();
         }
 
         return m_instance;
