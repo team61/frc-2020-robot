@@ -10,11 +10,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.TankDrive;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Lift;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
 
 /**
@@ -25,11 +25,16 @@ import lib.components.LogitechJoystick;
  */
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private final DriveTrain m_driveTrain = new DriveTrain();
-    private final Lift m_lift = Lift.getInstance();
+    private final DriveSubsystem m_driveSubsystem = DriveSubsystem.getInstance();
+    private final IntakeSubsystem m_intakeSubsystem = IntakeSubsystem.getInstance();
+    private final FeederSubsystem m_feederSubsystem = FeederSubsystem.getInstance();
+    private final TurretSubsystem m_turretSubsystem = TurretSubsystem.getInstance();
+    private final ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
+
+    private final LogitechJoystick jTurret = new LogitechJoystick(OIConstants.jTurret);
 
     private final Command m_autoCommand = null;
 
@@ -39,7 +44,7 @@ public class RobotContainer {
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        m_driveTrain.setDefaultCommand(new TankDrive(m_driveTrain, jLeft::getYAxis, jRight::getYAxis));
+        m_driveSubsystem.setDefaultCommand(new TankDrive(m_driveSubsystem, jLeft::getYAxis, jRight::getYAxis));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -52,6 +57,10 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        jRight.btn_1.whileHeld(new Intake(m_intakeSubsystem));
+
+        jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem).withTimeout(ShooterConstants.kTimeOut), new Feed(m_feederSubsystem)));
+
     }
 
 
