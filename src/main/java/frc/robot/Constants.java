@@ -131,4 +131,9 @@ public final class Constants {
 
         public static final double kSpeedPer = 0.6; // Placeholder
     }
+
+    public static final class LiftConstants {
+        public static final int kSolenoidAPort = 0; // Placeholder
+        public static final int kSolenoidBPort = 0; // Placeholder
+    }
 }
