@@ -7,16 +7,16 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
 
-public class Turret extends SubsystemBase {
+public class TurretSubsystem extends SubsystemBase {
 
-    private static Turret m_instance;
+    private static TurretSubsystem m_instance;
 
     private AHRS m_ahrs; // NAVX
 
     private WPI_TalonSRX m_heading = new WPI_TalonSRX(TurretConstants.kHeadingMotorPort);
     private WPI_TalonSRX m_angle = new WPI_TalonSRX(TurretConstants.kHeadingMotorPort);
 
-    public Turret() {
+    public TurretSubsystem() {
         try {
             m_ahrs = new AHRS(SPI.Port.kMXP);
         } catch (RuntimeException ex) {
@@ -25,9 +25,9 @@ public class Turret extends SubsystemBase {
         resetGryo();
     }
 
-    public static Turret getInstance() {
+    public static TurretSubsystem getInstance() {
         if (m_instance == null) {
-            m_instance = new Turret();
+            m_instance = new TurretSubsystem();
         }
 
         return m_instance;

@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
-public class Intake extends SubsystemBase {
+public class IntakeSubsystem extends SubsystemBase {
 
-    private static Intake m_instance;
+    private static IntakeSubsystem m_instance;
 
     private WPI_TalonSRX m_motor = new WPI_TalonSRX(IntakeConstants.kMotorPort);
 
@@ -18,9 +18,9 @@ public class Intake extends SubsystemBase {
     private SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(IntakeConstants.kS, IntakeConstants.kV, IntakeConstants.kA);
     private PIDController m_controller = new PIDController(IntakeConstants.kP, IntakeConstants.kI, IntakeConstants.kD);
 
-    public static Intake getInstance() {
+    public static IntakeSubsystem getInstance() {
         if (m_instance == null) {
-            m_instance = new Intake();
+            m_instance = new IntakeSubsystem();
         }
 
         return m_instance;

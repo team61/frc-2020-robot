@@ -1,28 +1,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.TurretSubsystem;
 
 import java.util.function.DoubleSupplier;
 
 public class TurretWithJoysticks extends CommandBase {
 
-    private Turret m_turret;
+    private TurretSubsystem m_turretSubsystem;
 
     private DoubleSupplier m_angle;
     private DoubleSupplier m_heading;
 
-    public TurretWithJoysticks(Turret turret, DoubleSupplier angle, DoubleSupplier heading) {
-        m_turret = turret;
+    public TurretWithJoysticks(TurretSubsystem turretSubsystem, DoubleSupplier angle, DoubleSupplier heading) {
+        m_turretSubsystem = turretSubsystem;
         m_angle = angle;
         m_heading = heading;
 
-        addRequirements(turret);
+        addRequirements(turretSubsystem);
     }
 
     @Override
     public void execute() {
-        m_turret.set(m_heading.getAsDouble(), m_angle.getAsDouble());
+        m_turretSubsystem.set(m_heading.getAsDouble(), m_angle.getAsDouble());
     }
 
     // Returns true when the command should end.
@@ -34,6 +34,6 @@ public class TurretWithJoysticks extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_turret.stop();
+        m_turretSubsystem.stop();
     }
 }

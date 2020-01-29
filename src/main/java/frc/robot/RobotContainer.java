@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
@@ -26,10 +25,10 @@ import lib.components.LogitechJoystick;
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final DriveTrain m_driveTrain = DriveTrain.getInstance();
-    private final Intake m_intake = Intake.getInstance();
-    private final Feeder m_feeder = Feeder.getInstance();
-    private final Turret m_turret = Turret.getInstance();
-    private final Launcher m_launcher = Launcher.getInstance();
+    private final IntakeSubsystem m_intakeSubsystem = IntakeSubsystem.getInstance();
+    private final FeederSubsystem m_feederSubsystem = FeederSubsystem.getInstance();
+    private final TurretSubsystem m_turretSubsystem = TurretSubsystem.getInstance();
+    private final ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
@@ -46,7 +45,6 @@ public class RobotContainer {
      */
     public RobotContainer() {
         m_driveTrain.setDefaultCommand(new TankDrive(m_driveTrain, jLeft::getYAxis, jRight::getYAxis));
-        m_turret.setDefaultCommand(new TurretAutoAim(m_turret, m_driveTrain::getX,  m_driveTrain::getY, m_driveTrain::getYaw, m_launcher::getTargetSpeedRPM, m_launcher::setTargetSpeedRPM));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -59,10 +57,9 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        jRight.btn_1.whileHeld(new OptimizedIntake(m_intake));
+        jRight.btn_1.whileHeld(new Intake(m_intakeSubsystem));
 
-        jTurretHeading.btn_1.whileHeld(
-            new ParallelCommandGroup(new OptimizedLaunch(m_launcher), new OptimizedFeed(m_feeder)));
+        jTurretHeading.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new Feed(m_feederSubsystem)));
 
     }
 

@@ -6,9 +6,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FeederConstants;
 import lib.components.LimitSwitch;
 
-public class Feeder extends SubsystemBase {
+public class FeederSubsystem extends SubsystemBase {
 
-    private static Feeder m_instance;
+    private static FeederSubsystem m_instance;
 
     private WPI_TalonSRX m_motor = new WPI_TalonSRX(FeederConstants.kMotorPort);
 
@@ -18,7 +18,7 @@ public class Feeder extends SubsystemBase {
 
     private int powerCells = 0;
 
-    public Feeder() {
+    public FeederSubsystem() {
         for(byte i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
             solenoids[i] = new Solenoid(FeederConstants.kSolenoidPorts[i]);
         }
@@ -28,9 +28,9 @@ public class Feeder extends SubsystemBase {
         }
     }
 
-    public static Feeder getInstance() {
+    public static FeederSubsystem getInstance() {
         if (m_instance == null) {
-            m_instance = new Feeder();
+            m_instance = new FeederSubsystem();
         }
 
         return m_instance;

@@ -47,7 +47,7 @@ If you run into any issues use the console in Driver Station to help with debugg
 
 * Turret locked onto power port
 
-  Based on the coordinate system the robot has on the field, the turret is able to constantly face in the direction of any of the power ports as long as the turret is within range (200° view).  When not even view the turret heading is based on how close a side is to being in view. 
+  Based on the coordinate system the robot has on the field, the turretSubsystem is able to constantly face in the direction of any of the power ports as long as the turretSubsystem is within range (200° view).  When not even view the turretSubsystem heading is based on how close a side is to being in view. 
 
 * Cubic splined paths
 

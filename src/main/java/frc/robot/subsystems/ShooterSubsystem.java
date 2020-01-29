@@ -10,9 +10,9 @@ import frc.robot.Constants;
 import frc.robot.Constants.LauncherConstants;
 import lib.components.LimitSwitch;
 
-public class Launcher extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase {
 
-    private static Launcher m_instance;
+    private static ShooterSubsystem m_instance;
 
     private WPI_TalonSRX m_flywheelA = new WPI_TalonSRX(LauncherConstants.kFlywheelMotorAPort);
     private WPI_TalonSRX m_flywheelB = new WPI_TalonSRX(LauncherConstants.kFlywheelMotorBPort);
@@ -28,13 +28,13 @@ public class Launcher extends SubsystemBase {
     double targetSpeedPer;
     double targetSpeedRPM;
 
-    public Launcher() {
+    public ShooterSubsystem() {
         m_flywheelB.follow(m_flywheelA);
     }
 
-    public static Launcher getInstance() {
+    public static ShooterSubsystem getInstance() {
         if (m_instance == null) {
-            m_instance = new Launcher();
+            m_instance = new ShooterSubsystem();
         }
 
         return m_instance;

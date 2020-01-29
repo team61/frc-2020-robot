@@ -220,6 +220,10 @@ public final class Constants {
 
         public static final int kLimitSwitchPort = 1; // Placeholder
 
+        // Timeout
+
+        public static final double kTimeOut = 2;
+
         // Launcher Speeds
         public static final double kFastSpeedPer = 0.6; // Placeholder
         public static final double kSlowSpeedPer = 0.3; // Placeholder
