@@ -1,33 +1,42 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.AutoConstants;
 
 public class DriveTrain extends SubsystemBase {
 
     private static DriveTrain m_instance;
 
-    private TalonSRX m_leftMaster = new TalonSRX(DriveConstants.kLeftMasterPort);
-    private TalonSRX m_leftSlave = new TalonSRX(DriveConstants.kLeftSlavePort);
-    private TalonSRX m_rightMaster = new TalonSRX(DriveConstants.kRightMasterPort);
-    private TalonSRX m_rightSlave = new TalonSRX(DriveConstants.kRightSlavePort);
+    private final WPI_TalonSRX m_frontLeft = new WPI_TalonSRX(DriveConstants.kFrontLeftPort);
+    private final WPI_TalonSRX m_rearLeft = new WPI_TalonSRX(DriveConstants.kRearLeftPort);
+    private final SpeedControllerGroup m_left = new SpeedControllerGroup(m_frontLeft, m_rearLeft);
 
-    private Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
-    private Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
+    private final WPI_TalonSRX m_frontRight = new WPI_TalonSRX(DriveConstants.kFrontRightPort);
+    private final WPI_TalonSRX m_rearRight = new WPI_TalonSRX(DriveConstants.kRearRightPort);
+    private final SpeedControllerGroup m_right = new SpeedControllerGroup(m_frontRight, m_rearRight);
+
+
+    private final Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
+    private final Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
 
     private AHRS m_ahrs; // NAVX
 
-    private DifferentialDriveOdometry m_odometry;
+    private final DifferentialDriveOdometry m_odometry;
+
+    private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_left, m_right);
 
     public DriveTrain() {
 
@@ -37,14 +46,15 @@ public class DriveTrain extends SubsystemBase {
         m_leftEncoder.reset();
         m_rightEncoder.reset();
 
-        m_odometry = new DifferentialDriveOdometry(getHeading(), DriveConstants.kStartingPosition);
-
         try {
             m_ahrs = new AHRS(SPI.Port.kMXP);
         } catch (RuntimeException ex) {
             DriverStation.reportError("Error installing navX MXP: " + ex.getMessage(), true);
         }
         resetGryo();
+
+        m_odometry = new DifferentialDriveOdometry(getHeading(), AutoConstants.kStartingPosition);
+        m_differentialDrive.setSafetyEnabled(false);
     }
 
     @Override
@@ -64,31 +74,29 @@ public class DriveTrain extends SubsystemBase {
      * Drive Methods
      * */
 
-    public void tankDrive(final double leftSpeed, final double rightSpeed) {
-        setLeftSpeed(leftSpeed);
-        setRightSpeed(rightSpeed);
+    public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
+        m_differentialDrive.tankDrive(leftSpeed, rightSpeed, squaredInputs);
     }
 
-    public void tankDriveSquared(final double leftSpeed, final double rightSpeed) {
-        tankDrive(Math.copySign(leftSpeed * leftSpeed, leftSpeed), Math.copySign(rightSpeed * rightSpeed, rightSpeed));
+    public void tankDrive(final double leftSpeed, final double rightSpeed) {
+        tankDrive(leftSpeed, rightSpeed, false);
     }
 
     public void tankDrive(final double speed) {
         tankDrive(speed, speed);
     }
 
-    public void setRightSpeed(double speed) {
-        m_rightMaster.set(ControlMode.PercentOutput, speed);
-        m_rightSlave.set(ControlMode.PercentOutput, speed);
-    }
-
-    public void setLeftSpeed(double speed) {
-        m_leftMaster.set(ControlMode.PercentOutput, speed);
-        m_leftSlave.set(ControlMode.PercentOutput, speed);
-    }
-
     public void stopTankDrive() {
         tankDrive(0);
+    }
+
+    public void tankDriveVolts(final double leftVolts, final double rightVolts) {
+        m_left.setVoltage(leftVolts);
+        m_right.setVoltage(rightVolts);
+    }
+
+    public void setMaxOutput(double maxOutput) {
+        m_differentialDrive.setMaxOutput(maxOutput);
     }
 
     /**
@@ -108,11 +116,11 @@ public class DriveTrain extends SubsystemBase {
         return m_rightEncoder.getDistance();
     }
 
-    public int getRightEncoder() {
+    public int getRightEncoderValue() {
         return m_rightEncoder.get();
     }
 
-    public int getLeftEncoder() {
+    public int getLeftEncoderValue() {
         return m_leftEncoder.get();
     }
 
@@ -143,6 +151,10 @@ public class DriveTrain extends SubsystemBase {
         return m_ahrs.getYaw();
     }
 
+    public double getAngle() {
+        return m_ahrs.getAngle(); // Same as yaw
+    }
+
     public double getPitch() {
         return m_ahrs.getPitch();
     }
@@ -171,6 +183,10 @@ public class DriveTrain extends SubsystemBase {
         return m_ahrs.isCalibrating();
     }
 
+    public double getTurnRate() {
+        return m_ahrs.getRate(); // Returns yaw rate
+    }
+
     /**
      * Odometry methods
      * */
@@ -180,7 +196,7 @@ public class DriveTrain extends SubsystemBase {
     }
 
     public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(getYaw());
+        return Rotation2d.fromDegrees(getAngle());
     }
 
     public Translation2d getTranslation2d() {
@@ -193,6 +209,10 @@ public class DriveTrain extends SubsystemBase {
 
     public double getY() {
         return getTranslation2d().getY();
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
     }
 
     public void updateOdometry() {

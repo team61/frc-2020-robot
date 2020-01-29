@@ -22,7 +22,7 @@ public class TankDrive extends CommandBase {
 
     @Override
     public void execute() {
-        m_driveTrain.tankDriveSquared(m_left.getAsDouble(), m_right.getAsDouble());
+        m_driveTrain.tankDrive(m_left.getAsDouble(), m_right.getAsDouble(), true);
     }
 
     // Returns true when the command should end.

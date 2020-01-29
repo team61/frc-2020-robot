@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -32,232 +31,58 @@ public final class Constants {
         //Stick Ports
         public static int jLeft = 0;
         public static int jRight = 1;
-        public static int jTurretHeading = 2;
-        public static int jTurretAngle = 3;
     }
 
     public static final class DriveConstants {
 
+        public static final double kWheelDiameter = 0.15; // Meters
+
+        // Encoder Information
+        public static final int kEncoderCPR = 360; // cycles/pulses per revolution
+        public static final double gearRatio = 1; // This is 1 if the encoder is directly mounted to the wheel shaft which it should to account for slip
+        public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (gearRatio * kEncoderCPR);
+        public static final boolean kLeftEncoderReversed = false;
+        public static final boolean kRightEncoderReversed = true;
+
+        // Motor Ports
+        public static final int kFrontLeftPort = 5;
+        public static final int kRearLeftPort = 6;
+        public static final int kFrontRightPort = 1;
+        public static final int kRearRightPort = 2;
+
+        // Encoder Ports
+        public static final int[] kLeftEncoderPorts = new int[]{2, 3};
+        public static final int[] kRightEncoderPorts = new int[]{0, 1};
+    }
+
+    public static final class AutoConstants {
         // Robot Infomation
         public static final double kTrackwidth = 0.69; // Meters
-        public static final double kTrackheight = 0.94; // Meters
-
-        public static final double kWheelDiameter = 0.15; // Meters
+        public static final double kWheelBase = 0.94; // Meters
 
         public static final double kMaxVelocity = 5; // Meters per second
 
         public static final double kMaxAcceleration = 3; // Meters per second squared
 
-        // Encoder Infomation
-        public static final int kEncoderCPR = 1024; // Placeholder that is subject to change
-        public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (double) kEncoderCPR;
-        public static final boolean kLeftEncoderReversed = false;
-        public static final boolean kRightEncoderReversed = true;
+        public static final double kMaxVoltage = 10;
 
-        // Kinematics
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
 
-        // Odometry
-        public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(0, 0), new Rotation2d(0)); // Placeholder that is subject to change
-
-        // Motor Ports
-        public static final int kLeftMasterPort = 5;
-        public static final int kLeftSlavePort = 6;
-        public static final int kRightMasterPort = 1;
-        public static final int kRightSlavePort = 2;
-
-        // Encoder Ports
-        public static final int[] kLeftEncoderPorts = new int[]{0, 1};
-        public static final int[] kRightEncoderPorts = new int[]{2, 3};
-    }
-
-    public static final class TurretConstants {
-
-        // Ports
-        public static final int kHeadingMotorPort = 7; // Placeholder that is subject to change
-        public static final int kAngleMotorPort = 11; // Placeholder
-
-        // Map Information
-        public static final Translation2d goalPosition = new Translation2d(0, 4); // Placeholder that is subject to change
-        public static final double goalHeight = 20; // placeholder that is subject to change
-        public static final double turretHeight = 5;
-
-        public static final double kDistanceFromRobot = 0.3;
-        public static final double kAngleFromRobot = 0;
-
-        public static final class HeaderConstants {
-
-            /* Characterization */
-
-            // Feedforward
-            public static final double kS = 0; // Volts
-            public static final double kV = 0; // Volts seconds per meters
-            public static final double kA = 0; // Volts seconds per meters squared
-            // PID
-            public static final double kP = 0; // Placeholder that is subject to change
-            public static final double kI = 0; // Placeholder that is subject to change
-            public static final double kD = 0; // Placeholder that is subject to change
-
-            // Constraints
-            public static final double kMaxVel = 1.75; // Placeholder that is subject to change
-            public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
-
-            public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVel, kMaxAcc);
-
-            public static final double kRange = 180; // in degrees
-            public static final double kUpperLimit = kRange/2;
-            public static final double kLowerLimit = -kRange/2;
-        }
-
-        public static final class AngleConstants {
-
-            /* Characterization */
-
-            // Feedforward
-            public static final double kS = 0; // Volts
-            public static final double kCos = 0; // Volts seconds per radians squared
-            public static final double kV = 0; // Volts seconds per radians
-            public static final double kA = 0; // Volts seconds per radians squared
-
-            // PID
-            public static final double kP = 0; // Placeholder that is subject to change
-            public static final double kI = 0; // Placeholder that is subject to change
-            public static final double kD = 0; // Placeholder that is subject to change
-
-            // Constraints
-            public static final double kMaxVel = 1.75; // Placeholder that is subject to change
-            public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
-
-            public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVel, kMaxAcc);
-
-            public static final double kRange = 90; // in degrees
-            public static final double kUpperLimit = kRange;
-            public static final double kLowerLimit = 0;
-        }
-    }
-
-    public static final class IntakeConstants {
-
-        // Ports
-        public static final int kMotorPort = 8; // Placeholder
-
-        public static final int[] kEncoderPorts = new int[]{0, 1};
-
-        public static final boolean kEncoderReversed = false;
-
-        // Speeds
-        public static final double kIntakeSpeedPer = 0.5;
-
-        public static final double kIntakeSpeedRPM = 1500;
 
         // Characterization
 
         // Feedforward
-        public static final double kS = 0; // Volts
-        public static final double kV = 0; // Volts seconds per meters
-        public static final double kA = 0; // Volts seconds per meters squared
+        public static final double kS = 0.323; // Volts
+        public static final double kV = 0.895; // Volts seconds per meters
+        public static final double kA = 0.177; // Volts seconds per meters squared
 
-        // PID
-        public static final double kP = 0; // Placeholder that is subject to change
-        public static final double kI = 0; // Placeholder that is subject to change
-        public static final double kD = 0; // Placeholder that is subject to change
+        // Feedback
+        public static final double kP = 17.8; // Volts seconds per meter
 
-        // Constraints
-        public static final double kMaxVel = 1.75; // Placeholder that is subject to change
-        public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
+        // Ramsete Controller
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
 
-        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVel, kMaxAcc);
-    }
-
-    public static final class FeederConstants {
-
-        // Ports
-        public static final int kMotorPort = 9; // Placeholder
-        public static final int[] kSolenoidPorts = {1, 2, 3};
-        public static final int[] kLimitSwitchPorts = {1, 2, 3};
-
-        public static final int[] kEncoderPorts = new int[]{0, 1};
-
-        public static final boolean kEncoderReversed = false;
-
-        // Speeds
-        public static final double kFeederSpeedPer = 0.5; // Placeholder
-
-        public static final double kFeederSpeedRPM = 1500; // Placeholder
-
-        /* Characterization */
-
-        // Feedforward
-        public static final double kS_Feeder = 0; // Volts
-        public static final double kV_Feeder = 0; // Volts seconds per meters
-        public static final double kA_Feeder = 0; // Volts seconds per meters squared
-
-        public static final double kS_Belt = 0; // Volts
-        public static final double kV_Belt = 0; // Volts seconds per meters
-        public static final double kA_Belt = 0; // Volts seconds per meters squared
-
-        // PID
-        public static final double kP_Feeder = 0; // Placeholder that is subject to change
-        public static final double kI_Feeder = 0; // Placeholder that is subject to change
-        public static final double kD_Feeder = 0; // Placeholder that is subject to change
-
-        public static final double kP_Belt = 0; // Placeholder that is subject to change
-        public static final double kI_Belt = 0; // Placeholder that is subject to change
-        public static final double kD_Belt = 0; // Placeholder that is subject to change
-
-        // Constraints
-        public static final double kMaxVel = 1.75; // Placeholder that is subject to change
-        public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
-
-    }
-
-    public static final class LauncherConstants {
-        public static final int kFlywheelMotorAPort = 10; // Placeholder
-        public static final int kFlywheelMotorBPort = 11; // Placeholder
-        public static final int[] kEncoderPorts = new int[]{0, 1}; // Placeholder
-
-        public static final boolean kEncoderReversed = false;
-
-        public static final int kLimitSwitchPort = 1; // Placeholder
-
-        // Timeout
-
-        public static final double kTimeOut = 2;
-
-        // Launcher Speeds
-        public static final double kFastSpeedPer = 0.6; // Placeholder
-        public static final double kSlowSpeedPer = 0.3; // Placeholder
-
-        public static final double kFastSpeedRPM = 2000; // Placeholder
-        public static final double kSlowSpeedRPM = 1500; // Placeholder
-
-        // Ball Speeds
-        public static final double kFastBallSpeed = 20; // Placeholder
-        public static final double kSlowBallSpeed = 12; // Placeholder
-
-        public static final double kSlowDistanceRange = 3; // Placeholder
-
-        // Constraints
-        public static final double kMaxAcc = 0.75; // Placeholder that is subject to change
-
-        /* Characterization */
-
-        // Feedforward
-        public static final double kS = 0; // Volts
-        public static final double kV = 0; // Volts seconds per meters
-        public static final double kA = 0; // Volts seconds per meters squared
-
-        // PID
-        public static final double kP = 0; // Placeholder that is subject to change
-        public static final double kI = 0; // Placeholder that is subject to change
-        public static final double kD = 0; // Placeholder that is subject to change
-    }
-
-    public static final class PhysicsConstants {
-        public static final double kG = 9.81;
-    }
-
-    public static final class MiscellaneousConstants {
-        public static final double kDt = 0.02;
+        public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(0, 0), new Rotation2d(0)); // Placeholder that is subject to change
     }
 }
