@@ -78,12 +78,13 @@ public final class Constants {
 
         // Feedback
         public static final double kP = 17.8; // Volts seconds per meter
+        public static final double kD = 0; // Volts per seconds per meter
 
         // Ramsete Controller
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = 0.7;
 
-        public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(0, 0), new Rotation2d(0)); // Placeholder that is subject to change
+        public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(3.346, -2.335), new Rotation2d(0)); // Placeholder that is subject to change
     }
 
     public static final class TurretConstants {
@@ -95,25 +96,12 @@ public final class Constants {
         public static final boolean kEncoderReversed = false;
     }
 
-    public static final class IntakeConstants {
-
-        // Ports
-        public static final int kMotorPort = 8; // Placeholder
-        public static final int[] kEncoderPorts = new int[]{0, 1};
-        public static final boolean kEncoderReversed = false;
-
-        public static final double kIntakeSpeedPer = 0.5;
-    }
-
     public static final class FeederConstants {
 
         // Ports
         public static final int kMotorPort = 9; // Placeholder
         public static final int[] kSolenoidPorts = {1, 2, 3};
         public static final int[] kLimitSwitchPorts = {1, 2, 3};
-        public static final int[] kEncoderPorts = new int[]{0, 1};
-
-        public static final boolean kEncoderReversed = false;
 
         public static final double kFeederSpeedPer = 0.5; // Placeholder
 
@@ -123,11 +111,6 @@ public final class Constants {
         // Ports
         public static final int kFlywheelMotorAPort = 10; // Placeholder
         public static final int kFlywheelMotorBPort = 11; // Placeholder
-
-        public static final boolean kEncoderReversed = false;
-
-
-        public static final double kTimeOut = 2;
 
         public static final double kSpeedPer = 0.6; // Placeholder
     }
