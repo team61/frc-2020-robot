@@ -6,7 +6,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.TurretSubsystem;
 
@@ -35,7 +34,7 @@ public class TurretAutoAim extends CommandBase {
     @Override
     public void execute() {
         double yaw = yawEntry.getDouble(0);
-        m_turretSubsystem.set(MathUtil.clamp(m_controller.calculate(yaw, 0) + m_feedforward.calculate(m_controller.getSetpoint().velocity), -1, 1));
+        m_turretSubsystem.setVoltage(m_controller.calculate(yaw, 0) + m_feedforward.calculate(m_controller.getSetpoint().velocity));
     }
 
     // Returns true when the command should end.

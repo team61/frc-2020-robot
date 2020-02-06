@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
@@ -17,6 +18,9 @@ public class FollowTrajectory extends CommandBase {
     private RamseteController m_follower = new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta);
 
     private SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(AutoConstants.kS, AutoConstants.kV, AutoConstants.kA);
+
+    private PIDController m_leftController = new PIDController(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD);
+    private PIDController m_rightController = new PIDController(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD);
 
     private final Timer m_timer = new Timer();
 
@@ -63,8 +67,17 @@ public class FollowTrajectory extends CommandBase {
         double rightFeedforward =
                 m_feedforward.calculate(rightSpeedSetpoint,
                         (rightSpeedSetpoint - m_prevSpeeds.rightMetersPerSecond) / dt);
+        double leftOutput = leftFeedforward
+                + m_leftController.calculate(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond,
+                leftSpeedSetpoint);
 
-        m_driveSubsystem.setSpeeds(targetWheelSpeeds, leftFeedforward, rightFeedforward);
+        double rightOutput = rightFeedforward
+                + m_rightController.calculate(m_driveSubsystem.getWheelSpeeds().rightMetersPerSecond,
+                rightSpeedSetpoint);
+
+        m_driveSubsystem.tankDriveVolts(leftOutput, rightOutput);
+
+        //m_driveSubsystem.setSpeeds(targetWheelSpeeds, leftFeedforward, rightFeedforward);
 
         m_prevTime = curTime;
         m_prevSpeeds = targetWheelSpeeds;
