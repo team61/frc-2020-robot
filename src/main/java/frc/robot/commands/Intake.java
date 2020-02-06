@@ -8,7 +8,9 @@ public class Intake extends CommandBase {
 
     private FeederSubsystem m_feederSubsystem;
 
-    private int topLimitSwitch = FeederConstants.kLimitSwitchPorts.length - 1;
+    private int numBelts = FeederConstants.kLimitSwitchPorts.length;
+    private int topBelt = numBelts - 1;
+
 
     public Intake(FeederSubsystem feederSubsystem) {
         m_feederSubsystem = feederSubsystem;
@@ -17,14 +19,28 @@ public class Intake extends CommandBase {
     }
 
     @Override
-    public void execute() {
-        int numPowerCells = m_feederSubsystem.getNumPowerCells();
+    public void initialize() {
+        int numPowerCells = Math.min(Math.max(m_feederSubsystem.getNumPowerCells(), 0), numBelts);
+        int availableBelts = numBelts - numPowerCells;
 
-        if (numPowerCells < FeederConstants.kLimitSwitchPorts.length) {
-            boolean state = m_feederSubsystem.isSwitchSet(topLimitSwitch - numPowerCells);
+        for (int i = 0; i < availableBelts; i++) {
+            m_feederSubsystem.setSolenoidState(i, true);
+        }
+    }
+
+    @Override
+    public void execute() {
+        int numPowerCells = Math.min(Math.max(m_feederSubsystem.getNumPowerCells(), 0), numBelts);
+
+        if (numPowerCells < numBelts) { // Change solenoid state until each belt is filled
+            int belt = topBelt - numPowerCells;
+            boolean state = m_feederSubsystem.isSwitchSet(belt);
 
             if (state) {
-                m_feederSubsystem.setNumPowerCells(numPowerCells + 1);
+                m_feederSubsystem.setSolenoidState(belt, false);
+
+                numPowerCells++;
+                m_feederSubsystem.setNumPowerCells(numPowerCells);
             }
         }
 

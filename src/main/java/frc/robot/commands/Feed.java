@@ -20,6 +20,10 @@ public class Feed extends CommandBase {
     @Override
     public void initialize() {
         pastState = m_feederSubsystem.isSwitchSet(topLimitSwitch);
+
+        for (int i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
+            m_feederSubsystem.setSolenoidState(i, true);
+        }
     }
 
     @Override

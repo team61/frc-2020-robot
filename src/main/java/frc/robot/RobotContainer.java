@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -28,6 +30,8 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -58,6 +62,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         m_driveSubsystem.setDefaultCommand(new TankDrive(m_driveSubsystem, jLeft::getYAxis, jRight::getYAxis));
+        m_turretSubsystem.setDefaultCommand(new TurretWithJoysticks(m_turretSubsystem, jTurret::getZAxis));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -72,8 +77,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
 
-        jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new Feed(m_feederSubsystem)));
-
+        jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new Feed(m_feederSubsystem).andThen(new WaitCommand(1))));
     }
 
 
@@ -83,24 +87,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // Create a voltage constraint to ensure we don't accelerate too fast
-        DifferentialDriveVoltageConstraint autoVoltageConstraint =
-                new DifferentialDriveVoltageConstraint(
-                        new SimpleMotorFeedforward(AutoConstants.kS,
-                                AutoConstants.kV,
-                                AutoConstants.kA),
-                        AutoConstants.kDriveKinematics,
-                        AutoConstants.kMaxVoltage);
-
-        // Create config for trajectory
-        TrajectoryConfig config =
-                // Add constraints to trajectory
-                new TrajectoryConfig(AutoConstants.kMaxVelocity,
-                        AutoConstants.kMaxAcceleration)
-                        // Add kinematics to ensure max speed is actually obeyed
-                        .setKinematics(AutoConstants.kDriveKinematics)
-                        // Apply the voltage constraint
-                        .addConstraint(autoVoltageConstraint);
 
         // An example trajectory to follow.  All units in meters.
         Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
@@ -114,28 +100,29 @@ public class RobotContainer {
                 // End 3 meters straight ahead of where we started, facing forward
                 new Pose2d(3, 0, new Rotation2d(0)),
                 // Pass config
-                config
+                AutoConstants.config
         );
 
-        //Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/RightStartToTrench.wpilib.json"));
+        String[] pathGroup = AutoConstants.RightTrenchGroup;
 
-        RamseteCommand ramseteCommand = new RamseteCommand(
-                exampleTrajectory,
-                m_driveSubsystem::getPose2d,
-                new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
-                new SimpleMotorFeedforward(AutoConstants.kS,
-                        AutoConstants.kV,
-                        AutoConstants.kA),
-                AutoConstants.kDriveKinematics,
-                m_driveSubsystem::getWheelSpeeds,
-                new PIDController(AutoConstants.kP, 0, AutoConstants.kD),
-                new PIDController(AutoConstants.kP, 0, AutoConstants.kD),
-                // RamseteCommand passes volts to the callback
-                m_driveSubsystem::tankDriveVolts,
-                m_driveSubsystem
-        );
+        Trajectory[] trajectories = new Trajectory[pathGroup.length];
+
+        try {
+            Path[] paths = new Path[pathGroup.length];
+            for(int i = 0; i < paths.length; i++) {
+                paths[i] = Filesystem.getDeployDirectory().toPath().resolve(pathGroup[i]);
+                trajectories[i] = TrajectoryUtil.fromPathweaverJson(paths[i]);
+            }
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectories", ex.getStackTrace());
+        }
 
         // Run path following command, then stop at the end.
-        return ramseteCommand.andThen(m_driveSubsystem::stopTankDrive);
+        try {
+            return new FollowTrajectory(trajectories[0], m_driveSubsystem).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem));
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            DriverStation.reportError("Trajectory array out of bounds", ex.getStackTrace());
+            return null;
+        }
     }
 }

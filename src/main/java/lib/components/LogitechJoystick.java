@@ -39,4 +39,6 @@ public class LogitechJoystick extends Joystick {
     public double getXAxis() {
         return getAxis(getX());
     }
+
+    public double getZAxis() { return getAxis(getZ()); }
 }

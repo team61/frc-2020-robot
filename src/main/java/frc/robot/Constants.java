@@ -7,10 +7,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -60,14 +64,77 @@ public final class Constants {
         public static final double kTrackwidth = 0.69; // Meters
         public static final double kWheelBase = 0.94; // Meters
 
-        public static final double kMaxVelocity = 5; // Meters per second
 
+        // Constraints
+        public static final double kMaxVelocity = 5; // Meters per second
         public static final double kMaxAcceleration = 3; // Meters per second squared
+
+        // Create a voltage constraint to ensure we don't accelerate too fast
+        public static final DifferentialDriveVoltageConstraint autoVoltageConstraint =
+                new DifferentialDriveVoltageConstraint(
+                        new SimpleMotorFeedforward(AutoConstants.kS,
+                                AutoConstants.kV,
+                                AutoConstants.kA),
+                        AutoConstants.kDriveKinematics,
+                        AutoConstants.kMaxVoltage);
+
+        // Create config for trajectory
+        public static final TrajectoryConfig config =
+                // Add constraints to trajectory
+                new TrajectoryConfig(AutoConstants.kMaxVelocity,
+                        AutoConstants.kMaxAcceleration)
+                        // Add kinematics to ensure max speed is actually obeyed
+                        .setKinematics(AutoConstants.kDriveKinematics)
+                        // Apply the voltage constraint
+                        .addConstraint(autoVoltageConstraint);
+
+        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
         public static final double kMaxVoltage = 10;
 
+        // Characterization
+
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
 
+        // Feedforward
+        public static final double kS = 0.323; // Volts
+        public static final double kV = 0.895; // Volts seconds per meters
+        public static final double kA = 0.177; // Volts seconds per meters squared
+
+        // Feedback
+        public static final double kP = 17.8; // Volts seconds per meter
+        public static final double kI = 0; // Volts seconds per meter
+        public static final double kD = 0; // Volts per seconds per meter
+
+
+        // Talon SRX
+        public static final double kF = 1023.0/7200.0;
+        public static final int kSlotIdx = 0;
+        public static final int kPIDLoopIdx = 0;
+        public static final int kTimeoutMs = 30;
+
+        // Ramsete Controller
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
+
+        public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(3.346, -2.335), new Rotation2d(0));
+
+        public static final String RightStartToTrench = "/home/lvuser/deploy/output/RightStartToTrench.wpilib.json";
+        public static final String TrenchToRightStart = "/home/lvuser/deploy/output/TrenchToRightStart.wpilib.json";
+
+        public static final String[] RightTrenchGroup = {RightStartToTrench, TrenchToRightStart};
+
+        public static final String DriveCamName = "DriveCam";
+
+    }
+
+    public static final class TurretConstants {
+
+        // Ports
+        public static final int kMotorPort = 7;
+        public static final int[] kEncoderPorts = new int[]{0, 1};
+
+        public static final boolean kEncoderReversed = false;
 
         // Characterization
 
@@ -78,22 +145,15 @@ public final class Constants {
 
         // Feedback
         public static final double kP = 17.8; // Volts seconds per meter
+        public static final double kI = 0; // Volts seconds per meter
         public static final double kD = 0; // Volts per seconds per meter
 
-        // Ramsete Controller
-        public static final double kRamseteB = 2;
-        public static final double kRamseteZeta = 0.7;
+        public static final double maxVelocity = 10;
+        public static final double maxAcceleration = 5;
 
-        public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(3.346, -2.335), new Rotation2d(0)); // Placeholder that is subject to change
-    }
+        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration);
 
-    public static final class TurretConstants {
-
-        // Ports
-        public static final int kMotorPort = 7;
-        public static final int[] kEncoderPorts = new int[]{0, 1};
-
-        public static final boolean kEncoderReversed = false;
+        public static final String TurretCamName = "TurretCam";
     }
 
     public static final class FeederConstants {
