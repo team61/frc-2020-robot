@@ -180,4 +180,8 @@ public final class Constants {
         public static final int kSolenoidAPort = 0; // Placeholder
         public static final int kSolenoidBPort = 0; // Placeholder
     }
+
+    public static final class WheelSpinnerConstants {
+        public static final int kMotorPort = 10;
+    }
 }
