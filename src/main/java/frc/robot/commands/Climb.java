@@ -5,8 +5,6 @@ import frc.robot.subsystems.LiftSubsystem;
 
 public class Climb extends InstantCommand {
 
-    private boolean m_extend = false;
-
     private LiftSubsystem m_liftSubsystem;
 
     /**
@@ -15,10 +13,9 @@ public class Climb extends InstantCommand {
      *
      * @param liftSubsystem The subsystem used by this command.
      */
-    public Climb(LiftSubsystem liftSubsystem, boolean extend) {
+    public Climb(LiftSubsystem liftSubsystem) {
         // Use addRequirements() here to declare subsystem dependencies.
         //addRequirements();
-        m_extend = extend;
         m_liftSubsystem = liftSubsystem;
 
         addRequirements(liftSubsystem);
@@ -27,11 +24,16 @@ public class Climb extends InstantCommand {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_extend) {
+        if (m_liftSubsystem.getToggle()) {
             m_liftSubsystem.extend();
         } else {
             m_liftSubsystem.retract();
         }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        m_liftSubsystem.toggle();
     }
 }
 

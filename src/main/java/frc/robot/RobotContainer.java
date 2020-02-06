@@ -30,6 +30,7 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
 
+import java.awt.desktop.OpenURIEvent;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,10 +48,11 @@ public class RobotContainer {
     private final FeederSubsystem m_feederSubsystem = FeederSubsystem.getInstance();
     private final TurretSubsystem m_turretSubsystem = TurretSubsystem.getInstance();
     private final ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
+    private final LiftSubsystem m_liftSubsystem = LiftSubsystem.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
-
+    private final LogitechJoystick jLift = new LogitechJoystick(OIConstants.jLift);
     private final LogitechJoystick jTurret = new LogitechJoystick(OIConstants.jTurret);
 
     private final Command m_autoCommand = null;
@@ -77,7 +79,10 @@ public class RobotContainer {
     private void configureButtonBindings() {
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
 
+        jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
+
         jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new Feed(m_feederSubsystem).andThen(new WaitCommand(1))));
+        jTurret.btn_4.whenPressed(new Dump(m_feederSubsystem));
     }
 
 

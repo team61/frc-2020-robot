@@ -9,7 +9,13 @@ public class LiftSubsystem extends SubsystemBase {
 
     private static LiftSubsystem m_instance;
 
+    private boolean m_toggle = false;
+
     private DoubleSolenoid m_solenoid = new DoubleSolenoid(LiftConstants.kSolenoidAPort, LiftConstants.kSolenoidBPort);
+
+    public LiftSubsystem() {
+        setToggle(false);
+    }
 
     public static LiftSubsystem getInstance() {
         return m_instance;
@@ -27,5 +33,17 @@ public class LiftSubsystem extends SubsystemBase {
 
     public void off() {
         m_solenoid.set(DoubleSolenoid.Value.kOff);
+    }
+
+    public boolean getToggle() {
+        return m_toggle;
+    }
+
+    public void setToggle(boolean toggle) {
+        m_toggle = toggle;
+    }
+
+    public void toggle() {
+        m_toggle = !m_toggle;
     }
 }
