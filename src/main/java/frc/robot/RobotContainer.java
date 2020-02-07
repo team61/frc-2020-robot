@@ -7,15 +7,34 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
+
+import java.awt.desktop.OpenURIEvent;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -26,14 +45,14 @@ import lib.components.LogitechJoystick;
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final DriveSubsystem m_driveSubsystem = DriveSubsystem.getInstance();
-    private final IntakeSubsystem m_intakeSubsystem = IntakeSubsystem.getInstance();
     private final FeederSubsystem m_feederSubsystem = FeederSubsystem.getInstance();
     private final TurretSubsystem m_turretSubsystem = TurretSubsystem.getInstance();
     private final ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
+    private final LiftSubsystem m_liftSubsystem = LiftSubsystem.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
-
+    private final LogitechJoystick jLift = new LogitechJoystick(OIConstants.jLift);
     private final LogitechJoystick jTurret = new LogitechJoystick(OIConstants.jTurret);
 
     private final Command m_autoCommand = null;
@@ -45,6 +64,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         m_driveSubsystem.setDefaultCommand(new TankDrive(m_driveSubsystem, jLeft::getYAxis, jRight::getYAxis));
+        m_turretSubsystem.setDefaultCommand(new TurretWithJoysticks(m_turretSubsystem, jTurret::getZAxis));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -57,10 +77,12 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        jRight.btn_1.whileHeld(new Intake(m_intakeSubsystem));
+        jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
 
-        jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem).withTimeout(ShooterConstants.kTimeOut), new Feed(m_feederSubsystem)));
+        jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
 
+        jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new Feed(m_feederSubsystem).andThen(new WaitCommand(1))));
+        jTurret.btn_4.whenPressed(new Dump(m_feederSubsystem));
     }
 
 
@@ -70,7 +92,42 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
-        return m_autoCommand;
+
+        // An example trajectory to follow.  All units in meters.
+        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(0, 0, new Rotation2d(0)),
+                // Pass through these two interior waypoints, making an 's' curve path
+                List.of(
+                        new Translation2d(1, 1),
+                        new Translation2d(2, -1)
+                ),
+                // End 3 meters straight ahead of where we started, facing forward
+                new Pose2d(3, 0, new Rotation2d(0)),
+                // Pass config
+                AutoConstants.config
+        );
+
+        String[] pathGroup = AutoConstants.RightTrenchGroup;
+
+        Trajectory[] trajectories = new Trajectory[pathGroup.length];
+
+        try {
+            Path[] paths = new Path[pathGroup.length];
+            for(int i = 0; i < paths.length; i++) {
+                paths[i] = Filesystem.getDeployDirectory().toPath().resolve(pathGroup[i]);
+                trajectories[i] = TrajectoryUtil.fromPathweaverJson(paths[i]);
+            }
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectories", ex.getStackTrace());
+        }
+
+        // Run path following command, then stop at the end.
+        try {
+            return new FollowTrajectory(trajectories[0], m_driveSubsystem).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem));
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            DriverStation.reportError("Trajectory array out of bounds", ex.getStackTrace());
+            return null;
+        }
     }
 }
