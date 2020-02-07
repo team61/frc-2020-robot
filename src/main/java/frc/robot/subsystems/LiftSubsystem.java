@@ -13,11 +13,18 @@ public class LiftSubsystem extends SubsystemBase {
 
     private DoubleSolenoid m_solenoid = new DoubleSolenoid(LiftConstants.kSolenoidAPort, LiftConstants.kSolenoidBPort);
 
+    //private Compressor compressor = new Compressor(0);
+
     public LiftSubsystem() {
         setToggle(false);
+        retract();
     }
 
     public static LiftSubsystem getInstance() {
+        if (m_instance == null) {
+            m_instance = new LiftSubsystem();
+        }
+
         return m_instance;
     }
 

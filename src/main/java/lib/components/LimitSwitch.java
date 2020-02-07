@@ -10,6 +10,6 @@ public class LimitSwitch {
         LimitSwitch = new DigitalInput(port);
     }
     public boolean isSwitchSet() {
-        return LimitSwitch.get();
+        return !LimitSwitch.get();
     }
 }

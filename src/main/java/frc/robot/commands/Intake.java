@@ -35,7 +35,7 @@ public class Intake extends CommandBase {
         if (numPowerCells < numBelts) { // Change solenoid state until each belt is filled
             int belt = topBelt - numPowerCells;
             boolean state = m_feederSubsystem.isSwitchSet(belt);
-
+            System.out.println(belt + " " + state);
             if (state) {
                 m_feederSubsystem.setSolenoidState(belt, false);
 

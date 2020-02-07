@@ -71,8 +71,14 @@ public class DriveSubsystem extends SubsystemBase {
         m_odometry = new DifferentialDriveOdometry(getHeading(), AutoConstants.kStartingPosition);
         m_differentialDrive.setSafetyEnabled(false);
 
+        m_rightMaster.setInverted(true);
+        m_leftMaster.setInverted(true);
+        m_rightSlave.setInverted(true);
+        m_leftSlave.setInverted(true);
+
         m_leftSlave.follow(m_leftMaster);
         m_rightSlave.follow(m_rightMaster);
+
 
 //        m_leftMaster.configFactoryDefault();
 //        m_rightMaster.configFactoryDefault();
@@ -124,7 +130,7 @@ public class DriveSubsystem extends SubsystemBase {
      * */
 
     public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
-        m_differentialDrive.tankDrive(leftSpeed, rightSpeed, squaredInputs);
+       m_differentialDrive.tankDrive(leftSpeed, rightSpeed, squaredInputs);
     }
 
     public void tankDrive(final double leftSpeed, final double rightSpeed) {

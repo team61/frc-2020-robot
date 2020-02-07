@@ -7,7 +7,7 @@
 
 package frc.robot;
 
-import com.revrobotics.ColorMatch;
+//import com.revrobotics.ColorMatch;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -53,14 +53,14 @@ public final class Constants {
         public static final boolean kRightEncoderReversed = true;
 
         // Motor Ports
-        public static final int kFrontLeftPort = 5;
-        public static final int kRearLeftPort = 6;
+        public static final int kFrontLeftPort = 3;
+        public static final int kRearLeftPort = 4;
         public static final int kFrontRightPort = 1;
         public static final int kRearRightPort = 2;
 
         // Encoder Ports
-        public static final int[] kLeftEncoderPorts = new int[]{2, 3};
-        public static final int[] kRightEncoderPorts = new int[]{0, 1};
+        public static final int[] kLeftEncoderPorts = new int[]{3, 4};
+        public static final int[] kRightEncoderPorts = new int[]{5, 6};
     }
 
     public static final class AutoConstants {
@@ -71,6 +71,14 @@ public final class Constants {
         // Constraints
         public static final double kMaxVelocity = 5; // Meters per second
         public static final double kMaxAcceleration = 3; // Meters per second squared
+
+        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
+
+        public static final double kMaxVoltage = 10;
+
+        // Characterization
+
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
 
         // Create a voltage constraint to ensure we don't accelerate too fast
         public static final DifferentialDriveVoltageConstraint autoVoltageConstraint =
@@ -90,14 +98,6 @@ public final class Constants {
                         .setKinematics(AutoConstants.kDriveKinematics)
                         // Apply the voltage constraint
                         .addConstraint(autoVoltageConstraint);
-
-        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
-
-        public static final double kMaxVoltage = 10;
-
-        // Characterization
-
-        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
 
         // Feedforward
         public static final double kS = 0.323; // Volts
@@ -162,9 +162,9 @@ public final class Constants {
     public static final class FeederConstants {
 
         // Ports
-        public static final int kMotorPort = 9; // Placeholder
-        public static final int[] kSolenoidPorts = {1, 2, 3};
-        public static final int[] kLimitSwitchPorts = {1, 2, 3};
+        public static final int kMotorPort = 8; // Placeholder
+        public static final int[] kSolenoidPorts = {0, 1, 2};
+        public static final int[] kLimitSwitchPorts = {0, 1, 2};
 
         public static final double kFeederSpeedPer = 0.5; // Placeholder
 
@@ -172,27 +172,27 @@ public final class Constants {
 
     public static final class ShooterConstants {
         // Ports
-        public static final int kFlywheelMotorAPort = 10; // Placeholder
-        public static final int kFlywheelMotorBPort = 11; // Placeholder
+        public static final int kFlywheelMotorAPort = 5; // Placeholder
+        public static final int kFlywheelMotorBPort = 6; // Placeholder
 
         public static final double kSpeedPer = 0.6; // Placeholder
     }
 
     public static final class LiftConstants {
-        public static final int kSolenoidAPort = 0; // Placeholder
-        public static final int kSolenoidBPort = 0; // Placeholder
+        public static final int kSolenoidAPort = 3; // Placeholder
+        public static final int kSolenoidBPort = 4; // Placeholder
     }
 
-    public static final class WheelSpinnerConstants {
-        public static final int kMotorPort = 10;
-
-        public static final double kWheelVoltage = 6;
-
-        public static final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-        public static final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-        public static final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
-        public static final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-
-        public static final Color[] colors = {kBlueTarget, kGreenTarget, kRedTarget, kYellowTarget};
-    }
+//    public static final class WheelSpinnerConstants {
+//        public static final int kMotorPort = 10;
+//
+//        public static final double kWheelVoltage = 6;
+//
+//        public static final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
+//        public static final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
+//        public static final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
+//        public static final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+//
+//        public static final Color[] colors = {kBlueTarget, kGreenTarget, kRedTarget, kYellowTarget};
+//    }
 }
