@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.revrobotics.ColorMatch;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -183,5 +185,14 @@ public final class Constants {
 
     public static final class WheelSpinnerConstants {
         public static final int kMotorPort = 10;
+
+        public static final double kWheelVoltage = 6;
+
+        public static final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
+        public static final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
+        public static final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
+        public static final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+
+        public static final Color[] colors = {kBlueTarget, kGreenTarget, kRedTarget, kYellowTarget};
     }
 }
