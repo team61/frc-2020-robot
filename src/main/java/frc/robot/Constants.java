@@ -58,8 +58,8 @@ public final class Constants {
         public static final int kRearRightPort = 2;
 
         // Encoder Ports
-        public static final int[] kLeftEncoderPorts = {3, 4};
-        public static final int[] kRightEncoderPorts = {5, 6};
+        public static final int[] kLeftEncoderPorts = {4, 5};
+        public static final int[] kRightEncoderPorts = {6, 7};
     }
 
     public static final class AutoConstants {
@@ -128,7 +128,8 @@ public final class Constants {
 
         // Ports
         public static final int kMotorPort = 7;
-        public static final int[] kEncoderPorts = {7, 8};
+        public static final int[] kEncoderPorts = {8, 9};
+        public static final int kLimitSwitchPort = 3;
 
         // Encoder Information
         public static final double kWheelDiameter = 0.15; // Meters
