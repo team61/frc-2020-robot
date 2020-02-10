@@ -39,9 +39,9 @@ public class TurretWithJoysticks extends CommandBase {
         m_turretSubsystem.set(m_speed.getAsDouble());
         double velocity = m_turretSubsystem.getEncoderRate();
         double acceleration = velocity / dt;
-        System.out.println(
-                "Velocity: " + velocity
-                + "Acceleration: " + acceleration);
+//        System.out.println(
+//                "Velocity: " + velocity
+//                + "Acceleration: " + acceleration);
 
         m_prevTime = curTime;
     }

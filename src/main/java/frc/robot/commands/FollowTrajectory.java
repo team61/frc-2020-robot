@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Constants.AutoConstants;
@@ -63,14 +64,13 @@ public class FollowTrajectory extends CommandBase {
         double rightSpeedSetpoint = targetWheelSpeeds.rightMetersPerSecond;
 
         double leftFeedForward = m_feedForward.calculate(leftSpeedSetpoint, (leftSpeedSetpoint - m_prevSpeeds.leftMetersPerSecond) / dt);
-
         double rightFeedForward = m_feedForward.calculate(rightSpeedSetpoint, (rightSpeedSetpoint - m_prevSpeeds.rightMetersPerSecond) / dt);
 
-        double leftProfile = m_leftController.calculate(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond, leftSpeedSetpoint);
-        double rightProfile = m_rightController.calculate(m_driveSubsystem.getWheelSpeeds().rightMetersPerSecond, rightSpeedSetpoint);
-        double leftOutput = MathUtil.clamp(leftFeedForward + leftProfile, 0, AutoConstants.kMaxVoltage);
+        double leftPID = m_leftController.calculate(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond, leftSpeedSetpoint);
+        double rightPID = m_rightController.calculate(m_driveSubsystem.getWheelSpeeds().rightMetersPerSecond, rightSpeedSetpoint);
 
-        double rightOutput = MathUtil.clamp(rightFeedForward + rightProfile, 0, AutoConstants.kMaxVoltage);
+        double leftOutput = MathUtil.clamp(leftFeedForward + leftPID, 0, AutoConstants.kMaxVoltage);
+        double rightOutput = MathUtil.clamp(rightFeedForward + rightPID, 0, AutoConstants.kMaxVoltage);
 
         m_driveSubsystem.tankDriveVolts(leftOutput, rightOutput);
 

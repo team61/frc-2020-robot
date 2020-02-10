@@ -76,7 +76,8 @@ public class RobotContainer {
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
 //
 //        jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new Feed(m_feederSubsystem).andThen(new WaitCommand(1))));
-//        jTurret.btn_4.whenPressed(new Dump(m_feederSubsystem));
+        jTurret.btn_1.whileHeld(new Feed(m_feederSubsystem));
+        jTurret.btn_4.whenPressed(new Dump(m_feederSubsystem));
 //        jTurret.btn_2.whenPressed(new TurretAutoAim(m_turretSubsystem, m_visionSubsystem::getYaw));
 
     }
