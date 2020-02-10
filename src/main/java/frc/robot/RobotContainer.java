@@ -11,18 +11,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.AutoConstants;
@@ -30,10 +25,8 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
 
-import java.awt.desktop.OpenURIEvent;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -49,6 +42,7 @@ public class RobotContainer {
     private final TurretSubsystem m_turretSubsystem = TurretSubsystem.getInstance();
     //private final ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
     private final LiftSubsystem m_liftSubsystem = LiftSubsystem.getInstance();
+//    private final VisionSubsystem m_visionSubsystem = VisionSubsystem.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
@@ -83,6 +77,8 @@ public class RobotContainer {
 //
 //        jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new Feed(m_feederSubsystem).andThen(new WaitCommand(1))));
 //        jTurret.btn_4.whenPressed(new Dump(m_feederSubsystem));
+//        jTurret.btn_2.whenPressed(new TurretAutoAim(m_turretSubsystem, m_visionSubsystem::getYaw));
+
     }
 
 

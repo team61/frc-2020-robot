@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -59,18 +58,18 @@ public final class Constants {
         public static final int kRearRightPort = 2;
 
         // Encoder Ports
-        public static final int[] kLeftEncoderPorts = new int[]{3, 4};
-        public static final int[] kRightEncoderPorts = new int[]{5, 6};
+        public static final int[] kLeftEncoderPorts = {3, 4};
+        public static final int[] kRightEncoderPorts = {5, 6};
     }
 
     public static final class AutoConstants {
-        public static final double kTrackwidth = 0.69; // Meters
+        public static final double kTrackWidth = 0.69; // Meters
         public static final double kWheelBase = 0.94; // Meters
 
 
         // Constraints
-        public static final double kMaxVelocity = 5; // Meters per second
-        public static final double kMaxAcceleration = 3; // Meters per second squared
+        public static final double kMaxVelocity = 6; // Meters per second
+        public static final double kMaxAcceleration = 2; // Meters per second squared
 
         public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
@@ -78,7 +77,7 @@ public final class Constants {
 
         // Characterization
 
-        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidth);
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
 
         // Create a voltage constraint to ensure we don't accelerate too fast
         public static final DifferentialDriveVoltageConstraint autoVoltageConstraint =
@@ -110,12 +109,6 @@ public final class Constants {
         public static final double kD = 0; // Volts per seconds per meter
 
 
-        // Talon SRX
-        public static final double kF = 1023.0/7200.0;
-        public static final int kSlotIdx = 0;
-        public static final int kPIDLoopIdx = 0;
-        public static final int kTimeoutMs = 30;
-
         // Ramsete Controller
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = 0.7;
@@ -135,8 +128,13 @@ public final class Constants {
 
         // Ports
         public static final int kMotorPort = 7;
-        public static final int[] kEncoderPorts = new int[]{0, 1};
+        public static final int[] kEncoderPorts = {7, 8};
 
+        // Encoder Information
+        public static final double kWheelDiameter = 0.15; // Meters
+        public static final int kEncoderCPR = 7; // cycles/pulses per revolution
+        public static final double gearRatio = 12.75; // This is 1 if the encoder is directly mounted to the wheel shaft which it should to account for slip
+        public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (gearRatio * kEncoderCPR);
         public static final boolean kEncoderReversed = false;
 
         // Characterization
@@ -151,10 +149,14 @@ public final class Constants {
         public static final double kI = 0; // Volts seconds per meter
         public static final double kD = 0; // Volts per seconds per meter
 
-        public static final double maxVelocity = 10;
-        public static final double maxAcceleration = 5;
+        public static final double kMaxVelocity = 3;
+        public static final double kMaxAcceleration = 1;
 
-        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration);
+        public static final double kMaxVoltage = 10;
+
+        public static final double kDefaultState = 0; // Distance from set point
+
+        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
         public static final String TurretCamName = "TurretCam";
     }

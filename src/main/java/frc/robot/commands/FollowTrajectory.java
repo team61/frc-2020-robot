@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Constants.AutoConstants;
 
@@ -17,7 +18,7 @@ public class FollowTrajectory extends CommandBase {
 
     private RamseteController m_follower = new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta);
 
-    private SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(AutoConstants.kS, AutoConstants.kV, AutoConstants.kA);
+    private SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(AutoConstants.kS, AutoConstants.kV, AutoConstants.kA);
 
     private PIDController m_leftController = new PIDController(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD);
     private PIDController m_rightController = new PIDController(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD);
@@ -27,6 +28,7 @@ public class FollowTrajectory extends CommandBase {
     private Trajectory m_trajectory;
 
     private double m_prevTime;
+
     private DifferentialDriveWheelSpeeds m_prevSpeeds;
 
     public FollowTrajectory(Trajectory trajectory, DriveSubsystem driveSubsystem) {
@@ -60,24 +62,17 @@ public class FollowTrajectory extends CommandBase {
         double leftSpeedSetpoint = targetWheelSpeeds.leftMetersPerSecond;
         double rightSpeedSetpoint = targetWheelSpeeds.rightMetersPerSecond;
 
-        double leftFeedforward =
-                m_feedforward.calculate(leftSpeedSetpoint,
-                        (leftSpeedSetpoint - m_prevSpeeds.leftMetersPerSecond) / dt);
+        double leftFeedForward = m_feedForward.calculate(leftSpeedSetpoint, (leftSpeedSetpoint - m_prevSpeeds.leftMetersPerSecond) / dt);
 
-        double rightFeedforward =
-                m_feedforward.calculate(rightSpeedSetpoint,
-                        (rightSpeedSetpoint - m_prevSpeeds.rightMetersPerSecond) / dt);
-        double leftOutput = leftFeedforward
-                + m_leftController.calculate(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond,
-                leftSpeedSetpoint);
+        double rightFeedForward = m_feedForward.calculate(rightSpeedSetpoint, (rightSpeedSetpoint - m_prevSpeeds.rightMetersPerSecond) / dt);
 
-        double rightOutput = rightFeedforward
-                + m_rightController.calculate(m_driveSubsystem.getWheelSpeeds().rightMetersPerSecond,
-                rightSpeedSetpoint);
+        double leftProfile = m_leftController.calculate(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond, leftSpeedSetpoint);
+        double rightProfile = m_rightController.calculate(m_driveSubsystem.getWheelSpeeds().rightMetersPerSecond, rightSpeedSetpoint);
+        double leftOutput = MathUtil.clamp(leftFeedForward + leftProfile, 0, AutoConstants.kMaxVoltage);
+
+        double rightOutput = MathUtil.clamp(rightFeedForward + rightProfile, 0, AutoConstants.kMaxVoltage);
 
         m_driveSubsystem.tankDriveVolts(leftOutput, rightOutput);
-
-        //m_driveSubsystem.setSpeeds(targetWheelSpeeds, leftFeedforward, rightFeedforward);
 
         m_prevTime = curTime;
         m_prevSpeeds = targetWheelSpeeds;

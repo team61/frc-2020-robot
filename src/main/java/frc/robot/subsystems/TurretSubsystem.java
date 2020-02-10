@@ -11,7 +11,11 @@ public class TurretSubsystem extends SubsystemBase {
 
     private WPI_TalonSRX m_motor = new WPI_TalonSRX(TurretConstants.kMotorPort);
 
-//    private Encoder m_encoder = new Encoder(TurretConstants.kEncoderPorts[0], TurretConstants.kEncoderPorts[1], TurretConstants.kEncoderReversed);
+   private Encoder m_encoder = new Encoder(TurretConstants.kEncoderPorts[0], TurretConstants.kEncoderPorts[1], TurretConstants.kEncoderReversed);
+
+   public TurretSubsystem() {
+       m_encoder.setDistancePerPulse(TurretConstants.kEncoderDistancePerPulse);
+   }
 
     public static TurretSubsystem getInstance() {
         if (m_instance == null) {
@@ -33,15 +37,19 @@ public class TurretSubsystem extends SubsystemBase {
         m_motor.setVoltage(0);
     }
 
-//    public int getEncoder() {
-//        return m_encoder.get();
-//    }
-//
-//    public double getEncoderRate() {
-//        return m_encoder.getRate();
-//    }
-//
-//    public void resetEncoder() {
-//        m_encoder.reset();
-//    }
+    public int getEncoderValue() {
+        return m_encoder.get();
+    }
+
+    public double getEncoderDistance() {
+       return m_encoder.getDistance();
+    }
+
+    public double getEncoderRate() {
+        return m_encoder.getRate();
+    }
+
+    public void resetEncoder() {
+        m_encoder.reset();
+    }
 }

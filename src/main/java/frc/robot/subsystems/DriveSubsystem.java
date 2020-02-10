@@ -78,36 +78,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_leftSlave.follow(m_leftMaster);
         m_rightSlave.follow(m_rightMaster);
-
-
-//        m_leftMaster.configFactoryDefault();
-//        m_rightMaster.configFactoryDefault();
-//
-//        m_leftMaster.setSensorPhase(true);
-//        m_rightMaster.setSensorPhase(true);
-//
-//        m_leftMaster.configNominalOutputForward(0, AutoConstants.kTimeoutMs);
-//        m_leftMaster.configNominalOutputReverse(0, AutoConstants.kTimeoutMs);
-//        m_leftMaster.configPeakOutputForward(1, AutoConstants.kTimeoutMs);
-//        m_leftMaster.configPeakOutputReverse(-1, AutoConstants.kTimeoutMs);
-//
-//        m_rightMaster.configNominalOutputForward(0, AutoConstants.kTimeoutMs);
-//        m_rightMaster.configNominalOutputReverse(0, AutoConstants.kTimeoutMs);
-//        m_rightMaster.configPeakOutputForward(1, AutoConstants.kTimeoutMs);
-//        m_rightMaster.configPeakOutputReverse(-1, AutoConstants.kTimeoutMs);
-//
-//        m_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-//        m_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-//
-//        m_leftMaster.config_kF(AutoConstants.kPIDLoopIdx, AutoConstants.kF, AutoConstants.kTimeoutMs);
-//        m_leftMaster.config_kP(AutoConstants.kPIDLoopIdx, AutoConstants.kP, AutoConstants.kTimeoutMs);
-//        m_leftMaster.config_kI(AutoConstants.kPIDLoopIdx, AutoConstants.kI, AutoConstants.kTimeoutMs);
-//        m_leftMaster.config_kD(AutoConstants.kPIDLoopIdx, AutoConstants.kD, AutoConstants.kTimeoutMs);
-//
-//        m_rightMaster.config_kF(AutoConstants.kPIDLoopIdx, AutoConstants.kF, AutoConstants.kTimeoutMs);
-//        m_rightMaster.config_kP(AutoConstants.kPIDLoopIdx, AutoConstants.kP, AutoConstants.kTimeoutMs);
-//        m_rightMaster.config_kI(AutoConstants.kPIDLoopIdx, AutoConstants.kI, AutoConstants.kTimeoutMs);
-//        m_rightMaster.config_kD(AutoConstants.kPIDLoopIdx, AutoConstants.kD, AutoConstants.kTimeoutMs);
     }
 
     @Override
@@ -177,6 +147,18 @@ public class DriveSubsystem extends SubsystemBase {
 
     public int getLeftEncoderValue() {
         return m_leftEncoder.get();
+    }
+
+    public double getLeftEncoderRate() {
+        return m_leftEncoder.getRate();
+    }
+
+    public double getRightEncoderRate() {
+        return m_rightEncoder.getRate();
+    }
+
+    public double getEncoderRate() {
+        return (getLeftEncoderRate() + getRightEncoderRate()) / 2;
     }
 
     public void resetLeftEncoder() {
@@ -269,40 +251,6 @@ public class DriveSubsystem extends SubsystemBase {
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
     }
-
-//    public void setSpeeds(DifferentialDriveWheelSpeeds speeds, double leftFeedforward, double rightFeedforward) {
-//        m_leftMaster.set(ControlMode.Velocity, speeds.leftMetersPerSecond, DemandType.ArbitraryFeedForward, leftFeedforward);
-//        m_rightMaster.set(ControlMode.Velocity, speeds.rightMetersPerSecond, DemandType.ArbitraryFeedForward, rightFeedforward);
-//    }
-//
-//    public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
-//        m_leftMaster.set(ControlMode.Velocity, speeds.leftMetersPerSecond);
-//        m_rightMaster.set(ControlMode.Velocity, speeds.rightMetersPerSecond);
-//    }
-
-//    public void drive(double xSpeed, double rot) {
-//        DifferentialDriveWheelSpeeds wheelSpeeds = AutoConstants.kDriveKinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, rot));
-//        setSpeeds(wheelSpeeds);
-//    }
-
-//    public Trajectory generateBallTrajectory() {
-//        NetworkTableInstance instance = NetworkTableInstance.getDefault();
-//        NetworkTable table = instance.getTable("chameleon-vision").getSubTable(AutoConstants.DriveCamName);
-//        NetworkTableEntry targetPose = table.getEntry("targetPose");
-//        List<Translation2d> list = new ArrayList<>();
-//        Double[] pose = targetPose.getDoubleArray(new Double[0]);
-//        list.add(new Translation2d(pose[0], pose[1]));
-//        return TrajectoryGenerator.generateTrajectory(
-//                // Start at the origin facing the +X direction
-//                getPose2d(),
-//                // Pass through these two interior waypoints, making an 's' curve path
-//                list,
-//                // End 3 meters straight ahead of where we started, facing forward
-//                new Pose2d(x, y, new Rotation2d(0)),
-//                // Pass config
-//                AutoConstants.config
-//        );
-//    }
 
     public void updateOdometry() {
         m_odometry.update(getHeading(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
