@@ -175,10 +175,10 @@ public final class Constants {
 
     public static final class ShooterConstants {
         // Ports
-        public static final int kFlywheelMotorAPort = 5; // Placeholder
-        public static final int kFlywheelMotorBPort = 6; // Placeholder
+        public static final int kMasterPort = 5; // Placeholder
+        public static final int kSlavePort = 6; // Placeholder
 
-        public static final double kSpeedPer = 0.6; // Placeholder
+        public static final double kSpeedVoltage = 10; // Placeholder
     }
 
     public static final class LiftConstants {

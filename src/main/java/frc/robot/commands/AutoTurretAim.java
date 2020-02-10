@@ -10,7 +10,7 @@ import frc.robot.subsystems.TurretSubsystem;
 
 import java.util.function.DoubleSupplier;
 
-public class TurretAutoAim extends CommandBase {
+public class AutoTurretAim extends CommandBase {
 
     private TurretSubsystem m_turretSubsystem;
 
@@ -23,7 +23,7 @@ public class TurretAutoAim extends CommandBase {
 
     private double m_prevTime;
 
-    public TurretAutoAim(TurretSubsystem turretSubsystem, DoubleSupplier yaw) {
+    public AutoTurretAim(TurretSubsystem turretSubsystem, DoubleSupplier yaw) {
         m_turretSubsystem = turretSubsystem;
         m_yaw = yaw;
 

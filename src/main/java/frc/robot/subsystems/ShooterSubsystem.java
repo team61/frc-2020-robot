@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
@@ -9,12 +8,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private static ShooterSubsystem m_instance;
 
-    private WPI_TalonSRX m_flywheelA = new WPI_TalonSRX(ShooterConstants.kFlywheelMotorAPort);
-    private WPI_TalonSRX m_flywheelB = new WPI_TalonSRX(ShooterConstants.kFlywheelMotorBPort);
-    private SpeedControllerGroup m_flywheel = new SpeedControllerGroup(m_flywheelA, m_flywheelB);
+    private WPI_TalonSRX m_master = new WPI_TalonSRX(ShooterConstants.kMasterPort);
+    private WPI_TalonSRX m_slave = new WPI_TalonSRX(ShooterConstants.kSlavePort);
 
     public ShooterSubsystem() {
-        m_flywheelB.follow(m_flywheelA);
+        m_slave.setInverted(true);
+        m_slave.follow(m_master);
     }
 
     public static ShooterSubsystem getInstance() {
@@ -26,11 +25,11 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void set(double speed) {
-        m_flywheel.set(speed);
+        m_master.set(speed);
     }
 
     public void setVoltage(double voltage) {
-        m_flywheel.setVoltage(voltage);
+        m_master.setVoltage(voltage);
     }
 
     public void stop() {

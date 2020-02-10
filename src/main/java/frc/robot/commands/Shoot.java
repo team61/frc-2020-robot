@@ -7,8 +7,6 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class Shoot extends CommandBase {
     private ShooterSubsystem m_shooterSubsystem;
 
-    private boolean pastState;
-
     public Shoot(ShooterSubsystem shooterSubsystem) {
         m_shooterSubsystem = shooterSubsystem;
 
@@ -17,7 +15,7 @@ public class Shoot extends CommandBase {
 
     @Override
     public void execute() {
-        m_shooterSubsystem.set(ShooterConstants.kSpeedPer);
+        m_shooterSubsystem.set(ShooterConstants.kSpeedVoltage);
 
     }
 
