@@ -181,6 +181,13 @@ public final class Constants {
         public static final int kSlavePort = 6; // Placeholder
 
         public static final double kSpeedVoltage = 10; // Placeholder
+        public static final double kAngle = 55;
+
+        public static final double kGoalHeight = 2.5;
+        public static final double kShooterHeight = 1;
+        public static final double kHeightDifference = kGoalHeight - kShooterHeight;
+
+        public static final double kVoltageConstant = 12;
     }
 
     public static final class LiftConstants {
@@ -197,6 +204,10 @@ public final class Constants {
 
         public static final String TurretCamName = "TurretCam";
 
+    }
+
+    public static final class PhysicConstants {
+        public static final double kGravity = 9.8;
     }
 
 //    public static final class WheelSpinnerConstants {

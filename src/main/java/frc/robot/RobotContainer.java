@@ -81,7 +81,6 @@ public class RobotContainer {
         jTurret.btn_4.whenPressed(new SetTurretDefault(m_turretSubsystem));
         jTurret.btn_5.whenPressed(new Dump(m_feederSubsystem));
 
-
 //        jTurret.btn_2.whenPressed(new AutoTurretAim(m_turretSubsystem, m_visionSubsystem::getYaw));
 //        jTurret.btn_2.whenPressed(new ResetOdometryWithVision(m_visionSubsystem.getDistance(), m_driveSubsystem.getPose2d(), m_driveSubsystem::resetOdometry));
 

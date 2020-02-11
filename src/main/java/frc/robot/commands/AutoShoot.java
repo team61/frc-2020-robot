@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.PhysicConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -20,7 +21,19 @@ public class AutoShoot extends CommandBase {
 
     @Override
     public void execute() {
-        m_shooterSubsystem.set(ShooterConstants.kSpeedVoltage);
+        double x = m_distance.getAsDouble();
+        double ballVelocity =
+                Math.sqrt(
+                        (-PhysicConstants.kGravity * x*x) /
+                                (2*Math.pow(Math.cos(Math.toRadians(ShooterConstants.kAngle)), 2)
+                                        * (ShooterConstants.kHeightDifference - Math.tan(ShooterConstants.kAngle))));
+
+        double voltage = ballVelocity * ShooterConstants.kVoltageConstant;
+        if (Double.isNaN(ballVelocity)) {
+            end(false);
+        }
+
+        m_shooterSubsystem.setVoltage(voltage);
 
     }
 
