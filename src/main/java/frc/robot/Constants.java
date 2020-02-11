@@ -73,7 +73,7 @@ public final class Constants {
 
         public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
-        public static final double kMaxVoltage = 10;
+        public static final double kMaxVoltage = 12;
 
         // Characterization
 
@@ -122,6 +122,8 @@ public final class Constants {
 
         public static final String DriveCamName = "DriveCam";
 
+        public static final double kFudgeFactor = 0.88; // right side
+
     }
 
     public static final class TurretConstants {
@@ -134,7 +136,7 @@ public final class Constants {
         // Encoder Information
         public static final double kWheelDiameter = 0.15; // Meters
         public static final int kEncoderCPR = 7; // cycles/pulses per revolution
-        public static final double gearRatio = 12.75; // This is 1 if the encoder is directly mounted to the wheel shaft which it should to account for slip
+        public static final double gearRatio = 3.1875; // This is 1 if the encoder is directly mounted to the wheel shaft which it should to account for slip
         public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (gearRatio * kEncoderCPR);
         public static final boolean kEncoderReversed = false;
 
@@ -143,23 +145,28 @@ public final class Constants {
         // Characterization
 
         // Feedforward
-        public static final double kS = 0.323; // Volts
-        public static final double kV = 0.895; // Volts seconds per meters
-        public static final double kA = 0.177; // Volts seconds per meters squared
+        public static final double kS = 0.451; // Volts
+        public static final double kV = 1.57; // Volts seconds per meters
+        public static final double kA = -0.00143; // Volts seconds per meters squared
 
         // Feedback
-        public static final double kP = 17.8; // Volts seconds per meter
+        public static final double kP = 3.08; // Volts seconds per meter
         public static final double kI = 0; // Volts seconds per meter
         public static final double kD = 0; // Volts per seconds per meter
+
+        public static final double kDistanceToDegrees = 180 / 45.0;
 
         public static final double kMaxVelocity = 3;
         public static final double kMaxAcceleration = 1;
 
-        public static final double kMaxVoltage = 10;
+        public static final double kMaxVoltage = 12;
 
         public static final double kDefaultState = 0; // Distance from set point
 
         public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
+
+        public static final double kMaxDistance = 50;
+
     }
 
     public static final class FeederConstants {
@@ -169,9 +176,9 @@ public final class Constants {
         public static final int[] kSolenoidPorts = {0, 1, 2};
         public static final int[] kLimitSwitchPorts = {0, 1, 2};
 
-        public static final double kFeederSpeedVoltage = 7; // Placeholder
+        public static final double kFeederSpeedVoltage = 9; // Placeholder
 
-        public static final double kFeederDelay = 1;
+        public static final double kFeederDelay = 0.5;
 
     }
 
@@ -180,7 +187,7 @@ public final class Constants {
         public static final int kMasterPort = 5; // Placeholder
         public static final int kSlavePort = 6; // Placeholder
 
-        public static final double kSpeedVoltage = 10; // Placeholder
+        public static final double kSpeedVoltage = 12; // Placeholder
         public static final double kAngle = 55;
 
         public static final double kGoalHeight = 2.5;

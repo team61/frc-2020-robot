@@ -38,16 +38,13 @@ public class TankDrive extends CommandBase {
         double curTime = m_timer.get();
         double dt = curTime - m_prevTime;
 
-        double leftVolts = m_left.getAsDouble() * AutoConstants.kMaxVoltage;
-        double rightVolts = m_right.getAsDouble() * AutoConstants.kMaxVoltage;
-
-        m_driveSubsystem.tankDriveVolts(leftVolts, rightVolts, true);
+        m_driveSubsystem.tankDriveToVolts(m_left.getAsDouble(), m_right.getAsDouble());
 
         double velocity = m_driveSubsystem.getEncoderRate();
         double acceleration = velocity / dt;
-        System.out.println(
-                "Velocity: " + velocity
-                        + "Acceleration: " + acceleration);
+//        System.out.println(
+//                "Velocity: " + velocity
+//                        + "Acceleration: " + acceleration);
 
         m_prevTime = curTime;
     }

@@ -78,8 +78,10 @@ public class RobotContainer {
 
         jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new WaitCommand(FeederConstants.kFeederDelay).andThen(new Feed(m_feederSubsystem))));
         jTurret.btn_3.whenPressed(new ResetBallCount(m_feederSubsystem));
-        jTurret.btn_4.whenPressed(new SetTurretDefault(m_turretSubsystem));
+       // jTurret.btn_4.whenPressed(new SetTurretDefault(m_turretSubsystem));
         jTurret.btn_5.whenPressed(new Dump(m_feederSubsystem));
+        jTurret.btn_4.whenPressed(new MoveTurretToPosition(m_turretSubsystem, 0));
+        jTurret.btn_6.whenPressed(new MoveTurretToPosition(m_turretSubsystem, 180));
 
 //        jTurret.btn_2.whenPressed(new AutoTurretAim(m_turretSubsystem, m_visionSubsystem::getYaw));
 //        jTurret.btn_2.whenPressed(new ResetOdometryWithVision(m_visionSubsystem.getDistance(), m_driveSubsystem.getPose2d(), m_driveSubsystem::resetOdometry));

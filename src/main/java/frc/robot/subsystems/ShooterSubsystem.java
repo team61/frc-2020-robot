@@ -12,7 +12,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private WPI_TalonSRX m_slave = new WPI_TalonSRX(ShooterConstants.kSlavePort);
 
     public ShooterSubsystem() {
-        m_slave.setInverted(true);
+        m_master.setInverted(true);
         m_slave.follow(m_master);
     }
 

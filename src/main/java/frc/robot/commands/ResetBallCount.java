@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants;
 import frc.robot.subsystems.FeederSubsystem;
 
 public class ResetBallCount extends InstantCommand {
@@ -13,6 +14,10 @@ public class ResetBallCount extends InstantCommand {
 
     @Override
     public void execute() {
+        for (int i = 0; i < Constants.FeederConstants.kSolenoidPorts.length; i++) {
+            m_feederSubsystem.setSolenoidState(i, true);
+        }
+
         m_feederSubsystem.setNumPowerCells(0);
     }
 }

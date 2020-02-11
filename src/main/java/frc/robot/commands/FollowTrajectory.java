@@ -69,8 +69,8 @@ public class FollowTrajectory extends CommandBase {
         double leftPID = m_leftController.calculate(m_driveSubsystem.getWheelSpeeds().leftMetersPerSecond, leftSpeedSetpoint);
         double rightPID = m_rightController.calculate(m_driveSubsystem.getWheelSpeeds().rightMetersPerSecond, rightSpeedSetpoint);
 
-        double leftOutput = MathUtil.clamp(leftFeedForward + leftPID, 0, AutoConstants.kMaxVoltage);
-        double rightOutput = MathUtil.clamp(rightFeedForward + rightPID, 0, AutoConstants.kMaxVoltage);
+        double leftOutput = MathUtil.clamp(leftFeedForward + leftPID, -AutoConstants.kMaxVoltage, AutoConstants.kMaxVoltage);
+        double rightOutput = MathUtil.clamp(rightFeedForward + rightPID, -AutoConstants.kMaxVoltage, AutoConstants.kMaxVoltage);
 
         m_driveSubsystem.tankDriveVolts(leftOutput, rightOutput);
 

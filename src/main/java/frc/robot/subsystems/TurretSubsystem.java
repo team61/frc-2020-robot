@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
+import lib.components.LimitSwitch;
 
 public class TurretSubsystem extends SubsystemBase {
 
@@ -13,9 +14,23 @@ public class TurretSubsystem extends SubsystemBase {
 
    private Encoder m_encoder = new Encoder(TurretConstants.kEncoderPorts[0], TurretConstants.kEncoderPorts[1], TurretConstants.kEncoderReversed);
 
+   private LimitSwitch m_limitSwitch = new LimitSwitch(TurretConstants.kLimitSwitchPort);
+
+   private double offSet = 20;
+   private double position = 0;
+
    public TurretSubsystem() {
        m_encoder.setDistancePerPulse(TurretConstants.kEncoderDistancePerPulse);
    }
+
+    @Override
+    public void periodic() {
+        if (isSwitchSet()) {
+            resetEncoder();
+            offSet = 0;
+        }
+        position = getEncoderDistance() + offSet;
+    }
 
     public static TurretSubsystem getInstance() {
         if (m_instance == null) {
@@ -25,12 +40,22 @@ public class TurretSubsystem extends SubsystemBase {
         return m_instance;
     }
 
+    public double getPosition() {
+       return position;
+    }
+
     public void set(double speed) {
-        m_motor.set(speed);
+        if (position <= TurretConstants.kMaxDistance || speed <= 0) {
+            m_motor.set(speed);
+        } else {
+            stop();
+        }
     }
 
     public void setVoltage(double voltage) {
-        m_motor.setVoltage(voltage);
+        if (position <= TurretConstants.kMaxDistance || voltage <= 0) {
+            m_motor.setVoltage(voltage);
+        }
     }
 
     public void stop() {
@@ -52,4 +77,9 @@ public class TurretSubsystem extends SubsystemBase {
     public void resetEncoder() {
         m_encoder.reset();
     }
+
+    public boolean isSwitchSet() {
+        return m_limitSwitch.isSwitchSet();
+    }
+
 }

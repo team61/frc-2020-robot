@@ -23,7 +23,7 @@ public class Dump extends CommandBase {
 
     @Override
     public void execute() {
-        m_feederSubsystem.set(-FeederConstants.kFeederSpeedPer);
+        m_feederSubsystem.setVoltage(-FeederConstants.kFeederSpeedVoltage);
     }
 
     // Returns true when the command should end.

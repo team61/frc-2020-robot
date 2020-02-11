@@ -30,20 +30,7 @@ public class Feed extends CommandBase {
 
     @Override
     public void execute() {
-        int numPowerCells = m_feederSubsystem.getNumPowerCells();
-
-        boolean state = m_feederSubsystem.isSwitchSet(topLimitSwitch);
-
-        if (state) {
-            pastState = true;
-        }
-
-        if (!state && pastState) {
-            m_feederSubsystem.setNumPowerCells(numPowerCells - 1);
-        }
-
         m_feederSubsystem.setVoltage(FeederConstants.kFeederSpeedVoltage);
-        //System.out.println(m_feederSubsystem.getNumPowerCells());
     }
 
     @Override

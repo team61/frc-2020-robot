@@ -44,7 +44,7 @@ public class Intake extends CommandBase {
             }
         }
 
-        m_feederSubsystem.set(FeederConstants.kFeederSpeedPer);
+        m_feederSubsystem.setVoltage(FeederConstants.kFeederSpeedVoltage);
     }
 
     // Returns true when the command should end.

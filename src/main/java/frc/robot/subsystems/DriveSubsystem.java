@@ -74,9 +74,9 @@ public class DriveSubsystem extends SubsystemBase {
         m_differentialDrive.setSafetyEnabled(false);
         m_differentialDrive.setDeadband(0); // Dead band is done with joysticks directly
 
-        m_rightMaster.setInverted(true);
+        m_rightMaster.setInverted(false);
         m_leftMaster.setInverted(true);
-        m_rightSlave.setInverted(true);
+        m_rightSlave.setInverted(false);
         m_leftSlave.setInverted(true);
 
         m_leftSlave.follow(m_leftMaster);
@@ -103,7 +103,7 @@ public class DriveSubsystem extends SubsystemBase {
      * */
 
     public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
-       m_differentialDrive.tankDrive(leftSpeed, rightSpeed, squaredInputs);
+       m_differentialDrive.tankDrive(leftSpeed, rightSpeed * AutoConstants.kFudgeFactor, squaredInputs);
     }
 
     public void tankDrive(final double leftSpeed, final double rightSpeed) {
@@ -118,22 +118,24 @@ public class DriveSubsystem extends SubsystemBase {
         tankDrive(0);
     }
 
-    public void tankDriveVolts(double leftVolts, double rightVolts, final boolean squaredInputs) {
-        leftVolts = MathUtil.clamp(leftVolts, 0, AutoConstants.kMaxVoltage);
-        rightVolts = MathUtil.clamp(rightVolts, 0, AutoConstants.kMaxVoltage);
-
-        if (squaredInputs) {
-            leftVolts = Math.copySign(leftVolts * leftVolts, leftVolts);
-            rightVolts = Math.copySign(rightVolts * rightVolts, rightVolts);
-        }
-
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
         m_leftMaster.setVoltage(leftVolts);
-        m_rightMaster.setVoltage(rightVolts);
+        m_rightMaster.setVoltage(rightVolts * AutoConstants.kFudgeFactor);
     }
 
-    public void tankDriveVolts(final double leftVolts, final double rightVolts) {
-        tankDriveVolts(leftVolts, rightVolts, false);
+    public void tankDriveToVolts(double leftSpeed, double rightSpeed, final boolean squaredInputs) {
+        if (squaredInputs) {
+            leftSpeed = Math.copySign(leftSpeed * leftSpeed, leftSpeed);
+            rightSpeed = Math.copySign(rightSpeed * rightSpeed, rightSpeed);
+        }
+        leftSpeed *= AutoConstants.kMaxVoltage;
+        rightSpeed *= AutoConstants.kMaxVoltage;
+        tankDriveVolts(leftSpeed, rightSpeed);
     }
+    public void tankDriveToVolts(double leftSpeed, double rightSpeed) {
+        tankDriveToVolts(leftSpeed, rightSpeed, true);
+    }
+
 
     public void setMaxOutput(double maxOutput) {
         m_differentialDrive.setMaxOutput(maxOutput);
