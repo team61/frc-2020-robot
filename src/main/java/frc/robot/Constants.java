@@ -158,8 +158,6 @@ public final class Constants {
         public static final double kDefaultState = 0; // Distance from set point
 
         public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
-
-        public static final String TurretCamName = "TurretCam";
     }
 
     public static final class FeederConstants {
@@ -169,7 +167,9 @@ public final class Constants {
         public static final int[] kSolenoidPorts = {0, 1, 2};
         public static final int[] kLimitSwitchPorts = {0, 1, 2};
 
-        public static final double kFeederSpeedPer = 0.5; // Placeholder
+        public static final double kFeederSpeedVoltage = 7; // Placeholder
+
+        public static final double kFeederDelay = 1;
 
     }
 
@@ -184,6 +184,17 @@ public final class Constants {
     public static final class LiftConstants {
         public static final int kSolenoidAPort = 3; // Placeholder
         public static final int kSolenoidBPort = 4; // Placeholder
+    }
+
+    public static final class VisionConstants {
+        public static final double kCamera_width = 640; // in pixels
+        public static final double kFieldOfView = 67; // in degrees
+        public static final double kDegPerPixel = kFieldOfView / kCamera_width;
+
+        public static final double kTapeWidth = 0.2; // in meters
+
+        public static final String TurretCamName = "TurretCam";
+
     }
 
 //    public static final class WheelSpinnerConstants {

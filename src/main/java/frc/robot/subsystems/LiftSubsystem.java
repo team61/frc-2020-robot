@@ -15,7 +15,6 @@ public class LiftSubsystem extends SubsystemBase {
 
     public LiftSubsystem() {
         setToggle(false);
-        retract();
     }
 
     public static LiftSubsystem getInstance() {

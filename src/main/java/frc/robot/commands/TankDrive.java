@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
 import java.util.function.DoubleSupplier;
@@ -38,7 +38,11 @@ public class TankDrive extends CommandBase {
         double curTime = m_timer.get();
         double dt = curTime - m_prevTime;
 
-        m_driveSubsystem.tankDrive(m_left.getAsDouble(), m_right.getAsDouble(), true);
+        double leftVolts = m_left.getAsDouble() * AutoConstants.kMaxVoltage;
+        double rightVolts = m_right.getAsDouble() * AutoConstants.kMaxVoltage;
+
+        m_driveSubsystem.tankDriveVolts(leftVolts, rightVolts, true);
+
         double velocity = m_driveSubsystem.getEncoderRate();
         double acceleration = velocity / dt;
         System.out.println(

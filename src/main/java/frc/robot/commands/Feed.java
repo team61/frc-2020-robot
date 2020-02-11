@@ -1,10 +1,12 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.subsystems.FeederSubsystem;
 
 public class Feed extends CommandBase {
+
     private FeederSubsystem m_feederSubsystem;
 
     private boolean pastState;
@@ -40,20 +42,14 @@ public class Feed extends CommandBase {
             m_feederSubsystem.setNumPowerCells(numPowerCells - 1);
         }
 
-        m_feederSubsystem.set(FeederConstants.kFeederSpeedPer);
+        m_feederSubsystem.setVoltage(FeederConstants.kFeederSpeedVoltage);
+        //System.out.println(m_feederSubsystem.getNumPowerCells());
     }
 
     @Override
     public void end(boolean interrupted) {
         m_feederSubsystem.stop();
-        if (interrupted) {
-            m_feederSubsystem.setNumPowerCells(0);
-        }
-    }
-
-    @Override
-    public boolean isFinished() {
-        return m_feederSubsystem.getNumPowerCells() == 0;
+        m_feederSubsystem.setNumPowerCells(0);
     }
 
 }

@@ -23,12 +23,14 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AutoConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.DoubleConsumer;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -70,6 +72,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_odometry = new DifferentialDriveOdometry(getHeading(), AutoConstants.kStartingPosition);
         m_differentialDrive.setSafetyEnabled(false);
+        m_differentialDrive.setDeadband(0); // Dead band is done with joysticks directly
 
         m_rightMaster.setInverted(true);
         m_leftMaster.setInverted(true);
@@ -115,9 +118,21 @@ public class DriveSubsystem extends SubsystemBase {
         tankDrive(0);
     }
 
-    public void tankDriveVolts(final double leftVolts, final double rightVolts) {
+    public void tankDriveVolts(double leftVolts, double rightVolts, final boolean squaredInputs) {
+        leftVolts = MathUtil.clamp(leftVolts, 0, AutoConstants.kMaxVoltage);
+        rightVolts = MathUtil.clamp(rightVolts, 0, AutoConstants.kMaxVoltage);
+
+        if (squaredInputs) {
+            leftVolts = Math.copySign(leftVolts * leftVolts, leftVolts);
+            rightVolts = Math.copySign(rightVolts * rightVolts, rightVolts);
+        }
+
         m_leftMaster.setVoltage(leftVolts);
         m_rightMaster.setVoltage(rightVolts);
+    }
+
+    public void tankDriveVolts(final double leftVolts, final double rightVolts) {
+        tankDriveVolts(leftVolts, rightVolts, false);
     }
 
     public void setMaxOutput(double maxOutput) {

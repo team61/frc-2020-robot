@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.FeederConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
@@ -40,7 +41,7 @@ public class RobotContainer {
     private final DriveSubsystem m_driveSubsystem = DriveSubsystem.getInstance();
     private final FeederSubsystem m_feederSubsystem = FeederSubsystem.getInstance();
     private final TurretSubsystem m_turretSubsystem = TurretSubsystem.getInstance();
-    //private final ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
+    private final ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
     private final LiftSubsystem m_liftSubsystem = LiftSubsystem.getInstance();
 //    private final VisionSubsystem m_visionSubsystem = VisionSubsystem.getInstance();
 
@@ -72,13 +73,15 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
-//
+
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
-//
-//        jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new Feed(m_feederSubsystem).andThen(new WaitCommand(1))));
-        jTurret.btn_1.whileHeld(new Feed(m_feederSubsystem));
+
+        jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new WaitCommand(FeederConstants.kFeederDelay).andThen(new Feed(m_feederSubsystem))));
+        jTurret.btn_3.whenPressed(new ResetBallCount(m_feederSubsystem));
         jTurret.btn_4.whenPressed(new Dump(m_feederSubsystem));
-//        jTurret.btn_2.whenPressed(new TurretAutoAim(m_turretSubsystem, m_visionSubsystem::getYaw));
+
+//        jTurret.btn_2.whenPressed(new AutoTurretAim(m_turretSubsystem, m_visionSubsystem::getYaw));
+//        jTurret.btn_2.whenPressed(new ResetOdometryWithVision(m_visionSubsystem.getDistance(), m_driveSubsystem.getPose2d(), m_driveSubsystem::resetOdometry));
 
     }
 
