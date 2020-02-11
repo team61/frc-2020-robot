@@ -138,6 +138,8 @@ public final class Constants {
         public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (gearRatio * kEncoderCPR);
         public static final boolean kEncoderReversed = false;
 
+        public static final Translation2d kGoalPosition = new Translation2d(3.358, -2.358);
+
         // Characterization
 
         // Feedforward
