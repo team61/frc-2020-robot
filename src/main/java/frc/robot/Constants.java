@@ -170,13 +170,13 @@ public final class Constants {
     public static final class FeederConstants {
 
         // Ports
-        public static final int kMotorPort = 8; // Placeholder
+        public static final int kMotorPort = 8;
         public static final int[] kSolenoidPorts = {0, 1, 2};
         public static final int[] kLimitSwitchPorts = {0, 1, 2};
 
         // Operation Data
         public static final double kMaxVoltage = 9;
-        public static final double kFeederDelay = 0.5;
+        public static final double kFeederDelay = 0.3;
 
     }
 

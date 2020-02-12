@@ -44,7 +44,7 @@ public class TurretAutoAimVision extends CommandBase {
 
         double speedSetpoint = m_controller.getSetpoint().velocity;
 
-        double profile = m_controller.calculate(m_yaw.getAsDouble(), 0);
+        double profile = m_controller.calculate(TurretConstants.kDistanceToDegrees / m_yaw.getAsDouble(), 0);
         double feedForward =  m_feedForward.calculate(speedSetpoint, (speedSetpoint - m_turretSubsystem.getEncoderRate()) / dt);
 
         double output = MathUtil.clamp(profile + feedForward, 0, TurretConstants.kMaxVoltage);
