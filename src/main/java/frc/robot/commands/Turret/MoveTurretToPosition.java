@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.Turret;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
@@ -32,7 +32,7 @@ public class MoveTurretToPosition extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return m_turretSubsystem.getPosition() * TurretConstants.kDistanceToDegrees <= m_angle + 2 && m_turretSubsystem.getPosition() * TurretConstants.kDistanceToDegrees >= m_angle - 2;
+        return m_turretSubsystem.getPosition() * TurretConstants.kDistanceToDegrees <= m_angle + TurretConstants.kTurretTolerance && m_turretSubsystem.getPosition() * TurretConstants.kDistanceToDegrees >= m_angle - 2;
     }
 
     @Override

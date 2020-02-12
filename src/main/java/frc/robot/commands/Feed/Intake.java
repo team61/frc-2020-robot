@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.Feed;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.FeederConstants;
@@ -44,7 +44,7 @@ public class Intake extends CommandBase {
             }
         }
 
-        m_feederSubsystem.setVoltage(FeederConstants.kFeederSpeedVoltage);
+        m_feederSubsystem.setVoltage(FeederConstants.kMaxVoltage);
     }
 
     // Returns true when the command should end.

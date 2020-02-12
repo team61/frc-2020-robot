@@ -1,29 +1,27 @@
-package frc.robot.commands;
+package frc.robot.commands.Turret;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.Constants.TurretConstants;
+import frc.robot.subsystems.TurretSubsystem;
 
 import java.util.function.DoubleSupplier;
 
-public class TankDrive extends CommandBase {
+public class TurretWithJoysticks extends CommandBase {
 
-    private DriveSubsystem m_driveSubsystem;
+    private TurretSubsystem m_turretSubsystem;
 
     private Timer m_timer = new Timer();
 
     private double m_prevTime;
 
-    private DoubleSupplier m_left;
-    private DoubleSupplier m_right;
+    private DoubleSupplier m_speed;
 
-    public TankDrive(DriveSubsystem driveSubsystem, DoubleSupplier left, DoubleSupplier right) {
-        m_driveSubsystem = driveSubsystem;
-        m_left = left;
-        m_right = right;
+    public TurretWithJoysticks(TurretSubsystem turretSubsystem, DoubleSupplier speed) {
+        m_turretSubsystem = turretSubsystem;
+        m_speed = speed;
 
-        addRequirements(driveSubsystem);
+        addRequirements(turretSubsystem);
     }
 
     @Override
@@ -33,20 +31,24 @@ public class TankDrive extends CommandBase {
         m_timer.start();
     }
 
+
     @Override
     public void execute() {
         double curTime = m_timer.get();
         double dt = curTime - m_prevTime;
 
-        m_driveSubsystem.tankDriveToVolts(m_left.getAsDouble(), m_right.getAsDouble());
+        m_turretSubsystem.setVoltage(m_speed.getAsDouble() * TurretConstants.kMaxVoltage);
 
-        double velocity = m_driveSubsystem.getEncoderRate();
+        double velocity = m_turretSubsystem.getEncoderRate();
         double acceleration = velocity / dt;
 //        System.out.println(
 //                "Velocity: " + velocity
 //                        + "Acceleration: " + acceleration);
 
         m_prevTime = curTime;
+
+        System.out.println(m_turretSubsystem.getPosition());
+
     }
 
     // Returns true when the command should end.
@@ -58,6 +60,6 @@ public class TankDrive extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_driveSubsystem.stopTankDrive();
+        m_turretSubsystem.stop();
     }
 }

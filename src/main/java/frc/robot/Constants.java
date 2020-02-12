@@ -60,24 +60,20 @@ public final class Constants {
         // Encoder Ports
         public static final int[] kLeftEncoderPorts = {4, 5};
         public static final int[] kRightEncoderPorts = {6, 7};
+
+        // Operation Data
+        public static final double kFudgeFactor = 0.88; // right side
+
     }
 
     public static final class AutoConstants {
-        public static final double kTrackWidth = 0.69; // Meters
-        public static final double kWheelBase = 0.94; // Meters
-
 
         // Constraints
         public static final double kMaxVelocity = 6; // Meters per second
         public static final double kMaxAcceleration = 2; // Meters per second squared
-
-        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
-
         public static final double kMaxVoltage = 12;
 
-        // Characterization
-
-        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
+        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
         // Create a voltage constraint to ensure we don't accelerate too fast
         public static final DifferentialDriveVoltageConstraint autoVoltageConstraint =
@@ -87,6 +83,12 @@ public final class Constants {
                                 AutoConstants.kA),
                         AutoConstants.kDriveKinematics,
                         AutoConstants.kMaxVoltage);
+
+
+        /* Characterization */
+        public static final double kTrackWidth = 0.69; // Meters
+        public static final double kWheelBase = 0.94; // Meters
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
 
         // Create config for trajectory
         public static final TrajectoryConfig config =
@@ -113,17 +115,13 @@ public final class Constants {
         public static final double kRamseteB = 2;
         public static final double kRamseteZeta = 0.7;
 
+        // Path Planning
         public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(3.346, -2.335), new Rotation2d(0));
 
         public static final String RightStartToTrench = "/home/lvuser/deploy/output/RightStartToTrench.wpilib.json";
         public static final String TrenchToRightStart = "/home/lvuser/deploy/output/TrenchToRightStart.wpilib.json";
 
         public static final String[] RightTrenchGroup = {RightStartToTrench, TrenchToRightStart};
-
-        public static final String DriveCamName = "DriveCam";
-
-        public static final double kFudgeFactor = 0.88; // right side
-
     }
 
     public static final class TurretConstants {
@@ -139,10 +137,9 @@ public final class Constants {
         public static final double gearRatio = 3.1875; // This is 1 if the encoder is directly mounted to the wheel shaft which it should to account for slip
         public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (gearRatio * kEncoderCPR);
         public static final boolean kEncoderReversed = false;
+        public static final double kDistanceToDegrees = 180 / 45.0; // Move turret 180 degrees then measure encoder distance and divide
 
-        public static final Translation2d kGoalPosition = new Translation2d(3.358, -2.358);
-
-        // Characterization
+        /* Characterization */
 
         // Feedforward
         public static final double kS = 0.451; // Volts
@@ -154,18 +151,19 @@ public final class Constants {
         public static final double kI = 0; // Volts seconds per meter
         public static final double kD = 0; // Volts per seconds per meter
 
-        public static final double kDistanceToDegrees = 180 / 45.0;
-
-        public static final double kMaxVelocity = 3;
-        public static final double kMaxAcceleration = 1;
-
+        // Constraints
+        public static final double kMaxVelocity = 8;
+        public static final double kMaxAcceleration = 3;
         public static final double kMaxVoltage = 12;
-
-        public static final double kDefaultState = 0; // Distance from set point
-
         public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
+        // Operation Data
+        public static final double kDefaultState = 0; // Distance from set point
         public static final double kMaxDistance = 50;
+        public static final double kTurretTolerance = 2;
+
+
+        public static final Translation2d kGoalPosition = new Translation2d(3.358, -2.358);
 
     }
 
@@ -176,40 +174,45 @@ public final class Constants {
         public static final int[] kSolenoidPorts = {0, 1, 2};
         public static final int[] kLimitSwitchPorts = {0, 1, 2};
 
-        public static final double kFeederSpeedVoltage = 9; // Placeholder
-
+        // Operation Data
+        public static final double kMaxVoltage = 9;
         public static final double kFeederDelay = 0.5;
 
     }
 
     public static final class ShooterConstants {
         // Ports
-        public static final int kMasterPort = 5; // Placeholder
-        public static final int kSlavePort = 6; // Placeholder
+        public static final int kMasterPort = 5;
+        public static final int kSlavePort = 6;
 
-        public static final double kSpeedVoltage = 12; // Placeholder
+        // Operation Data
+        public static final double kMaxVoltage = 12;
+
+        // Kinematics
         public static final double kAngle = 55;
-
         public static final double kGoalHeight = 2.5;
         public static final double kShooterHeight = 1;
         public static final double kHeightDifference = kGoalHeight - kShooterHeight;
-
-        public static final double kVoltageConstant = 12;
     }
 
     public static final class LiftConstants {
-        public static final int kSolenoidAPort = 3; // Placeholder
-        public static final int kSolenoidBPort = 4; // Placeholder
+        // Ports
+        public static final int kSolenoidAPort = 3;
+        public static final int kSolenoidBPort = 4;
     }
 
     public static final class VisionConstants {
+        // Camera Information
         public static final double kCamera_width = 640; // in pixels
         public static final double kFieldOfView = 67; // in degrees
         public static final double kDegPerPixel = kFieldOfView / kCamera_width;
 
-        public static final double kTapeWidth = 0.2; // in meters
-
+        // Camera Names
         public static final String TurretCamName = "TurretCam";
+        public static final String DriveCamName = "DriveCam";
+
+        // Object Data
+        public static final double kTapeWidth = 0.2; // in meters
 
     }
 

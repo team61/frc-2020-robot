@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.Shoot;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.PhysicConstants;
@@ -28,7 +28,7 @@ public class AutoShoot extends CommandBase {
                                 (2*Math.pow(Math.cos(Math.toRadians(ShooterConstants.kAngle)), 2)
                                         * (ShooterConstants.kHeightDifference - Math.tan(ShooterConstants.kAngle))));
 
-        double voltage = ballVelocity * ShooterConstants.kVoltageConstant;
+        double voltage = ballVelocity * ShooterConstants.kMaxVoltage;
         if (Double.isNaN(ballVelocity)) {
             end(false);
         }

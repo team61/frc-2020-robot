@@ -22,7 +22,16 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.FeederConstants;
-import frc.robot.commands.*;
+import frc.robot.commands.Drive.FollowTrajectory;
+import frc.robot.commands.Drive.TankDrive;
+import frc.robot.commands.Feed.Dump;
+import frc.robot.commands.Feed.Feed;
+import frc.robot.commands.Feed.Intake;
+import frc.robot.commands.Feed.ResetBallCount;
+import frc.robot.commands.Lift.Climb;
+import frc.robot.commands.Shoot.Shoot;
+import frc.robot.commands.Turret.MoveTurretToPosition;
+import frc.robot.commands.Turret.TurretWithJoysticks;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
 
@@ -79,9 +88,9 @@ public class RobotContainer {
         jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new WaitCommand(FeederConstants.kFeederDelay).andThen(new Feed(m_feederSubsystem))));
         jTurret.btn_3.whenPressed(new ResetBallCount(m_feederSubsystem));
        // jTurret.btn_4.whenPressed(new SetTurretDefault(m_turretSubsystem));
-        jTurret.btn_5.whenPressed(new Dump(m_feederSubsystem));
-        jTurret.btn_4.whenPressed(new MoveTurretToPosition(m_turretSubsystem, 0));
-        jTurret.btn_6.whenPressed(new MoveTurretToPosition(m_turretSubsystem, 180));
+        jTurret.btn_5.whileHeld(new Dump(m_feederSubsystem));
+        jTurret.btn_4.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 0));
+        jTurret.btn_6.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 180));
 
 //        jTurret.btn_2.whenPressed(new AutoTurretAim(m_turretSubsystem, m_visionSubsystem::getYaw));
 //        jTurret.btn_2.whenPressed(new ResetOdometryWithVision(m_visionSubsystem.getDistance(), m_driveSubsystem.getPose2d(), m_driveSubsystem::resetOdometry));

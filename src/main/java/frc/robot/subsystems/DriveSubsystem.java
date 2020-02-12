@@ -103,7 +103,7 @@ public class DriveSubsystem extends SubsystemBase {
      * */
 
     public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
-       m_differentialDrive.tankDrive(leftSpeed, rightSpeed * AutoConstants.kFudgeFactor, squaredInputs);
+       m_differentialDrive.tankDrive(leftSpeed, rightSpeed * DriveConstants.kFudgeFactor, squaredInputs);
     }
 
     public void tankDrive(final double leftSpeed, final double rightSpeed) {
@@ -120,7 +120,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         m_leftMaster.setVoltage(leftVolts);
-        m_rightMaster.setVoltage(rightVolts * AutoConstants.kFudgeFactor);
+        m_rightMaster.setVoltage(rightVolts * DriveConstants.kFudgeFactor);
     }
 
     public void tankDriveToVolts(double leftSpeed, double rightSpeed, final boolean squaredInputs) {
@@ -129,7 +129,7 @@ public class DriveSubsystem extends SubsystemBase {
             rightSpeed = Math.copySign(rightSpeed * rightSpeed, rightSpeed);
         }
         leftSpeed *= AutoConstants.kMaxVoltage;
-        rightSpeed *= AutoConstants.kMaxVoltage;
+        rightSpeed *= AutoConstants.kMaxVoltage * DriveConstants.kFudgeFactor;
         tankDriveVolts(leftSpeed, rightSpeed);
     }
     public void tankDriveToVolts(double leftSpeed, double rightSpeed) {

@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.Shoot;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ShooterConstants;
@@ -15,7 +15,7 @@ public class Shoot extends CommandBase {
 
     @Override
     public void execute() {
-        m_shooterSubsystem.set(ShooterConstants.kSpeedVoltage);
+        m_shooterSubsystem.set(ShooterConstants.kMaxVoltage);
 
     }
 

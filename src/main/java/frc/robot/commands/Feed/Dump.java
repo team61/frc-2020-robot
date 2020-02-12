@@ -1,19 +1,14 @@
-package frc.robot.commands;
+package frc.robot.commands.Feed;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.subsystems.FeederSubsystem;
 
-public class Feed extends CommandBase {
+public class Dump extends CommandBase {
 
     private FeederSubsystem m_feederSubsystem;
 
-    private boolean pastState;
-    private int topLimitSwitch = FeederConstants.kLimitSwitchPorts.length - 1;
-
-
-    public Feed(FeederSubsystem feederSubsystem) {
+    public Dump(FeederSubsystem feederSubsystem) {
         m_feederSubsystem = feederSubsystem;
 
         addRequirements(feederSubsystem);
@@ -21,8 +16,6 @@ public class Feed extends CommandBase {
 
     @Override
     public void initialize() {
-        pastState = m_feederSubsystem.isSwitchSet(topLimitSwitch);
-
         for (int i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
             m_feederSubsystem.setSolenoidState(i, true);
         }
@@ -30,13 +23,18 @@ public class Feed extends CommandBase {
 
     @Override
     public void execute() {
-        m_feederSubsystem.setVoltage(FeederConstants.kFeederSpeedVoltage);
+        m_feederSubsystem.setVoltage(-FeederConstants.kMaxVoltage);
     }
 
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         m_feederSubsystem.stop();
-        m_feederSubsystem.setNumPowerCells(0);
     }
-
 }
