@@ -1,5 +1,6 @@
 package frc.robot.commands.Feed;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.subsystems.FeederSubsystem;
@@ -8,8 +9,9 @@ public class Feed extends CommandBase {
 
     private FeederSubsystem m_feederSubsystem;
 
-    private int topLimitSwitch = FeederConstants.kLimitSwitchPorts.length - 1;
+    private Timer m_timer = new Timer();
 
+    private int solenoid;
 
     public Feed(FeederSubsystem feederSubsystem) {
         m_feederSubsystem = feederSubsystem;
@@ -19,13 +21,21 @@ public class Feed extends CommandBase {
 
     @Override
     public void initialize() {
-        for (int i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
-            m_feederSubsystem.setSolenoidState(i, true);
-        }
+        solenoid = FeederConstants.kSolenoidPorts.length - 1;
+        m_timer.reset();
+        m_timer.start();
     }
 
     @Override
     public void execute() {
+        if (m_timer.get() >= FeederConstants.kBallDelay) {
+            m_feederSubsystem.setSolenoidState(solenoid, true);
+            if (solenoid > 0) {
+                solenoid--;
+            }
+            m_timer.reset();
+            m_timer.start();
+        }
         m_feederSubsystem.setVoltage(FeederConstants.kMaxVoltage);
     }
 

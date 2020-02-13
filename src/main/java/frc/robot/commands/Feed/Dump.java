@@ -1,5 +1,6 @@
 package frc.robot.commands.Feed;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.subsystems.FeederSubsystem;
@@ -7,6 +8,10 @@ import frc.robot.subsystems.FeederSubsystem;
 public class Dump extends CommandBase {
 
     private FeederSubsystem m_feederSubsystem;
+
+    private Timer m_timer = new Timer();
+
+    private int solenoid;
 
     public Dump(FeederSubsystem feederSubsystem) {
         m_feederSubsystem = feederSubsystem;
@@ -16,25 +21,28 @@ public class Dump extends CommandBase {
 
     @Override
     public void initialize() {
-        for (int i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
-            m_feederSubsystem.setSolenoidState(i, true);
-        }
+        solenoid = 0;
+        m_timer.reset();
+        m_timer.start();
     }
 
     @Override
     public void execute() {
+        if (m_timer.get() >= FeederConstants.kBallDelay) {
+            m_feederSubsystem.setSolenoidState(solenoid, true);
+            if (solenoid < FeederConstants.kSolenoidPorts.length - 1) {
+                solenoid++;
+            }
+            m_timer.reset();
+            m_timer.start();
+        }
         m_feederSubsystem.setVoltage(-FeederConstants.kMaxVoltage);
     }
 
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         m_feederSubsystem.stop();
+        m_feederSubsystem.setNumPowerCells(0);
     }
+
 }

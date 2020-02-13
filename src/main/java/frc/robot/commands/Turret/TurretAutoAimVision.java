@@ -14,8 +14,8 @@ public class TurretAutoAimVision extends CommandBase {
 
     private TurretSubsystem m_turretSubsystem;
 
-    private ProfiledPIDController m_controller = new ProfiledPIDController(TurretConstants.kP, TurretConstants.kI, TurretConstants.kD,TurretConstants.kConstraints);
-    private SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(TurretConstants.kS, TurretConstants.kV, TurretConstants.kA);
+    //private ProfiledPIDController m_controller = new ProfiledPIDController(TurretConstants.kP, TurretConstants.kI, TurretConstants.kD,TurretConstants.kConstraints);
+    //private SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(TurretConstants.kS, TurretConstants.kV, TurretConstants.kA);
 
     private DoubleSupplier m_yaw;
 
@@ -42,14 +42,22 @@ public class TurretAutoAimVision extends CommandBase {
         double curTime = m_timer.get();
         double dt = curTime - m_prevTime;
 
-        double speedSetpoint = m_controller.getSetpoint().velocity;
+       // double speedSetpoint = m_controller.getSetpoint().velocity;
 
-        double profile = m_controller.calculate(TurretConstants.kDistanceToDegrees / m_yaw.getAsDouble(), 0);
-        double feedForward =  m_feedForward.calculate(speedSetpoint, (speedSetpoint - m_turretSubsystem.getEncoderRate()) / dt);
+       // double profile = m_controller.calculate(TurretConstants.kDistanceToDegrees / m_yaw.getAsDouble(), 0);
+       // double feedForward =  m_feedForward.calculate(speedSetpoint, (speedSetpoint - m_turretSubsystem.getEncoderRate()) / dt);
 
-        double output = MathUtil.clamp(profile + feedForward, 0, TurretConstants.kMaxVoltage);
+        //double output = MathUtil.clamp(profile + feedForward, 0, TurretConstants.kMaxVoltage);
 
-        m_turretSubsystem.setVoltage(output);
+       // m_turretSubsystem.setVoltage(output);
+        if (m_yaw.getAsDouble() > 5) {
+            m_turretSubsystem.setVoltage(TurretConstants.kMaxVoltage);
+        } else if (m_yaw.getAsDouble() < -5) {
+            m_turretSubsystem.setVoltage(-TurretConstants.kMaxVoltage);
+        } else {
+            m_turretSubsystem.stop();
+            end(false);
+        }
 
         m_prevTime = curTime;
     }

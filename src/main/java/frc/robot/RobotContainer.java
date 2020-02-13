@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.FeederConstants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.commands.Drive.FollowTrajectory;
 import frc.robot.commands.Drive.TankDrive;
 import frc.robot.commands.Feed.Dump;
@@ -31,6 +32,7 @@ import frc.robot.commands.Feed.ResetBallCount;
 import frc.robot.commands.Lift.Climb;
 import frc.robot.commands.Shoot.Shoot;
 import frc.robot.commands.Turret.MoveTurretToPosition;
+import frc.robot.commands.Turret.TurretAutoAimVision;
 import frc.robot.commands.Turret.TurretWithJoysticks;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
@@ -52,12 +54,14 @@ public class RobotContainer {
     private final TurretSubsystem m_turretSubsystem = TurretSubsystem.getInstance();
     private final ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
     private final LiftSubsystem m_liftSubsystem = LiftSubsystem.getInstance();
-//    private final VisionSubsystem m_visionSubsystem = VisionSubsystem.getInstance();
+    private final VisionSubsystem m_visionSubsystem = VisionSubsystem.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
     private final LogitechJoystick jLift = new LogitechJoystick(OIConstants.jLift);
     private final LogitechJoystick jTurret = new LogitechJoystick(OIConstants.jTurret);
+
+    private final ParallelRaceGroup m_fire = new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new WaitCommand(FeederConstants.kFeederDelay).andThen(new Feed(m_feederSubsystem)));
 
     private final Command m_autoCommand = null;
 
@@ -85,14 +89,14 @@ public class RobotContainer {
 
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
 
-        jTurret.btn_1.whileHeld(new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new WaitCommand(FeederConstants.kFeederDelay).andThen(new Feed(m_feederSubsystem))));
+        jTurret.btn_1.whileHeld(m_fire);
         jTurret.btn_3.whenPressed(new ResetBallCount(m_feederSubsystem));
        // jTurret.btn_4.whenPressed(new SetTurretDefault(m_turretSubsystem));
         jTurret.btn_5.whileHeld(new Dump(m_feederSubsystem));
         jTurret.btn_4.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 0));
         jTurret.btn_6.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 180));
 
-//        jTurret.btn_2.whenPressed(new AutoTurretAim(m_turretSubsystem, m_visionSubsystem::getYaw));
+        jTurret.btn_2.whenPressed(new TurretAutoAimVision(m_turretSubsystem, m_visionSubsystem::getYaw));
 //        jTurret.btn_2.whenPressed(new ResetOdometryWithVision(m_visionSubsystem.getDistance(), m_driveSubsystem.getPose2d(), m_driveSubsystem::resetOdometry));
 
     }
@@ -136,7 +140,8 @@ public class RobotContainer {
 
         // Run path following command, then stop at the end.
         try {
-            return new FollowTrajectory(trajectories[0], m_driveSubsystem).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem));
+            return new ParallelDeadlineGroup(new WaitCommand(FeederConstants.kBallDelay * 3 + FeederConstants.kFeederDelay + 1.5), m_fire);
+            // FollowTrajectory(trajectories[0], m_driveSubsystem).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem));
         } catch (ArrayIndexOutOfBoundsException ex) {
             DriverStation.reportError("Trajectory array out of bounds", ex.getStackTrace());
             return null;

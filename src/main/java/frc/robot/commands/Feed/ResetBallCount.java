@@ -15,7 +15,7 @@ public class ResetBallCount extends InstantCommand {
     @Override
     public void execute() {
         for (int i = 0; i < Constants.FeederConstants.kSolenoidPorts.length; i++) {
-            m_feederSubsystem.setSolenoidState(i, true);
+            m_feederSubsystem.setSolenoidState(i, false);
         }
 
         m_feederSubsystem.setNumPowerCells(0);

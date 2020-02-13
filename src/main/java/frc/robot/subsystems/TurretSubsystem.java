@@ -16,7 +16,7 @@ public class TurretSubsystem extends SubsystemBase {
 
    private LimitSwitch m_limitSwitch = new LimitSwitch(TurretConstants.kLimitSwitchPort);
 
-   private double offSet = 20;
+   private double offSet = 0;
    private double position = 0;
 
    public TurretSubsystem() {
@@ -45,15 +45,37 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public void set(double speed) {
-        if (position <= TurretConstants.kMaxDistance || speed <= 0) {
-            m_motor.set(speed);
-        } else {
-            stop();
-        }
+       if (position >= TurretConstants.kMaxDistance) {
+           if (speed <= 0) {
+               m_motor.set(speed);
+           } else {
+               stop();
+           }
+       } else if (position < 0) {
+           if (speed >= 0) {
+               m_motor.set(speed);
+           } else {
+               stop();
+           }
+       } else {
+           m_motor.set(speed);
+       }
     }
 
     public void setVoltage(double voltage) {
-        if (position <= TurretConstants.kMaxDistance || voltage <= 0) {
+        if (position >= TurretConstants.kMaxDistance) {
+            if (voltage <= 0) {
+                m_motor.setVoltage(voltage);
+            } else {
+                stop();
+            }
+        } else if (isSwitchSet()) {
+            if (voltage >= 0) {
+                m_motor.setVoltage(voltage);
+            } else {
+                stop();
+            }
+        } else {
             m_motor.setVoltage(voltage);
         }
     }

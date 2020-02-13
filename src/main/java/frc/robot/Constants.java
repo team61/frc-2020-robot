@@ -73,6 +73,10 @@ public final class Constants {
         public static final double kMaxAcceleration = 2; // Meters per second squared
         public static final double kMaxVoltage = 12;
 
+        public static final double kTrackWidth = 0.69; // Meters
+        public static final double kWheelBase = 0.94; // Meters
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
+
         public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
         // Create a voltage constraint to ensure we don't accelerate too fast
@@ -86,9 +90,6 @@ public final class Constants {
 
 
         /* Characterization */
-        public static final double kTrackWidth = 0.69; // Meters
-        public static final double kWheelBase = 0.94; // Meters
-        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
 
         // Create config for trajectory
         public static final TrajectoryConfig config =
@@ -176,7 +177,8 @@ public final class Constants {
 
         // Operation Data
         public static final double kMaxVoltage = 9;
-        public static final double kFeederDelay = 0.3;
+        public static final double kFeederDelay = 0.7;
+        public static final double kBallDelay = 0.5;
 
     }
 

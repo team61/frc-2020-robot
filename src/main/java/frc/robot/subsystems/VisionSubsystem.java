@@ -11,9 +11,10 @@ public class VisionSubsystem extends SubsystemBase {
     private static VisionSubsystem m_instance;
 
     private NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
-    private NetworkTable table = networkTableInstance.getTable("chameleon-vision").getSubTable(VisionConstants.TurretCamName);
+    private NetworkTable table = networkTableInstance.getTable("chameleon-vision").getSubTable("TurretCam");
     private NetworkTableEntry yawEntry = table.getEntry("targetYaw");
-    private NetworkTableEntry widthEntry = table.getEntry("targetFittedWidth");
+    private NetworkTableEntry widthEntry = table.getEntry("targetBoundingWidth");
+    private NetworkTableEntry latencyEntry = table.getEntry("latency");
     private double yaw = 0;
     private double width = 0;
 
@@ -28,6 +29,9 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         setValues();
+        System.out.println(yawEntry.getDouble(404));
+//        System.out.println(widthEntry.getDouble(404));
+//        System.out.println(latencyEntry.getDouble(404));
     }
 
     public void setYaw() {

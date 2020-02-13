@@ -47,7 +47,7 @@ public class TurretWithJoysticks extends CommandBase {
 
         m_prevTime = curTime;
 
-        System.out.println(m_turretSubsystem.getPosition());
+        //System.out.println(m_turretSubsystem.getPosition());
 
     }
 
