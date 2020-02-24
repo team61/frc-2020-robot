@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class LogitechJoystick extends Joystick {
 
-    private final double JOYSTICK_BUFFER = .07;
+    private final double JOYSTICK_BUFFER = .06;
 
     public LogitechJoystick(int port) {
         super(port);
@@ -24,8 +24,15 @@ public class LogitechJoystick extends Joystick {
     public JoystickButton btn_11 = new JoystickButton(this, 11);
     public JoystickButton btn_12 = new JoystickButton(this, 12);
 
+    public double getAxis(double value, double deadzone) {
+        if (Math.abs(value) > deadzone) {
+            return value;
+        } else {
+            return 0;
+        }
+    }
     public double getAxis(double value) {
-        if (Math.abs(value) > JOYSTICK_BUFFER) {
+        if (Math.abs(value) >JOYSTICK_BUFFER) {
             return value;
         } else {
             return 0;
@@ -40,5 +47,5 @@ public class LogitechJoystick extends Joystick {
         return getAxis(getX());
     }
 
-    public double getZAxis() { return getAxis(getZ()); }
+    public double getZAxis() { return getAxis(getZ(), 0.03); }
 }

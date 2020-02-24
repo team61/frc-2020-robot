@@ -7,8 +7,9 @@ import frc.robot.subsystems.FeederSubsystem;
 public class ResetBallCount extends InstantCommand {
 
     private FeederSubsystem m_feederSubsystem;
+    private int m_limitSwitch;
 
-    public ResetBallCount(FeederSubsystem feederSubsystem) {
+    public ResetBallCount(FeederSubsystem feederSubsystem, int limitSwitch) {
         m_feederSubsystem = feederSubsystem;
     }
 
@@ -18,6 +19,6 @@ public class ResetBallCount extends InstantCommand {
             m_feederSubsystem.setSolenoidState(i, false);
         }
 
-        m_feederSubsystem.setNumPowerCells(0);
+        m_feederSubsystem.setNumPowerCells(m_limitSwitch);
     }
 }

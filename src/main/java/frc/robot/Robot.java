@@ -30,9 +30,6 @@ public class Robot extends TimedRobot {
 
     private RobotContainer m_robotContainer;
 
-//    public NetworkTableEntry yaw;
-//    public NetworkTableEntry isDriverMode;
-
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -43,15 +40,6 @@ public class Robot extends TimedRobot {
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
         CameraServer.getInstance().startAutomaticCapture();
-        // Gets the default instance of NetworkTables
-//        NetworkTableInstance table = NetworkTableInstance.getDefault();
-
-        // Gets the MyCamName table under the chamelon-vision table
-        // MyCamName will vary depending on the name of your camera
-//        NetworkTable cameraTable = table.getTable("chameleon-vision").getSubTable("TurretCam");
-
-        // Gets the yaw to the target from the cameraTable
-//        yaw = cameraTable.getEntry("targetYaw");
     }
 
     /**
@@ -67,8 +55,7 @@ public class Robot extends TimedRobot {
         // commands, running already-scheduled commands, removing finished or interrupted commands,
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
-        // Prints the yaw to the target
-//        System.out.println(yaw.getDouble(0.0));
+
         CommandScheduler.getInstance().run();
     }
 

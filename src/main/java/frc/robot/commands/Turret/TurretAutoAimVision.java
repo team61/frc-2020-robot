@@ -50,13 +50,12 @@ public class TurretAutoAimVision extends CommandBase {
         //double output = MathUtil.clamp(profile + feedForward, 0, TurretConstants.kMaxVoltage);
 
        // m_turretSubsystem.setVoltage(output);
-        if (m_yaw.getAsDouble() > 5) {
-            m_turretSubsystem.setVoltage(TurretConstants.kMaxVoltage);
-        } else if (m_yaw.getAsDouble() < -5) {
-            m_turretSubsystem.setVoltage(-TurretConstants.kMaxVoltage);
+        if (m_yaw.getAsDouble() > 4) {
+            m_turretSubsystem.setVoltage(8);
+        } else if (m_yaw.getAsDouble() < -4) {
+            m_turretSubsystem.setVoltage(-8);
         } else {
             m_turretSubsystem.stop();
-            end(false);
         }
 
         m_prevTime = curTime;

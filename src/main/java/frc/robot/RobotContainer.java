@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.FeederConstants;
-import frc.robot.Constants.TurretConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Drive.FollowTrajectory;
 import frc.robot.commands.Drive.TankDrive;
 import frc.robot.commands.Feed.Dump;
@@ -30,6 +30,7 @@ import frc.robot.commands.Feed.Feed;
 import frc.robot.commands.Feed.Intake;
 import frc.robot.commands.Feed.ResetBallCount;
 import frc.robot.commands.Lift.Climb;
+import frc.robot.commands.Shoot.Fire;
 import frc.robot.commands.Shoot.Shoot;
 import frc.robot.commands.Turret.MoveTurretToPosition;
 import frc.robot.commands.Turret.TurretAutoAimVision;
@@ -61,8 +62,6 @@ public class RobotContainer {
     private final LogitechJoystick jLift = new LogitechJoystick(OIConstants.jLift);
     private final LogitechJoystick jTurret = new LogitechJoystick(OIConstants.jTurret);
 
-    private final ParallelRaceGroup m_fire = new ParallelRaceGroup(new Shoot(m_shooterSubsystem), new WaitCommand(FeederConstants.kFeederDelay).andThen(new Feed(m_feederSubsystem)));
-
     private final Command m_autoCommand = null;
 
     SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -89,14 +88,18 @@ public class RobotContainer {
 
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
 
-        jTurret.btn_1.whileHeld(m_fire);
-        jTurret.btn_3.whenPressed(new ResetBallCount(m_feederSubsystem));
-       // jTurret.btn_4.whenPressed(new SetTurretDefault(m_turretSubsystem));
+        jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage));
+        jTurret.btn_7.whenPressed(new ResetBallCount(m_feederSubsystem, 0));
+        jTurret.btn_9.whenPressed(new ResetBallCount(m_feederSubsystem, 1));
+        jTurret.btn_11.whenPressed(new ResetBallCount(m_feederSubsystem, 2));
+
+
+        // jTurret.btn_4.whenPressed(new SetTurretDefault(m_turretSubsystem));
         jTurret.btn_5.whileHeld(new Dump(m_feederSubsystem));
         jTurret.btn_4.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 0));
         jTurret.btn_6.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 180));
 
-        jTurret.btn_2.whenPressed(new TurretAutoAimVision(m_turretSubsystem, m_visionSubsystem::getYaw));
+        jTurret.btn_2.whileHeld(new TurretAutoAimVision(m_turretSubsystem, m_visionSubsystem::getYaw));
 //        jTurret.btn_2.whenPressed(new ResetOdometryWithVision(m_visionSubsystem.getDistance(), m_driveSubsystem.getPose2d(), m_driveSubsystem::resetOdometry));
 
     }
@@ -109,20 +112,19 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
 
-        // An example trajectory to follow.  All units in meters.
-        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(0, 0, new Rotation2d(0)),
-                // Pass through these two interior waypoints, making an 's' curve path
-                List.of(
-                        new Translation2d(1, 1),
-                        new Translation2d(2, -1)
-                ),
-                // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(3, 0, new Rotation2d(0)),
-                // Pass config
-                AutoConstants.config
-        );
+         //An example trajectory to follow.  All units in meters.
+//        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+//                // Start at the origin facing the +X direction
+//                new Pose2d(0, 0, new Rotation2d(0)),
+//                // Pass through these two interior waypoints, making an 's' curve path
+//                List.of(
+//                        new Translation2d(5, 0)
+//                ),
+//                // End 3 meters straight ahead of where we started, facing forward
+//                new Pose2d(5, 0, new Rotation2d(0)),
+//                // Pass config
+//                AutoConstants.config
+//        );
 
         String[] pathGroup = AutoConstants.RightTrenchGroup;
 
@@ -140,8 +142,10 @@ public class RobotContainer {
 
         // Run path following command, then stop at the end.
         try {
-            return new ParallelDeadlineGroup(new WaitCommand(FeederConstants.kBallDelay * 3 + FeederConstants.kFeederDelay + 1.5), m_fire);
-            // FollowTrajectory(trajectories[0], m_driveSubsystem).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem));
+            ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
+                    new WaitCommand(FeederConstants.kAutoDelay),
+                    new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage));
+           return m_fire.andThen(new FollowTrajectory(trajectories[0], m_driveSubsystem).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem)));
         } catch (ArrayIndexOutOfBoundsException ex) {
             DriverStation.reportError("Trajectory array out of bounds", ex.getStackTrace());
             return null;

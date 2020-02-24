@@ -62,7 +62,7 @@ public final class Constants {
         public static final int[] kRightEncoderPorts = {6, 7};
 
         // Operation Data
-        public static final double kFudgeFactor = 0.88; // right side
+        public static final double kFudgeFactor = 1; // right side
 
     }
 
@@ -102,12 +102,12 @@ public final class Constants {
                         .addConstraint(autoVoltageConstraint);
 
         // Feedforward
-        public static final double kS = 0.323; // Volts
-        public static final double kV = 0.895; // Volts seconds per meters
-        public static final double kA = 0.177; // Volts seconds per meters squared
+        public static final double kS = 1.48; // Volts
+        public static final double kV = 2.11; // Volts seconds per meters
+        public static final double kA = -0.00802; // Volts seconds per meters squared
 
         // Feedback
-        public static final double kP = 17.8; // Volts seconds per meter
+        public static final double kP = 4.14; // Volts seconds per meter
         public static final double kI = 0; // Volts seconds per meter
         public static final double kD = 0; // Volts per seconds per meter
 
@@ -179,6 +179,7 @@ public final class Constants {
         public static final double kMaxVoltage = 9;
         public static final double kFeederDelay = 0.7;
         public static final double kBallDelay = 0.5;
+        public static final double kAutoDelay = 3.7;
 
     }
 
@@ -189,12 +190,8 @@ public final class Constants {
 
         // Operation Data
         public static final double kMaxVoltage = 12;
-
-        // Kinematics
-        public static final double kAngle = 55;
-        public static final double kGoalHeight = 2.5;
-        public static final double kShooterHeight = 1;
-        public static final double kHeightDifference = kGoalHeight - kShooterHeight;
+        public static final double kAutoVoltage = 11.3;
+        public static final double kVoltagePerDistance = 1.2 / 0.8; // Volts per meter
     }
 
     public static final class LiftConstants {
