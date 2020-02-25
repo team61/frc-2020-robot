@@ -14,14 +14,7 @@ public class TurretAutoAimVision extends CommandBase {
 
     private TurretSubsystem m_turretSubsystem;
 
-    //private ProfiledPIDController m_controller = new ProfiledPIDController(TurretConstants.kP, TurretConstants.kI, TurretConstants.kD,TurretConstants.kConstraints);
-    //private SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(TurretConstants.kS, TurretConstants.kV, TurretConstants.kA);
-
     private DoubleSupplier m_yaw;
-
-    private Timer m_timer = new Timer();
-
-    private double m_prevTime;
 
     public TurretAutoAimVision(TurretSubsystem turretSubsystem, DoubleSupplier yaw) {
         m_turretSubsystem = turretSubsystem;
@@ -31,34 +24,14 @@ public class TurretAutoAimVision extends CommandBase {
     }
 
     @Override
-    public void initialize() {
-        m_prevTime = 0;
-        m_timer.reset();
-        m_timer.start();
-    }
-
-    @Override
     public void execute() {
-        double curTime = m_timer.get();
-        double dt = curTime - m_prevTime;
-
-       // double speedSetpoint = m_controller.getSetpoint().velocity;
-
-       // double profile = m_controller.calculate(TurretConstants.kDistanceToDegrees / m_yaw.getAsDouble(), 0);
-       // double feedForward =  m_feedForward.calculate(speedSetpoint, (speedSetpoint - m_turretSubsystem.getEncoderRate()) / dt);
-
-        //double output = MathUtil.clamp(profile + feedForward, 0, TurretConstants.kMaxVoltage);
-
-       // m_turretSubsystem.setVoltage(output);
-        if (m_yaw.getAsDouble() > 4) {
-            m_turretSubsystem.setVoltage(8);
-        } else if (m_yaw.getAsDouble() < -4) {
-            m_turretSubsystem.setVoltage(-8);
+        if (m_yaw.getAsDouble() > TurretConstants.kVisionTolerance) {
+            m_turretSubsystem.setVoltage(TurretConstants.kVisionVoltage);
+        } else if (m_yaw.getAsDouble() < -TurretConstants.kVisionTolerance) {
+            m_turretSubsystem.setVoltage(-TurretConstants.kVisionVoltage);
         } else {
             m_turretSubsystem.stop();
         }
-
-        m_prevTime = curTime;
     }
 
     // Returns true when the command should end.

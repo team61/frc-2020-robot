@@ -153,15 +153,14 @@ public final class Constants {
         public static final double kD = 0; // Volts per seconds per meter
 
         // Constraints
-        public static final double kMaxVelocity = 8;
-        public static final double kMaxAcceleration = 3;
         public static final double kMaxVoltage = 12;
-        public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
         // Operation Data
         public static final double kDefaultState = 0; // Distance from set point
         public static final double kMaxDistance = 50;
         public static final double kTurretTolerance = 2;
+        public static final double kVisionTolerance = 4; // Degrees
+        public static final double kVisionVoltage = 8;
 
 
         public static final Translation2d kGoalPosition = new Translation2d(3.358, -2.358);
@@ -218,17 +217,4 @@ public final class Constants {
     public static final class PhysicConstants {
         public static final double kGravity = 9.8;
     }
-
-//    public static final class WheelSpinnerConstants {
-//        public static final int kMotorPort = 10;
-//
-//        public static final double kWheelVoltage = 6;
-//
-//        public static final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-//        public static final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-//        public static final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
-//        public static final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-//
-//        public static final Color[] colors = {kBlueTarget, kGreenTarget, kRedTarget, kYellowTarget};
-//    }
 }

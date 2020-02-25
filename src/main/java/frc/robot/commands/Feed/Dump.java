@@ -36,7 +36,7 @@ public class Dump extends CommandBase {
             m_timer.reset();
             m_timer.start();
         }
-        m_feederSubsystem.set(-1);
+        m_feederSubsystem.setVoltage(-FeederConstants.kMaxVoltage);
     }
 
     @Override

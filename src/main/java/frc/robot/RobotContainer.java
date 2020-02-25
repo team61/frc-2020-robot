@@ -11,27 +11,23 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Drive.FollowTrajectory;
 import frc.robot.commands.Drive.TankDrive;
+import frc.robot.commands.Feed.BeltDump;
 import frc.robot.commands.Feed.Dump;
-import frc.robot.commands.Feed.Feed;
 import frc.robot.commands.Feed.Intake;
-import frc.robot.commands.Feed.ResetBallCount;
+import frc.robot.commands.Feed.ResetLimitSwitch;
 import frc.robot.commands.Lift.Climb;
 import frc.robot.commands.Shoot.Fire;
-import frc.robot.commands.Shoot.Shoot;
 import frc.robot.commands.Turret.MoveTurretToPosition;
 import frc.robot.commands.Turret.TurretAutoAimVision;
 import frc.robot.commands.Turret.TurretWithJoysticks;
@@ -40,7 +36,7 @@ import lib.components.LogitechJoystick;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.function.BooleanSupplier;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -61,6 +57,8 @@ public class RobotContainer {
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
     private final LogitechJoystick jLift = new LogitechJoystick(OIConstants.jLift);
     private final LogitechJoystick jTurret = new LogitechJoystick(OIConstants.jTurret);
+
+    private Trigger BeltDumpTrigger = new Trigger(()-> jTurret.btn_8.get() || jTurret.btn_10.get() || jTurret.btn_12.get());
 
     private final Command m_autoCommand = null;
 
@@ -89,18 +87,18 @@ public class RobotContainer {
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
 
         jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage));
-        jTurret.btn_7.whenPressed(new ResetBallCount(m_feederSubsystem, 0));
-        jTurret.btn_9.whenPressed(new ResetBallCount(m_feederSubsystem, 1));
-        jTurret.btn_11.whenPressed(new ResetBallCount(m_feederSubsystem, 2));
 
-
-        // jTurret.btn_4.whenPressed(new SetTurretDefault(m_turretSubsystem));
-        jTurret.btn_5.whileHeld(new Dump(m_feederSubsystem));
         jTurret.btn_4.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 0));
+        jTurret.btn_5.whileHeld(new Dump(m_feederSubsystem));
         jTurret.btn_6.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 180));
 
+        jTurret.btn_7.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 0));
+        jTurret.btn_9.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 1));
+        jTurret.btn_11.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 2));
+
+        BeltDumpTrigger.whileActiveContinuous(new BeltDump(m_feederSubsystem, new BooleanSupplier[] {jTurret.btn_8::get, jTurret.btn_10::get, jTurret.btn_12::get}));
+
         jTurret.btn_2.whileHeld(new TurretAutoAimVision(m_turretSubsystem, m_visionSubsystem::getYaw));
-//        jTurret.btn_2.whenPressed(new ResetOdometryWithVision(m_visionSubsystem.getDistance(), m_driveSubsystem.getPose2d(), m_driveSubsystem::resetOdometry));
 
     }
 
