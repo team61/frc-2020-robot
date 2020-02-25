@@ -11,9 +11,16 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
@@ -36,6 +43,7 @@ import lib.components.LogitechJoystick;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -110,7 +118,29 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
 
-         //An example trajectory to follow.  All units in meters.
+//        // Create a voltage constraint to ensure we don't accelerate too fast
+//        DifferentialDriveVoltageConstraint autoVoltageConstraint =
+//                new DifferentialDriveVoltageConstraint(
+//                        new SimpleMotorFeedforward(AutoConstants.kS,
+//                                AutoConstants.kV,
+//                                AutoConstants.kA),
+//                        AutoConstants.kDriveKinematics,
+//                        AutoConstants.kMaxVoltage);
+//
+//
+//        /* Characterization */
+//
+//        // Create config for trajectory
+//        TrajectoryConfig config =
+//                // Add constraints to trajectory
+//                new TrajectoryConfig(AutoConstants.kMaxVelocity,
+//                        AutoConstants.kMaxAcceleration)
+//                        // Add kinematics to ensure max speed is actually obeyed
+//                        .setKinematics(AutoConstants.kDriveKinematics)
+//                        // Apply the voltage constraint
+//                        .addConstraint(autoVoltageConstraint);
+//
+//         //An example trajectory to follow.  All units in meters.
 //        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
 //                // Start at the origin facing the +X direction
 //                new Pose2d(0, 0, new Rotation2d(0)),
@@ -121,7 +151,7 @@ public class RobotContainer {
 //                // End 3 meters straight ahead of where we started, facing forward
 //                new Pose2d(5, 0, new Rotation2d(0)),
 //                // Pass config
-//                AutoConstants.config
+//                config
 //        );
 
         String[] pathGroup = AutoConstants.RightTrenchGroup;
@@ -143,7 +173,11 @@ public class RobotContainer {
             ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
                     new WaitCommand(FeederConstants.kAutoDelay),
                     new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage));
-           return m_fire.andThen(new FollowTrajectory(trajectories[0], m_driveSubsystem).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem)));
+           return m_fire.andThen(
+                   new ParallelDeadlineGroup(
+                       new FollowTrajectory(trajectories[0], m_driveSubsystem).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem)),
+                       new Intake(m_feederSubsystem))
+                   .andThen(m_fire));
         } catch (ArrayIndexOutOfBoundsException ex) {
             DriverStation.reportError("Trajectory array out of bounds", ex.getStackTrace());
             return null;

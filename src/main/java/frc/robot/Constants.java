@@ -42,7 +42,7 @@ public final class Constants {
 
     public static final class DriveConstants {
 
-        public static final double kWheelDiameter = 0.15; // Meters
+        public static final double kWheelDiameter = 0.2032; // Meters
 
         // Encoder Information
         public static final int kEncoderCPR = 360; // pulses per revolution
@@ -78,28 +78,6 @@ public final class Constants {
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidth);
 
         public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
-
-        // Create a voltage constraint to ensure we don't accelerate too fast
-        public static final DifferentialDriveVoltageConstraint autoVoltageConstraint =
-                new DifferentialDriveVoltageConstraint(
-                        new SimpleMotorFeedforward(AutoConstants.kS,
-                                AutoConstants.kV,
-                                AutoConstants.kA),
-                        AutoConstants.kDriveKinematics,
-                        AutoConstants.kMaxVoltage);
-
-
-        /* Characterization */
-
-        // Create config for trajectory
-        public static final TrajectoryConfig config =
-                // Add constraints to trajectory
-                new TrajectoryConfig(AutoConstants.kMaxVelocity,
-                        AutoConstants.kMaxAcceleration)
-                        // Add kinematics to ensure max speed is actually obeyed
-                        .setKinematics(AutoConstants.kDriveKinematics)
-                        // Apply the voltage constraint
-                        .addConstraint(autoVoltageConstraint);
 
         // Feedforward
         public static final double kS = 1.48; // Volts
