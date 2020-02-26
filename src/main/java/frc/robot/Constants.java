@@ -69,8 +69,8 @@ public final class Constants {
     public static final class AutoConstants {
 
         // Constraints
-        public static final double kMaxVelocity = 6; // Meters per second
-        public static final double kMaxAcceleration = 2; // Meters per second squared
+        public static final double kMaxVelocity = 2; // Meters per second
+        public static final double kMaxAcceleration = 1; // Meters per second squared
         public static final double kMaxVoltage = 12;
 
         public static final double kTrackWidth = 0.69; // Meters
@@ -95,7 +95,7 @@ public final class Constants {
         public static final double kRamseteZeta = 0.7;
 
         // Path Planning
-        public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(3.346, -2.335), new Rotation2d(0));
+        public static final Pose2d kStartingPosition = new Pose2d(new Translation2d(3.323, -0.867), new Rotation2d(0));
 
         public static final String RightStartToTrench = "/home/lvuser/deploy/output/RightStartToTrench.wpilib.json";
         public static final String TrenchToRightStart = "/home/lvuser/deploy/output/TrenchToRightStart.wpilib.json";
@@ -138,7 +138,9 @@ public final class Constants {
         public static final double kMaxDistance = 50;
         public static final double kTurretTolerance = 2;
         public static final double kVisionTolerance = 4; // Degrees
-        public static final double kVisionVoltage = 8;
+        public static final double kVisionVoltage = 7;
+        public static final double kAdjustmentVoltage = 6;
+        public static final double kAdjustmentDelay = 0.2;
 
 
         public static final Translation2d kGoalPosition = new Translation2d(3.358, -2.358);

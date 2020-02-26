@@ -26,7 +26,7 @@ public class MoveTurretToPosition extends CommandBase {
     @Override
     public void execute() {
         int sign = (m_angle - m_turretSubsystem.getPosition() * TurretConstants.kDistanceToDegrees >= 0) ? 1: -1;
-        m_turretSubsystem.setVoltage(sign * TurretConstants.kVisionVoltage);
+        m_turretSubsystem.setVoltage(sign * TurretConstants.kMaxVoltage);
     }
 
     // Returns true when the command should end.

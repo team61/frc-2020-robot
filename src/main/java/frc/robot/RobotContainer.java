@@ -27,6 +27,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.Drive.DriveForDistance;
 import frc.robot.commands.Drive.FollowTrajectory;
 import frc.robot.commands.Drive.TankDrive;
 import frc.robot.commands.Feed.BeltDump;
@@ -36,6 +37,7 @@ import frc.robot.commands.Feed.ResetLimitSwitch;
 import frc.robot.commands.Lift.Climb;
 import frc.robot.commands.Shoot.Fire;
 import frc.robot.commands.Turret.MoveTurretToPosition;
+import frc.robot.commands.Turret.SmallAdjustment;
 import frc.robot.commands.Turret.TurretAutoAimVision;
 import frc.robot.commands.Turret.TurretWithJoysticks;
 import frc.robot.subsystems.*;
@@ -66,9 +68,12 @@ public class RobotContainer {
     private final LogitechJoystick jLift = new LogitechJoystick(OIConstants.jLift);
     private final LogitechJoystick jTurret = new LogitechJoystick(OIConstants.jTurret);
 
-    private Trigger BeltDumpTrigger = new Trigger(()-> jTurret.btn_8.get() || jTurret.btn_10.get() || jTurret.btn_12.get());
+    private Trigger BeltDumpTriggerUp = new Trigger(()-> jTurret.btn_8.get() || jTurret.btn_10.get() || jTurret.btn_12.get());
+    private Trigger BeltDumpTriggerDown = new Trigger(()-> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get());
+
 
     private final Command m_autoCommand = null;
+    private final TurretAutoAimVision m_aim = new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw);
 
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -96,17 +101,21 @@ public class RobotContainer {
 
         jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage));
 
+        jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));
+        jTurret.btn_5.whenPressed(new SmallAdjustment(m_turretSubsystem, -Constants.TurretConstants.kAdjustmentVoltage));
+
         jTurret.btn_4.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 0));
-        jTurret.btn_5.whileHeld(new Dump(m_feederSubsystem));
         jTurret.btn_6.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 180));
 
-        jTurret.btn_7.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 0));
-        jTurret.btn_9.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 1));
-        jTurret.btn_11.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 2));
+        jLift.btn_7.whenPressed(new Dump(m_feederSubsystem));
+        jLift.btn_8.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 0));
+        jLift.btn_10.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 1));
+        jLift.btn_12.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 2));
 
-        BeltDumpTrigger.whileActiveContinuous(new BeltDump(m_feederSubsystem, new BooleanSupplier[] {jTurret.btn_8::get, jTurret.btn_10::get, jTurret.btn_12::get}));
+        BeltDumpTriggerUp.whileActiveContinuous(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_12::get, jTurret.btn_10::get, jTurret.btn_8::get}));
+        BeltDumpTriggerDown.whileActiveContinuous(new BeltDump(m_feederSubsystem, -Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, jTurret.btn_9::get, jTurret.btn_7::get}));
 
-        jTurret.btn_2.whileHeld(new TurretAutoAimVision(m_turretSubsystem, m_visionSubsystem::getYaw));
+        jTurret.btn_2.whileHeld(m_aim);
 
     }
 
@@ -172,11 +181,14 @@ public class RobotContainer {
         try {
             ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
                     new WaitCommand(FeederConstants.kAutoDelay),
-                    new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage));
-           return m_fire.andThen(
+                    new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage),
+                    m_aim
+                    );
+           return m_fire
+                   .andThen(
                    new ParallelDeadlineGroup(
-                       new FollowTrajectory(trajectories[0], m_driveSubsystem).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem)),
-                       new Intake(m_feederSubsystem))
+                       new FollowTrajectory(trajectories[0], m_driveSubsystem),
+                       new Intake(m_feederSubsystem)).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem))
                    .andThen(m_fire));
         } catch (ArrayIndexOutOfBoundsException ex) {
             DriverStation.reportError("Trajectory array out of bounds", ex.getStackTrace());

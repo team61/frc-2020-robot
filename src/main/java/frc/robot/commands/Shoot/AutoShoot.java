@@ -21,18 +21,8 @@ public class AutoShoot extends CommandBase {
 
     @Override
     public void execute() {
-        double x = m_distance.getAsDouble();
-        double ballVelocity =
-                Math.sqrt(
-                        (-PhysicConstants.kGravity * x*x) /
-                                (2*Math.pow(Math.cos(Math.toRadians(ShooterConstants.kAngle)), 2)
-                                        * (ShooterConstants.kHeightDifference - Math.tan(ShooterConstants.kAngle))));
 
-        double voltage = ballVelocity * ShooterConstants.kMaxVoltage;
-        if (Double.isNaN(ballVelocity)) {
-            end(false);
-        }
-
+        double voltage = m_distance.getAsDouble() * ShooterConstants.kVoltagePerDistance;
         m_shooterSubsystem.setVoltage(voltage);
 
     }

@@ -12,10 +12,12 @@ public class BeltDump extends CommandBase {
     private FeederSubsystem m_feederSubsystem;
 
     private BooleanSupplier[] m_solenoids;
+    private double m_speed;
 
-    public BeltDump(FeederSubsystem feederSubsystem, BooleanSupplier[] solenoids) {
+    public BeltDump(FeederSubsystem feederSubsystem, double speed, BooleanSupplier[] solenoids) {
         m_feederSubsystem = feederSubsystem;
         m_solenoids = solenoids;
+        m_speed = speed;
 
         addRequirements(feederSubsystem);
     }
@@ -29,7 +31,7 @@ public class BeltDump extends CommandBase {
                 m_feederSubsystem.setSolenoidState(i, false);
             }
         }
-        m_feederSubsystem.setVoltage(-FeederConstants.kMaxVoltage);
+        m_feederSubsystem.setVoltage(m_speed);
     }
 
     @Override

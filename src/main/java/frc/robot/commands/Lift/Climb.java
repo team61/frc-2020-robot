@@ -25,9 +25,9 @@ public class Climb extends InstantCommand {
     @Override
     public void execute() {
         if (m_liftSubsystem.getToggle()) {
-            m_liftSubsystem.extend();
-        } else {
             m_liftSubsystem.retract();
+        } else {
+            m_liftSubsystem.extend();
         }
     }
 
