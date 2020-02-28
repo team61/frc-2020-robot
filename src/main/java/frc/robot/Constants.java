@@ -8,6 +8,7 @@
 package frc.robot;
 
 //import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatch;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -139,8 +141,8 @@ public final class Constants {
         public static final double kTurretTolerance = 2;
         public static final double kVisionTolerance = 4; // Degrees
         public static final double kVisionVoltage = 7;
-        public static final double kAdjustmentVoltage = 6;
-        public static final double kAdjustmentDelay = 0.2;
+        public static final double kAdjustmentVoltage = 7;
+        public static final double kAdjustmentDelay = 0.1;
 
 
         public static final Translation2d kGoalPosition = new Translation2d(3.358, -2.358);
@@ -156,9 +158,9 @@ public final class Constants {
 
         // Operation Data
         public static final double kMaxVoltage = 9;
-        public static final double kFeederDelay = 0.7;
-        public static final double kBallDelay = 0.5;
-        public static final double kAutoDelay = 3.7;
+        public static final double kFeederDelay = 0.85;
+        public static final double[] kBallDelay = {1.15, 0.95, 0.8};
+        public static final double kAutoDelay = 4.5;
 
     }
 
@@ -197,4 +199,17 @@ public final class Constants {
     public static final class PhysicConstants {
         public static final double kGravity = 9.8;
     }
+    public static final class WheelSpinnerConstants {
+        public static final int kMotorPort = 9;
+
+        public static final double kWheelVoltage = 12;
+
+        public static final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
+        public static final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
+        public static final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
+        public static final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+
+        public static final Color[] colors = {kBlueTarget, kGreenTarget, kRedTarget, kYellowTarget};
+    }
+
 }

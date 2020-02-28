@@ -28,7 +28,7 @@ public class Dump extends CommandBase {
 
     @Override
     public void execute() {
-        if (m_timer.get() >= FeederConstants.kBallDelay) {
+        if (m_timer.get() >= FeederConstants.kBallDelay[solenoid]) {
             m_feederSubsystem.setSolenoidState(solenoid, true);
             if (solenoid < FeederConstants.kSolenoidPorts.length - 1) {
                 solenoid++;

@@ -29,6 +29,7 @@ import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Drive.DriveForDistance;
 import frc.robot.commands.Drive.FollowTrajectory;
+import frc.robot.commands.Drive.SimpleDrive;
 import frc.robot.commands.Drive.TankDrive;
 import frc.robot.commands.Feed.BeltDump;
 import frc.robot.commands.Feed.Dump;
@@ -40,6 +41,7 @@ import frc.robot.commands.Turret.MoveTurretToPosition;
 import frc.robot.commands.Turret.SmallAdjustment;
 import frc.robot.commands.Turret.TurretAutoAimVision;
 import frc.robot.commands.Turret.TurretWithJoysticks;
+import frc.robot.commands.WheelSpinner.SpinWheel;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
 
@@ -62,6 +64,7 @@ public class RobotContainer {
     private final ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
     private final LiftSubsystem m_liftSubsystem = LiftSubsystem.getInstance();
     private final VisionSubsystem m_visionSubsystem = VisionSubsystem.getInstance();
+    private final WheelSpinner m_wheelSpinner = WheelSpinner.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
@@ -107,6 +110,7 @@ public class RobotContainer {
         jTurret.btn_4.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 0));
         jTurret.btn_6.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 180));
 
+        jLift.btn_2.whileHeld(new SpinWheel(m_wheelSpinner));
         jLift.btn_7.whenPressed(new Dump(m_feederSubsystem));
         jLift.btn_8.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 0));
         jLift.btn_10.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 1));
@@ -181,15 +185,21 @@ public class RobotContainer {
         try {
             ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
                     new WaitCommand(FeederConstants.kAutoDelay),
-                    new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage),
-                    m_aim
+                    new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage)
                     );
-           return m_fire
-                   .andThen(
-                   new ParallelDeadlineGroup(
-                       new FollowTrajectory(trajectories[0], m_driveSubsystem),
-                       new Intake(m_feederSubsystem)).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem))
-                   .andThen(m_fire));
+           return m_fire;
+//                   .andThen(
+//                   new ParallelDeadlineGroup(
+//                   new SimpleDrive(m_driveSubsystem, -10, 2).andThen(new SimpleDrive(m_driveSubsystem, -3, 2.5)),
+//                       new Intake(m_feederSubsystem)));
+
+
+//                   m_fire
+//                   .andThen(
+//                   new ParallelDeadlineGroup(
+//                       new FollowTrajectory(trajectories[0], m_driveSubsystem),
+//                       new Intake(m_feederSubsystem)).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem))
+//                   .andThen(m_fire));
         } catch (ArrayIndexOutOfBoundsException ex) {
             DriverStation.reportError("Trajectory array out of bounds", ex.getStackTrace());
             return null;

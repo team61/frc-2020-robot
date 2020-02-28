@@ -16,7 +16,7 @@ public class TurretSubsystem extends SubsystemBase {
 
    private LimitSwitch m_limitSwitch = new LimitSwitch(TurretConstants.kLimitSwitchPort);
 
-   private double offSet = 0;
+   private double offSet = 40;
    private double position = 0;
 
    public TurretSubsystem() {
@@ -25,6 +25,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        //System.out.println(position);
         if (isSwitchSet()) {
             resetEncoder();
             offSet = 0;
