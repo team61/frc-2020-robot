@@ -26,8 +26,8 @@ public class LogitechJoystick extends Joystick {
     public JoystickButton btn_11 = new JoystickButton(this, 11);
     public JoystickButton btn_12 = new JoystickButton(this, 12);
 
-    public double getAxis(double value, double deadzone) {
-        if (Math.abs(value) > deadzone) {
+    public double getAxis(double value, double deadZone) {
+        if (Math.abs(value) > deadZone) {
             return value;
         } else {
             return 0;
@@ -49,5 +49,5 @@ public class LogitechJoystick extends Joystick {
         return getAxis(getX());
     }
 
-    public double getZAxis() { return getAxis(getZ(), 0.05); }
+    public double getZAxis() { return getAxis(getZ()); }
 }

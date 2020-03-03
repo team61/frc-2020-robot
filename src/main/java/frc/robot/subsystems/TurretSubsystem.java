@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
 import lib.components.LimitSwitch;
@@ -16,7 +17,6 @@ public class TurretSubsystem extends SubsystemBase {
 
    private LimitSwitch m_limitSwitch = new LimitSwitch(TurretConstants.kLimitSwitchPort);
 
-   private double offSet = 35;
    private double position = 0;
 
    public TurretSubsystem() {
@@ -26,10 +26,11 @@ public class TurretSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         if (isSwitchSet()) {
-            resetEncoder();
-            offSet = 0;
+            position = 0;
         }
-        position = getEncoderDistance() + offSet;
+        position += getEncoderDistance();
+        SmartDashboard.putNumber("Turret Angle", position * TurretConstants.kDistanceToDegrees);
+        resetEncoder();
     }
 
     public static TurretSubsystem getInstance() {
@@ -51,7 +52,7 @@ public class TurretSubsystem extends SubsystemBase {
            } else {
                stop();
            }
-       } else if (position < 0) {
+       } else if (isSwitchSet()) {
            if (speed >= 0) {
                m_motor.set(speed);
            } else {

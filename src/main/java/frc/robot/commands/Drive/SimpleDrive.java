@@ -30,7 +30,7 @@ public class SimpleDrive extends CommandBase {
     @Override
     public void execute() {
 
-        m_driveSubsystem.tankDriveVolts(m_speed, m_speed);
+        m_driveSubsystem.tankDriveVolts(m_speed, -m_speed);
     }
 
     // Returns true when the command should end.

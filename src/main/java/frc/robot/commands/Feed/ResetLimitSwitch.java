@@ -1,10 +1,11 @@
 package frc.robot.commands.Feed;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.Constants.FeederConstants;
 
-public class ResetLimitSwitch extends InstantCommand {
+public class ResetLimitSwitch extends CommandBase {
 
     private FeederSubsystem m_feederSubsystem;
     private int m_limitSwitch;

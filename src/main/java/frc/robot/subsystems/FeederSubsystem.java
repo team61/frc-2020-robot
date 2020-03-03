@@ -35,8 +35,8 @@ public class FeederSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         for(int i = 0; i < 3; i++) {
-//            System.out.println("Solenoid " + i + ": " + isSwitchSet(i));
-            SmartDashboard.putBoolean("Solenoid " + i, isSwitchSet(i));
+            SmartDashboard.putBoolean("Solenoid " + i, getSolenoidState(i));
+            SmartDashboard.putBoolean("Limit Switch " + i, isSwitchSet(i));
         }
     }
 

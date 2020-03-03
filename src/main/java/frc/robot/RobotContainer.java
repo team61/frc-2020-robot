@@ -77,10 +77,11 @@ public class RobotContainer {
 
     ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
             new WaitCommand(FeederConstants.kAutoDelay),
-            new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage)
+            new Fire(m_shooterSubsystem, m_feederSubsystem)
     );
 
-    private final Command m_autoCommand = null;
+    private Command m_autoCommand = m_fire.andThen(new SimpleDrive(m_driveSubsystem, 6, 2));
+
     private final TurretAutoAimVision m_aim = new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw);
 
     SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -107,7 +108,7 @@ public class RobotContainer {
 
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
 
-        jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage));
+        jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem));
 
         jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));
         jTurret.btn_5.whenPressed(new SmallAdjustment(m_turretSubsystem, -Constants.TurretConstants.kAdjustmentVoltage));
@@ -117,11 +118,11 @@ public class RobotContainer {
 
         //jLift.btn_2.whileHeld(new SpinWheel(m_wheelSpinner));
         //jLift.btn_3.whileHeld(new SpinToColor(m_wheelSpinner));
-        jLift.btn_7.whenPressed(new Dump(m_feederSubsystem));
-        jLift.btn_8.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 0));
-        jLift.btn_10.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 1));
-        jLift.btn_12.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 2));
-        // honk honk thomas buckley here its gamer time
+        jLift.btn_7.whileHeld(new Dump(m_feederSubsystem));
+        jLift.btn_12.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 0));
+        jLift.btn_10.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 1));
+        jLift.btn_8.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 2));
+
         BeltDumpTriggerDown.whileActiveContinuous(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_12::get, jTurret.btn_10::get, jTurret.btn_8::get}));
         BeltDumpTriggerUp.whileActiveContinuous(new BeltDump(m_feederSubsystem, -Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, jTurret.btn_9::get, jTurret.btn_7::get}));
 
@@ -137,6 +138,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return m_fire.andThen(new SimpleDrive(m_driveSubsystem, -6, 1.8));
+
+        return m_autoCommand;
     }
 }

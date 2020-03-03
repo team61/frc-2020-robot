@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
@@ -11,9 +12,8 @@ public class VisionSubsystem extends SubsystemBase {
     private static VisionSubsystem m_instance;
 
     private NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
-    private NetworkTable table = networkTableInstance.getTable("chameleon-vision").getSubTable("TurretCam");
+    private NetworkTable table = networkTableInstance.getTable("chameleon-vision").getSubTable("Cam");
     private NetworkTableEntry yawEntry = table.getEntry("targetYaw");
-//    isDriverMode = table.getEntry("driver_mode");
     private NetworkTableEntry widthEntry = table.getEntry("targetBoundingWidth");
 
     private double yaw = 0;
@@ -30,22 +30,19 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         setValues();
-        System.out.println(getYaw());
+        SmartDashboard.putNumber("Target Yaw", yaw);
     }
 
     public void setYaw() {
-        double tempYaw = yawEntry.getDouble(Double.NaN);
-        yaw = (Double.isNaN(tempYaw)) ? yaw: tempYaw; // if yaw entry is invalid then don't change yaw value
+        yaw = yawEntry.getDouble(Double.NaN);
     }
 
     public void setWidth() {
-        double tempWidth = widthEntry.getDouble(Double.NaN);
-        width = (Double.isNaN(tempWidth)) ? width: tempWidth; // if yaw entry is invalid then don't change yaw value
+        width = widthEntry.getDouble(Double.NaN);
     }
 
     public void setValues() {
         setYaw();
-        setWidth();
     }
 
     public double getYaw() {

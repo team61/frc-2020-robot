@@ -9,7 +9,7 @@ import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class Fire extends ParallelRaceGroup {
-    public Fire(ShooterSubsystem shooterSubsystem, FeederSubsystem feederSubsystem, double voltage) {
-        addCommands(new Shoot(shooterSubsystem, voltage), new WaitCommand(Constants.FeederConstants.kFeederDelay).andThen(new Feed(feederSubsystem)));
+    public Fire(ShooterSubsystem shooterSubsystem, FeederSubsystem feederSubsystem) {
+        addCommands(new Shoot(shooterSubsystem), new WaitCommand(Constants.FeederConstants.kFeederDelay).andThen(new Feed(feederSubsystem)));
     }
 }

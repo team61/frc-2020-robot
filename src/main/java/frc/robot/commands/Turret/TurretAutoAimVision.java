@@ -25,10 +25,13 @@ public class TurretAutoAimVision extends CommandBase {
 
     @Override
     public void execute() {
+        System.out.println(m_yaw.getAsDouble());
         if (m_yaw.getAsDouble() > TurretConstants.kVisionTolerance) {
             m_turretSubsystem.setVoltage(TurretConstants.kVisionVoltage);
+            System.out.println("test2");
         } else if (m_yaw.getAsDouble() < -TurretConstants.kVisionTolerance) {
             m_turretSubsystem.setVoltage(-TurretConstants.kVisionVoltage);
+            System.out.println("test");
         } else {
             m_turretSubsystem.stop();
         }
