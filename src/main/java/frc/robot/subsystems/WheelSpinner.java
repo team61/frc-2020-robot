@@ -26,6 +26,14 @@ public class WheelSpinner extends SubsystemBase {
     private Color colorGoal;
     private int colorGoalNum;
 
+    public WheelSpinner() {
+        for (Color color : WheelSpinnerConstants.colors) {
+            m_colorMatcher.addColorMatch(color);
+        }
+        m_colorMatcher.setConfidenceThreshold(0.6);
+
+    }
+
     public static WheelSpinner getInstance() {
         if (m_instance == null) {
             m_instance = new WheelSpinner();
@@ -36,8 +44,9 @@ public class WheelSpinner extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //System.out.println(colorGoal);
-        //System.out.println(getColor());
+        //System.out.println(" G: " + colorGoal);
+        System.out.println(isColor(colorGoal));
+        //System.out.println(getMatch().color);
         String gameData;
         gameData = DriverStation.getInstance().getGameSpecificMessage();
         if (gameData.length() > 0) {

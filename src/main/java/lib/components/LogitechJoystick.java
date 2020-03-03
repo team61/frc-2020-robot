@@ -3,6 +3,8 @@ package lib.components;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+import java.util.function.DoubleSupplier;
+
 public class LogitechJoystick extends Joystick {
 
     private final double JOYSTICK_BUFFER = .06;
@@ -47,5 +49,5 @@ public class LogitechJoystick extends Joystick {
         return getAxis(getX());
     }
 
-    public double getZAxis() { return getAxis(getZ(), 0.03); }
+    public double getZAxis() { return getAxis(getZ(), 0.05); }
 }

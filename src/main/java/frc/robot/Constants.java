@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.ColorShim;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -141,8 +142,8 @@ public final class Constants {
         public static final double kTurretTolerance = 2;
         public static final double kVisionTolerance = 4; // Degrees
         public static final double kVisionVoltage = 7;
-        public static final double kAdjustmentVoltage = 7;
-        public static final double kAdjustmentDelay = 0.1;
+        public static final double kAdjustmentVoltage = 12;
+        public static final double kAdjustmentDelay = 0.05;
 
 
         public static final Translation2d kGoalPosition = new Translation2d(3.358, -2.358);
@@ -160,7 +161,7 @@ public final class Constants {
         public static final double kMaxVoltage = 9;
         public static final double kFeederDelay = 0.85;
         public static final double[] kBallDelay = {1.15, 0.95, 0.8};
-        public static final double kAutoDelay = 4.5;
+        public static final double kAutoDelay = 5.1;
 
     }
 

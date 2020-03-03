@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FeederConstants;
 import lib.components.LimitSwitch;
@@ -28,6 +29,14 @@ public class FeederSubsystem extends SubsystemBase {
 
         for(byte i = 0; i < FeederConstants.kLimitSwitchPorts.length; i++) {
             limitSwitches[i] = new LimitSwitch(FeederConstants.kLimitSwitchPorts[i]);
+        }
+    }
+
+    @Override
+    public void periodic() {
+        for(int i = 0; i < 3; i++) {
+//            System.out.println("Solenoid " + i + ": " + isSwitchSet(i));
+            SmartDashboard.putBoolean("Solenoid " + i, isSwitchSet(i));
         }
     }
 

@@ -41,6 +41,7 @@ import frc.robot.commands.Turret.MoveTurretToPosition;
 import frc.robot.commands.Turret.SmallAdjustment;
 import frc.robot.commands.Turret.TurretAutoAimVision;
 import frc.robot.commands.Turret.TurretWithJoysticks;
+import frc.robot.commands.WheelSpinner.SpinToColor;
 import frc.robot.commands.WheelSpinner.SpinWheel;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
@@ -64,16 +65,20 @@ public class RobotContainer {
     private final ShooterSubsystem m_shooterSubsystem = ShooterSubsystem.getInstance();
     private final LiftSubsystem m_liftSubsystem = LiftSubsystem.getInstance();
     private final VisionSubsystem m_visionSubsystem = VisionSubsystem.getInstance();
-    private final WheelSpinner m_wheelSpinner = WheelSpinner.getInstance();
+  //  private final WheelSpinner m_wheelSpinner = WheelSpinner.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
     private final LogitechJoystick jLift = new LogitechJoystick(OIConstants.jLift);
     private final LogitechJoystick jTurret = new LogitechJoystick(OIConstants.jTurret);
 
-    private Trigger BeltDumpTriggerUp = new Trigger(()-> jTurret.btn_8.get() || jTurret.btn_10.get() || jTurret.btn_12.get());
-    private Trigger BeltDumpTriggerDown = new Trigger(()-> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get());
+    private Trigger BeltDumpTriggerDown = new Trigger(()-> jTurret.btn_8.get() || jTurret.btn_10.get() || jTurret.btn_12.get());
+    private Trigger BeltDumpTriggerUp = new Trigger(()-> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get());
 
+    ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
+            new WaitCommand(FeederConstants.kAutoDelay),
+            new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage)
+    );
 
     private final Command m_autoCommand = null;
     private final TurretAutoAimVision m_aim = new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw);
@@ -110,14 +115,16 @@ public class RobotContainer {
         jTurret.btn_4.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 0));
         jTurret.btn_6.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 180));
 
-        jLift.btn_2.whileHeld(new SpinWheel(m_wheelSpinner));
+        //jLift.btn_2.whileHeld(new SpinWheel(m_wheelSpinner));
+        //jLift.btn_3.whileHeld(new SpinToColor(m_wheelSpinner));
         jLift.btn_7.whenPressed(new Dump(m_feederSubsystem));
         jLift.btn_8.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 0));
         jLift.btn_10.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 1));
         jLift.btn_12.whenPressed(new ResetLimitSwitch(m_feederSubsystem, 2));
+        // honk honk thomas buckley here its gamer time
+        BeltDumpTriggerDown.whileActiveContinuous(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_12::get, jTurret.btn_10::get, jTurret.btn_8::get}));
+        BeltDumpTriggerUp.whileActiveContinuous(new BeltDump(m_feederSubsystem, -Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, jTurret.btn_9::get, jTurret.btn_7::get}));
 
-        BeltDumpTriggerUp.whileActiveContinuous(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_12::get, jTurret.btn_10::get, jTurret.btn_8::get}));
-        BeltDumpTriggerDown.whileActiveContinuous(new BeltDump(m_feederSubsystem, -Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, jTurret.btn_9::get, jTurret.btn_7::get}));
 
         jTurret.btn_2.whileHeld(m_aim);
 
@@ -130,79 +137,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-
-//        // Create a voltage constraint to ensure we don't accelerate too fast
-//        DifferentialDriveVoltageConstraint autoVoltageConstraint =
-//                new DifferentialDriveVoltageConstraint(
-//                        new SimpleMotorFeedforward(AutoConstants.kS,
-//                                AutoConstants.kV,
-//                                AutoConstants.kA),
-//                        AutoConstants.kDriveKinematics,
-//                        AutoConstants.kMaxVoltage);
-//
-//
-//        /* Characterization */
-//
-//        // Create config for trajectory
-//        TrajectoryConfig config =
-//                // Add constraints to trajectory
-//                new TrajectoryConfig(AutoConstants.kMaxVelocity,
-//                        AutoConstants.kMaxAcceleration)
-//                        // Add kinematics to ensure max speed is actually obeyed
-//                        .setKinematics(AutoConstants.kDriveKinematics)
-//                        // Apply the voltage constraint
-//                        .addConstraint(autoVoltageConstraint);
-//
-//         //An example trajectory to follow.  All units in meters.
-//        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-//                // Start at the origin facing the +X direction
-//                new Pose2d(0, 0, new Rotation2d(0)),
-//                // Pass through these two interior waypoints, making an 's' curve path
-//                List.of(
-//                        new Translation2d(5, 0)
-//                ),
-//                // End 3 meters straight ahead of where we started, facing forward
-//                new Pose2d(5, 0, new Rotation2d(0)),
-//                // Pass config
-//                config
-//        );
-
-        String[] pathGroup = AutoConstants.RightTrenchGroup;
-
-        Trajectory[] trajectories = new Trajectory[pathGroup.length];
-
-        try {
-            Path[] paths = new Path[pathGroup.length];
-            for(int i = 0; i < paths.length; i++) {
-                paths[i] = Filesystem.getDeployDirectory().toPath().resolve(pathGroup[i]);
-                trajectories[i] = TrajectoryUtil.fromPathweaverJson(paths[i]);
-            }
-        } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectories", ex.getStackTrace());
-        }
-
-        // Run path following command, then stop at the end.
-        try {
-            ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
-                    new WaitCommand(FeederConstants.kAutoDelay),
-                    new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kMaxVoltage)
-                    );
-           return m_fire;
-//                   .andThen(
-//                   new ParallelDeadlineGroup(
-//                   new SimpleDrive(m_driveSubsystem, -10, 2).andThen(new SimpleDrive(m_driveSubsystem, -3, 2.5)),
-//                       new Intake(m_feederSubsystem)));
-
-
-//                   m_fire
-//                   .andThen(
-//                   new ParallelDeadlineGroup(
-//                       new FollowTrajectory(trajectories[0], m_driveSubsystem),
-//                       new Intake(m_feederSubsystem)).andThen(new FollowTrajectory(trajectories[1], m_driveSubsystem))
-//                   .andThen(m_fire));
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            DriverStation.reportError("Trajectory array out of bounds", ex.getStackTrace());
-            return null;
-        }
+        return m_fire.andThen(new SimpleDrive(m_driveSubsystem, -6, 1.8));
     }
 }

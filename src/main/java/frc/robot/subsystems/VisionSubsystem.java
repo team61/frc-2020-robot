@@ -13,7 +13,9 @@ public class VisionSubsystem extends SubsystemBase {
     private NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
     private NetworkTable table = networkTableInstance.getTable("chameleon-vision").getSubTable("TurretCam");
     private NetworkTableEntry yawEntry = table.getEntry("targetYaw");
+//    isDriverMode = table.getEntry("driver_mode");
     private NetworkTableEntry widthEntry = table.getEntry("targetBoundingWidth");
+
     private double yaw = 0;
     private double width = 0;
 
@@ -28,7 +30,7 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         setValues();
-        System.out.println(yawEntry.getDouble(404));
+        System.out.println(getYaw());
     }
 
     public void setYaw() {

@@ -22,7 +22,7 @@ public class TurretWithJoysticks extends CommandBase {
 
     @Override
     public void execute() {
-        m_turretSubsystem.setVoltage(m_speed.getAsDouble() * TurretConstants.kMaxVoltage);
+        m_turretSubsystem.set(m_speed.getAsDouble());
     }
 
     // Returns true when the command should end.
