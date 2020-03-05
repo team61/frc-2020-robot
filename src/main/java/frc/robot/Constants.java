@@ -9,6 +9,7 @@ package frc.robot;
 
 //import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatch;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -170,6 +171,7 @@ public final class Constants {
         public static final int kMasterPort = 5;
         public static final int kSlavePort = 6;
 
+        public static final int kEncoderCPR = 2048;
         // Operation Data
         public static final double kMaxVoltage = 12;
         public static final double kAutoVoltage = 11.3;
@@ -211,6 +213,11 @@ public final class Constants {
         public static final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
         public static final Color[] colors = {kBlueTarget, kGreenTarget, kRedTarget, kYellowTarget};
+    }
+    public static final class LEDContants {
+        public static final int[] kLEDPorts = {0, 1};
+        public static final int[] kLengths = {23, 23};
+
     }
 
 }

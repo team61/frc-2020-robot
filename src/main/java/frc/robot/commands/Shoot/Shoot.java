@@ -26,8 +26,6 @@ public class Shoot extends CommandBase {
     @Override
     public void execute() {
         m_shooterSubsystem.set(1);
-        // 11.3 10ft
-
     }
 
     @Override

@@ -66,6 +66,7 @@ public class RobotContainer {
     private final LiftSubsystem m_liftSubsystem = LiftSubsystem.getInstance();
     private final VisionSubsystem m_visionSubsystem = VisionSubsystem.getInstance();
   //  private final WheelSpinner m_wheelSpinner = WheelSpinner.getInstance();
+    private final LEDSubsystem m_LEDSubsystem = LEDSubsystem.getInstance();
 
     private final LogitechJoystick jLeft = new LogitechJoystick(OIConstants.jLeft);
     private final LogitechJoystick jRight = new LogitechJoystick(OIConstants.jRight);
@@ -113,8 +114,8 @@ public class RobotContainer {
         jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));
         jTurret.btn_5.whenPressed(new SmallAdjustment(m_turretSubsystem, -Constants.TurretConstants.kAdjustmentVoltage));
 
-        jTurret.btn_4.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 0));
-        jTurret.btn_6.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 180));
+        //jTurret.btn_4.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 0));
+        //jTurret.btn_6.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 180));
 
         //jLift.btn_2.whileHeld(new SpinWheel(m_wheelSpinner));
         //jLift.btn_3.whileHeld(new SpinToColor(m_wheelSpinner));

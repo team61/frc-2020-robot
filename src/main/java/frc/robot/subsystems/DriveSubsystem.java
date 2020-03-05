@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -91,6 +92,10 @@ public class DriveSubsystem extends SubsystemBase {
         updateOdometry();
         x = getPose2d().getTranslation().getX();
         y = getPose2d().getTranslation().getY();
+        SmartDashboard.putNumber("X", x);
+        SmartDashboard.putNumber("Y", y);
+        SmartDashboard.putNumber("Velocity", getEncoderRate());
+        SmartDashboard.putNumber("Acceleration", getAccelerationX());
     }
 
     public static DriveSubsystem getInstance() {
