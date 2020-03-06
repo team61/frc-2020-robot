@@ -35,22 +35,22 @@ public class IncrementLED extends CommandBase {
                 head++;
                 tail++;
 
-                // Checks to see if led is within bounds of led strip
-                head %= Constants.LEDContants.kLiftLength;
-                tail %= Constants.LEDContants.kLiftLength;
-
-                head *= Constants.LEDContants.kLiftLength;
-                tail *= Constants.LEDContants.kLiftLength;
+                if (head >= Constants.LEDContants.kLiftLength) {
+                    head = 0;
+                }
+                if (tail >= Constants.LEDContants.kLiftLength) {
+                    tail = 0;
+                }
 
                 m_timer.reset();
                 m_timer.start();
             }
             if (tail < head) {
                 for (int i = tail; i <= head; i++) {
-                    m_ledSubsystem.setLEDRGB(port, i, 100, 0, 100);
+                   m_ledSubsystem.setLEDRGB(port, i, 100, 0, 100);
                 }
             } else if (tail > head) {
-                for (int i = tail; i <= Constants.LEDContants.kLiftLength; i++) {
+                for (int i = tail; i < Constants.LEDContants.kLiftLength; i++) {
                     m_ledSubsystem.setLEDRGB(port, i, 100, 0, 100);
                 }
                 for (int i = 0; i <= head; i++) {

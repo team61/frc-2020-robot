@@ -24,7 +24,7 @@ public class FeederSubsystem extends SubsystemBase {
         m_motor.setInverted(true);
         for(byte i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
             solenoids[i] = new Solenoid(FeederConstants.kSolenoidPorts[i]);
-            solenoids[i].set(false);
+            solenoids[i].set(true);
         }
 
         for(byte i = 0; i < FeederConstants.kLimitSwitchPorts.length; i++) {

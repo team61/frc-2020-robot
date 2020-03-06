@@ -43,6 +43,8 @@ import frc.robot.commands.Turret.TurretAutoAimVision;
 import frc.robot.commands.Turret.TurretWithJoysticks;
 import frc.robot.commands.WheelSpinner.SpinToColor;
 import frc.robot.commands.WheelSpinner.SpinWheel;
+import frc.robot.commands.led.AnimateFeeder;
+import frc.robot.commands.led.IncrementLED;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
 
@@ -93,6 +95,11 @@ public class RobotContainer {
     public RobotContainer() {
         m_driveSubsystem.setDefaultCommand(new TankDrive(m_driveSubsystem, jLeft::getYAxis, jRight::getYAxis));
         m_turretSubsystem.setDefaultCommand(new TurretWithJoysticks(m_turretSubsystem, jTurret::getZAxis));
+        m_LEDSubsystem.setDefaultCommand(new AnimateFeeder(m_LEDSubsystem, new BooleanSupplier[]{
+            () -> m_feederSubsystem.getSolenoidState(0),
+                () -> m_feederSubsystem.getSolenoidState(1),
+                () -> m_feederSubsystem.getSolenoidState(2)}
+                ));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -106,7 +113,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
-
+       jLift.btn_11.whileHeld(new IncrementLED(m_LEDSubsystem));
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
 
         jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem));

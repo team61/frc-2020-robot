@@ -10,8 +10,8 @@ public class DecrementLED extends CommandBase {
     private LEDSubsystem m_ledSubsystem;
 
     private Timer m_timer = new Timer();
-    private int head = Constants.LEDContants.kLiftLength - Constants.LEDContants.kLiftSnakeSize + 1;
-    private int tail = Constants.LEDContants.kLiftLength;
+    private int head = Constants.LEDContants.kLiftLength - 1 - Constants.LEDContants.kLiftSnakeSize;
+    private int tail = Constants.LEDContants.kLiftLength - 1;
 
     public DecrementLED(LEDSubsystem ledSubsystem) {
         m_ledSubsystem = ledSubsystem;
@@ -21,40 +21,44 @@ public class DecrementLED extends CommandBase {
 
     @Override
     public void initialize() {
-        head = Constants.LEDContants.kLiftLength - Constants.LEDContants.kLiftSnakeSize + 1;
-        tail = Constants.LEDContants.kLiftLength;
+        head = Constants.LEDContants.kLiftLength - 1 - Constants.LEDContants.kLiftSnakeSize;
+        tail = Constants.LEDContants.kLiftLength - 1;
         m_timer.reset();
         m_timer.start();
     }
 
     @Override
     public void execute() {
-        for (int port : Constants.LEDContants.kLiftPorts) {
+        for(int port : Constants.LEDContants.kLiftPorts) {
             if (m_timer.get() >= Constants.LEDContants.kLiftIncrementDelay) {
                 m_ledSubsystem.turnOffLED(port, tail);
                 head--;
                 tail--;
 
-                // Checks to see if led is within bounds of led strip
-                head = (head < 0) ? Constants.LEDContants.kLiftLength : head;
-                tail = (tail < 0) ? Constants.LEDContants.kLiftLength : tail;
+                if (head <= 0) {
+                    head = Constants.LEDContants.kLiftLength - 1;
+                }
+                if (tail <= 0) {
+                    tail = Constants.LEDContants.kLiftLength - 1;
+                }
 
                 m_timer.reset();
                 m_timer.start();
             }
             if (tail > head) {
                 for (int i = head; i <= tail; i++) {
-                    m_ledSubsystem.setLEDRGB(port, Math.abs(i - Constants.LEDContants.kLiftLength), 100, 0, 100);
+                    m_ledSubsystem.setLEDRGB(port, i, 100, 0, 100);
                 }
             } else if (tail < head) {
-                for (int i = head; i <= Constants.LEDContants.kLiftLength; i++) {
+                for (int i = head; i < Constants.LEDContants.kLiftLength; i++) {
                     m_ledSubsystem.setLEDRGB(port, i, 100, 0, 100);
                 }
                 for (int i = 0; i <= tail; i++) {
                     m_ledSubsystem.setLEDRGB(port, i, 100, 0, 100);
                 }
-                m_ledSubsystem.setData(port);
             }
+
+            m_ledSubsystem.setData(port);
         }
     }
 
