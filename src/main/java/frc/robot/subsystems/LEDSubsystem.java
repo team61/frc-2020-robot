@@ -11,7 +11,7 @@ public class LEDSubsystem extends SubsystemBase {
     public AddressableLEDBuffer[] m_ledBuffers = new AddressableLEDBuffer[Constants.LEDContants.kLengths.length];
 
     public LEDSubsystem() {
-        for(int i = 0; i < 1; i++) {
+        for(int i = 0; i < Constants.LEDContants.kLEDPorts.length; i++) {
             m_leds[i] = new AddressableLED(Constants.LEDContants.kLEDPorts[i]);
             m_ledBuffers[i] = new AddressableLEDBuffer(Constants.LEDContants.kLengths[i]);
             m_leds[i].setLength(m_ledBuffers[i].getLength());
@@ -28,17 +28,25 @@ public class LEDSubsystem extends SubsystemBase {
         return m_instance;
     }
 
-    @Override
-    public void periodic() {
-        lightLift();
+    public void setLEDRGB(int port, int led, int r, int g, int b) {
+        m_ledBuffers[port].setRGB(led, r, g, b);
     }
 
-    public void lightLift() {
-        for (int i = 0; i < m_ledBuffers[0].getLength(); i++) {
-            m_ledBuffers[0].setRGB(i, 255, 0, 255);
-            //m_ledBuffers[1].setRGB(i, 255, 0, 255);
+    public void setLEDHSV(int port, int led, int h, int s, int v) {
+        m_ledBuffers[port].setRGB(led, h, s, v);
+    }
+
+    public void turnOffLED(int port, int led) {
+        setLEDRGB(port, led, 0, 0, 0);
+    }
+
+    public void turnOffLEDs(int port) {
+        for (int led = 0; led < Constants.LEDContants.kLengths[port]; led++) {
+            turnOffLED(port, led);
         }
-        m_leds[0].setData(m_ledBuffers[0]);
-        //m_leds[1].setData(m_ledBuffers[1]);
+    }
+
+    public void setData(int port) {
+        m_leds[port].setData(m_ledBuffers[port]);
     }
 }

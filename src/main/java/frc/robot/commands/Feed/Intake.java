@@ -20,8 +20,7 @@ public class Intake extends CommandBase {
 
     @Override
     public void initialize() {
-        int numPowerCells = Math.min(Math.max(m_feederSubsystem.getNumPowerCells(), 0), numBelts);
-        int availableBelts = numBelts - numPowerCells;
+        int availableBelts = numBelts - m_feederSubsystem.getNumPowerCells();
 
         for (int i = 0; i < availableBelts; i++) {
             m_feederSubsystem.setSolenoidState(i, true);
@@ -30,12 +29,11 @@ public class Intake extends CommandBase {
 
     @Override
     public void execute() {
-        int numPowerCells = Math.min(Math.max(m_feederSubsystem.getNumPowerCells(), 0), numBelts);
+        int numPowerCells = m_feederSubsystem.getNumPowerCells();
 
         if (numPowerCells < numBelts) { // Change solenoid state until each belt is filled
             int belt = topBelt - numPowerCells;
             boolean state = m_feederSubsystem.isSwitchSet(belt);
-            System.out.println(belt + " " + state);
             if (state) {
                 m_feederSubsystem.setSolenoidState(belt, false);
 
@@ -43,14 +41,7 @@ public class Intake extends CommandBase {
                 m_feederSubsystem.setNumPowerCells(numPowerCells);
             }
         }
-
-        m_feederSubsystem.setVoltage(FeederConstants.kMaxVoltage);
-    }
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return false;
+        m_feederSubsystem.set(FeederConstants.kMaxVoltage);
     }
 
     // Called once the command ends or is interrupted.

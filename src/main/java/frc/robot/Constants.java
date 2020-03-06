@@ -161,7 +161,7 @@ public final class Constants {
         // Operation Data
         public static final double kMaxVoltage = 9;
         public static final double kFeederDelay = 0.85;
-        public static final double[] kBallDelay = {1.15, 0.95, 0.8};
+        public static final double[] kBallDelays = {1.15, 0.95, 0.8};
         public static final double kAutoDelay = 5.1;
 
     }
@@ -216,7 +216,15 @@ public final class Constants {
     }
     public static final class LEDContants {
         public static final int[] kLEDPorts = {0, 1};
-        public static final int[] kLengths = {23, 23};
+        public static final int kLiftLength = 23;
+        public static final int[] kLengths = {kLiftLength, kLiftLength};
+
+        public static final int[] kLiftPorts = {0, 1};
+        public static final int kLiftSnakeSize = 5;
+        public static final double kLiftIncrementDelay = 0.5;
+        public static final double kLiftFlashDelay = 0.5;
+        public static final int kLiftSpace = 2;
+        public static final int kLiftIncrement = 3;
 
     }
 

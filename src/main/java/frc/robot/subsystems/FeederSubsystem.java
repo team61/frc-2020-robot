@@ -53,7 +53,7 @@ public class FeederSubsystem extends SubsystemBase {
     }
 
     public int getNumPowerCells() {
-        return powerCells;
+        return Math.min(Math.max(powerCells, 0), FeederConstants.kLimitSwitchPorts.length);
     }
 
     public void setSolenoidState(int solenoid, boolean solenoidState) {

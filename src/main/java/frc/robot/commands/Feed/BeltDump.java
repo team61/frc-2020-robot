@@ -31,7 +31,7 @@ public class BeltDump extends CommandBase {
                 m_feederSubsystem.setSolenoidState(i, false);
             }
         }
-        m_feederSubsystem.setVoltage(m_speed);
+        m_feederSubsystem.set(m_speed);
     }
 
     @Override

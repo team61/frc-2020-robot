@@ -31,7 +31,7 @@ public class Feed extends CommandBase {
 
     @Override
     public void execute() {
-        if (m_timer.get() >= FeederConstants.kBallDelay[solenoid]) {
+        if (m_timer.get() >= FeederConstants.kBallDelays[solenoid]) {
             m_feederSubsystem.setSolenoidState(solenoid, true);
             if (solenoid > 0) {
                 solenoid--;
