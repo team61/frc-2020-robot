@@ -7,28 +7,13 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.FeederConstants;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.Drive.DriveForDistance;
-import frc.robot.commands.Drive.FollowTrajectory;
 import frc.robot.commands.Drive.SimpleDrive;
 import frc.robot.commands.Drive.TankDrive;
 import frc.robot.commands.Feed.BeltDump;
@@ -37,20 +22,14 @@ import frc.robot.commands.Feed.Intake;
 import frc.robot.commands.Feed.ResetLimitSwitch;
 import frc.robot.commands.Lift.Climb;
 import frc.robot.commands.Shoot.Fire;
-import frc.robot.commands.Turret.MoveTurretToPosition;
 import frc.robot.commands.Turret.SmallAdjustment;
 import frc.robot.commands.Turret.TurretAutoAimVision;
 import frc.robot.commands.Turret.TurretWithJoysticks;
-import frc.robot.commands.WheelSpinner.SpinToColor;
-import frc.robot.commands.WheelSpinner.SpinWheel;
 import frc.robot.commands.led.AnimateFeeder;
-import frc.robot.commands.led.IncrementLED;
+import frc.robot.commands.led.AnimateLiftUp;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -113,7 +92,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
-       jLift.btn_11.whileHeld(new IncrementLED(m_LEDSubsystem));
+       jLift.btn_11.whileHeld(new AnimateLiftUp(m_LEDSubsystem));
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
 
         jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem));

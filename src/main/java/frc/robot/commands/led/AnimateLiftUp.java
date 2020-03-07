@@ -1,11 +1,12 @@
 package frc.robot.commands.led;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.LEDSubsystem;
 
-public class IncrementLED extends CommandBase {
+public class AnimateLiftUp extends CommandBase {
 
     private LEDSubsystem m_ledSubsystem;
 
@@ -13,7 +14,7 @@ public class IncrementLED extends CommandBase {
     private int head = Constants.LEDContants.kLiftSnakeSize - 1;
     private int tail = 0;
 
-    public IncrementLED(LEDSubsystem ledSubsystem) {
+    public AnimateLiftUp(LEDSubsystem ledSubsystem) {
         m_ledSubsystem = ledSubsystem;
 
         addRequirements(ledSubsystem);
@@ -47,14 +48,14 @@ public class IncrementLED extends CommandBase {
             }
             if (tail < head) {
                 for (int i = tail; i <= head; i++) {
-                   m_ledSubsystem.setLEDRGB(port, i, 100, 0, 100);
+                   m_ledSubsystem.setLED(port, i, Color.kYellow);
                 }
             } else if (tail > head) {
                 for (int i = tail; i < Constants.LEDContants.kLiftLength; i++) {
-                    m_ledSubsystem.setLEDRGB(port, i, 100, 0, 100);
+                    m_ledSubsystem.setLED(port, i, Color.kYellow);
                 }
                 for (int i = 0; i <= head; i++) {
-                    m_ledSubsystem.setLEDRGB(port, i, 100, 0, 100);
+                    m_ledSubsystem.setLED(port, i, Color.kYellow);
                 }
             }
 

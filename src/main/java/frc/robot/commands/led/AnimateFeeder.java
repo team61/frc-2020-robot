@@ -10,6 +10,10 @@ import java.util.function.BooleanSupplier;
 
 public class AnimateFeeder extends CommandBase {
 
+    private final int r = 100;
+    private final int g = 0;
+    private final int b = 100;
+
     private LEDSubsystem m_ledSubsystem;
     private BooleanSupplier[] m_states;
 
