@@ -1,12 +1,11 @@
 package frc.robot.commands.led;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.LEDSubsystem;
 
-public class AnimateLiftUp extends CommandBase {
+public class IncrementLED extends CommandBase {
 
     private LEDSubsystem m_ledSubsystem;
 
@@ -14,7 +13,7 @@ public class AnimateLiftUp extends CommandBase {
     private int head = Constants.LEDContants.kLiftSnakeSize - 1;
     private int tail = 0;
 
-    public AnimateLiftUp(LEDSubsystem ledSubsystem) {
+    public IncrementLED(LEDSubsystem ledSubsystem) {
         m_ledSubsystem = ledSubsystem;
 
         addRequirements(ledSubsystem);
@@ -30,16 +29,15 @@ public class AnimateLiftUp extends CommandBase {
 
     @Override
     public void execute() {
-        for(int port : Constants.LEDContants.kLiftPorts) {
             if (m_timer.get() >= Constants.LEDContants.kLiftIncrementDelay) {
-                m_ledSubsystem.turnOffLED(port, tail);
+                m_ledSubsystem.turnOffLED(tail);
                 head++;
                 tail++;
 
-                if (head >= Constants.LEDContants.kLiftLength) {
+                if (head >= Constants.LEDContants.kLength) {
                     head = 0;
                 }
-                if (tail >= Constants.LEDContants.kLiftLength) {
+                if (tail >= Constants.LEDContants.kLength) {
                     tail = 0;
                 }
 
@@ -48,26 +46,24 @@ public class AnimateLiftUp extends CommandBase {
             }
             if (tail < head) {
                 for (int i = tail; i <= head; i++) {
-                   m_ledSubsystem.setLED(port, i, Color.kYellow);
+                   m_ledSubsystem.setLEDRGB(i, 100, 0, 100);
                 }
             } else if (tail > head) {
-                for (int i = tail; i < Constants.LEDContants.kLiftLength; i++) {
-                    m_ledSubsystem.setLED(port, i, Color.kYellow);
+                for (int i = tail; i < Constants.LEDContants.kLength; i++) {
+                    m_ledSubsystem.setLEDRGB(i, 100, 0, 100);
                 }
                 for (int i = 0; i <= head; i++) {
-                    m_ledSubsystem.setLED(port, i, Color.kYellow);
+                    m_ledSubsystem.setLEDRGB(i, 100, 0, 100);
                 }
             }
 
-            m_ledSubsystem.setData(port);
+            m_ledSubsystem.setData();
         }
-    }
+
 
     @Override
     public void end(boolean interrupted) {
-        for(int port : Constants.LEDContants.kLiftPorts) {
-            m_ledSubsystem.turnOffLEDs(port);
-            m_ledSubsystem.setData(port);
-        }
+            m_ledSubsystem.turnOffLEDs();
+            m_ledSubsystem.setData();
     }
 }

@@ -1,34 +1,33 @@
-package frc.robot.commands.led;
-
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.subsystems.LEDSubsystem;
-
-public class VictoryLift extends CommandBase {
-
-    private LEDSubsystem m_ledSubsystem;
-
-    private Timer m_timer = new Timer();
-    //private boolean state = false;
-
-    public VictoryLift(LEDSubsystem ledSubsystem) {
-        m_ledSubsystem = ledSubsystem;
-
-        addRequirements(ledSubsystem);
-    }
-
-    @Override
-    public void initialize() {
-        //state = false;
-        m_timer.reset();
-        m_timer.start();
-    }
-
-    @Override
-    public void execute() {
-        for(int port : Constants.LEDContants.kLiftPorts) {
+//package frc.robot.commands.led;
+//
+//import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj2.command.CommandBase;
+//import frc.robot.Constants;
+//import frc.robot.subsystems.LEDSubsystem;
+//
+//public class VictoryLift extends CommandBase {
+//
+//    private LEDSubsystem m_ledSubsystem;
+//
+//    private Timer m_timer = new Timer();
+//    private boolean state = false;
+//
+//    public VictoryLift(LEDSubsystem ledSubsystem) {
+//        m_ledSubsystem = ledSubsystem;
+//
+//        addRequirements(ledSubsystem);
+//    }
+//
+//    @Override
+//    public void initialize() {
+//        state = false;
+//        m_timer.reset();
+//        m_timer.start();
+//    }
+//
+//    @Override
+//    public void execute() {
+//        for(int port : Constants.LEDContants.kLiftPorts) {
 //            if (m_timer.get() >= Constants.LEDContants.kLiftFlashDelay) {
 //                state = !state;
 //                m_timer.reset();
@@ -41,18 +40,15 @@ public class VictoryLift extends CommandBase {
 //            } else {
 //                m_ledSubsystem.turnOffLEDs(port);
 //            }
-            for (int led = 0; led < Constants.LEDContants.kLiftLength; led++) {
-                m_ledSubsystem.setLED(port, led, Color.kGreen);
-            }
-            m_ledSubsystem.setData(port);
-        }
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        for(int port : Constants.LEDContants.kLiftPorts) {
-            m_ledSubsystem.turnOffLEDs(port);
-            m_ledSubsystem.setData(port);
-        }
-    }
-}
+//            m_ledSubsystem.setData(port);
+//        }
+//    }
+//
+//    @Override
+//    public void end(boolean interrupted) {
+//        for(int port : Constants.LEDContants.kLiftPorts) {
+//            m_ledSubsystem.turnOffLEDs(port);
+//            m_ledSubsystem.setData(port);
+//        }
+//    }
+//}

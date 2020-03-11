@@ -39,7 +39,7 @@ public class Feed extends CommandBase {
             m_timer.reset();
             m_timer.start();
         }
-        m_feederSubsystem.setVoltage(FeederConstants.kMaxVoltage);
+        m_feederSubsystem.set(1);
     }
 
     @Override

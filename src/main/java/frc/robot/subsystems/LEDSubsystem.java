@@ -2,23 +2,21 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class LEDSubsystem extends SubsystemBase {
     private static LEDSubsystem m_instance;
-    public AddressableLED[] m_leds = new AddressableLED[Constants.LEDContants.kLEDPorts.length];
-    public AddressableLEDBuffer[] m_ledBuffers = new AddressableLEDBuffer[Constants.LEDContants.kLengths.length];
+    public AddressableLED m_led;
+    public AddressableLEDBuffer m_ledBuffer;
 
     public LEDSubsystem() {
-        for(int i = 0; i < Constants.LEDContants.kLEDPorts.length; i++) {
-            m_leds[i] = new AddressableLED(Constants.LEDContants.kLEDPorts[i]);
-            m_ledBuffers[i] = new AddressableLEDBuffer(Constants.LEDContants.kLengths[i]);
-            m_leds[i].setLength(m_ledBuffers[i].getLength());
-            m_leds[i].setData(m_ledBuffers[i]);
-            m_leds[i].start();
-        }
+            m_led = new AddressableLED(Constants.LEDContants.kLEDPort);
+            m_ledBuffer = new AddressableLEDBuffer(Constants.LEDContants.kLength);
+            m_led.setLength(m_ledBuffer.getLength());
+            m_led.setData(m_ledBuffer);
+            m_led.start();
+
     }
 
     public static LEDSubsystem getInstance() {
@@ -29,29 +27,25 @@ public class LEDSubsystem extends SubsystemBase {
         return m_instance;
     }
 
-    public void setLEDRGB(int port, int led, int r, int g, int b) {
-        m_ledBuffers[port].setRGB(led, r, g, b);
+    public void setLEDRGB(int led, int r, int g, int b) {
+        m_ledBuffer.setRGB(led, r, g, b);
     }
 
-    public void setLED(int port, int led, Color color) {
-        m_ledBuffers[port].setLED(led, color);
+    public void setLEDHSV(int led, int h, int s, int v) {
+        m_ledBuffer.setRGB(led, h, s, v);
     }
 
-    public void setLEDHSV(int port, int led, int h, int s, int v) {
-        m_ledBuffers[port].setRGB(led, h, s, v);
+    public void turnOffLED(int led) {
+        setLEDRGB(led, 0, 0, 0);
     }
 
-    public void turnOffLED(int port, int led) {
-        setLEDRGB(port, led, 0, 0, 0);
-    }
-
-    public void turnOffLEDs(int port) {
-        for (int led = 0; led < Constants.LEDContants.kLengths[port]; led++) {
-            turnOffLED(port, led);
+    public void turnOffLEDs() {
+        for (int led = 0; led < Constants.LEDContants.kLength; led++) {
+            turnOffLED(led);
         }
     }
 
-    public void setData(int port) {
-        m_leds[port].setData(m_ledBuffers[port]);
+    public void setData() {
+        m_led.setData(m_ledBuffer);
     }
 }

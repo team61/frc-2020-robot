@@ -215,13 +215,11 @@ public final class Constants {
         public static final Color[] colors = {kBlueTarget, kGreenTarget, kRedTarget, kYellowTarget};
     }
     public static final class LEDContants {
-        public static final int[] kLEDPorts = {0};
-        public static final int kLiftLength = 23;
-        public static final int[] kLengths = {kLiftLength, kLiftLength};
+        public static final int kLEDPort = 0;
+        public static final int kLength = 23;
 
-        public static final int[] kLiftPorts = {0};
         public static final int kLiftSnakeSize = 7;
-        public static final double kLiftIncrementDelay = 0.05;
+        public static final double kLiftIncrementDelay = 0.02;
         public static final double kLiftFlashDelay = 0.5;
         public static final double kShootChargeDelay = 0.05;
 

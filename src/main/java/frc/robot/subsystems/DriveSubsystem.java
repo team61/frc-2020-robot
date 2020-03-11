@@ -8,9 +8,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -37,11 +35,13 @@ public class DriveSubsystem extends SubsystemBase {
 
     private static DriveSubsystem m_instance;
 
-    private final WPI_TalonSRX m_leftMaster = new WPI_TalonSRX(DriveConstants.kFrontLeftPort);
-    private final WPI_TalonSRX m_leftSlave = new WPI_TalonSRX(DriveConstants.kRearLeftPort);
+    private final Spark m_leftMaster = new Spark(DriveConstants.kFrontLeftPort);
+    private final Spark m_leftSlave = new Spark(DriveConstants.kRearLeftPort);
+    private final SpeedControllerGroup m_left = new SpeedControllerGroup(m_leftMaster, m_leftSlave);
 
-    private final WPI_TalonSRX m_rightMaster = new WPI_TalonSRX(DriveConstants.kFrontRightPort);
-    private final WPI_TalonSRX m_rightSlave = new WPI_TalonSRX(DriveConstants.kRearRightPort);
+    private final Spark m_rightMaster = new Spark(DriveConstants.kFrontRightPort);
+    private final Spark m_rightSlave = new Spark(DriveConstants.kRearRightPort);
+    private final SpeedControllerGroup m_right = new SpeedControllerGroup(m_rightMaster, m_rightSlave);
 
 
     private final Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
@@ -51,7 +51,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private final DifferentialDriveOdometry m_odometry;
 
-    private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_leftMaster, m_rightMaster);
+    private final DifferentialDrive m_differentialDrive = new DifferentialDrive(m_left, m_right);
 
     private double x = 0;
     private double y = 0;
@@ -82,9 +82,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_leftEncoder.setReverseDirection(false);
         m_rightEncoder.setReverseDirection(false);
-
-        m_leftSlave.follow(m_leftMaster);
-        m_rightSlave.follow(m_rightMaster);
     }
 
     @Override
@@ -113,7 +110,9 @@ public class DriveSubsystem extends SubsystemBase {
     public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
        m_differentialDrive.tankDrive(leftSpeed, rightSpeed * DriveConstants.kFudgeFactor, squaredInputs);
     }
-
+    public void test() {
+        m_rightMaster.set(0.4);
+    }
     public void tankDrive(final double leftSpeed, final double rightSpeed) {
         tankDrive(leftSpeed, rightSpeed, false);
     }
@@ -127,8 +126,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        m_leftMaster.setVoltage(leftVolts);
-        m_rightMaster.setVoltage(rightVolts * DriveConstants.kFudgeFactor);
+        m_left.setVoltage(leftVolts);
+        m_right.setVoltage(rightVolts * DriveConstants.kFudgeFactor);
     }
 
 

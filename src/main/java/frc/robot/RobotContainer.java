@@ -7,13 +7,28 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.FeederConstants;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.Drive.DriveForDistance;
+import frc.robot.commands.Drive.FollowTrajectory;
 import frc.robot.commands.Drive.SimpleDrive;
 import frc.robot.commands.Drive.TankDrive;
 import frc.robot.commands.Feed.BeltDump;
@@ -22,14 +37,22 @@ import frc.robot.commands.Feed.Intake;
 import frc.robot.commands.Feed.ResetLimitSwitch;
 import frc.robot.commands.Lift.Climb;
 import frc.robot.commands.Shoot.Fire;
+import frc.robot.commands.Shoot.Shoot;
+import frc.robot.commands.Turret.MoveTurretToPosition;
 import frc.robot.commands.Turret.SmallAdjustment;
 import frc.robot.commands.Turret.TurretAutoAimVision;
 import frc.robot.commands.Turret.TurretWithJoysticks;
+import frc.robot.commands.WheelSpinner.SpinToColor;
+import frc.robot.commands.WheelSpinner.SpinWheel;
 import frc.robot.commands.led.AnimateFeeder;
-import frc.robot.commands.led.AnimateLiftUp;
+//import frc.robot.commands.led.IncrementLED;
+import frc.robot.commands.led.IncrementLED;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -54,13 +77,16 @@ public class RobotContainer {
     private final LogitechJoystick jLift = new LogitechJoystick(OIConstants.jLift);
     private final LogitechJoystick jTurret = new LogitechJoystick(OIConstants.jTurret);
 
-    private Trigger BeltDumpTriggerDown = new Trigger(()-> jTurret.btn_8.get() || jTurret.btn_10.get() || jTurret.btn_12.get());
-    private Trigger BeltDumpTriggerUp = new Trigger(()-> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get());
-
-    ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
+    private Trigger BeltDumpTriggerDown = new Trigger(()-> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get());
+    private Trigger BeltDumpTriggerUp = new Trigger(()-> jTurret.btn_8.get() || jTurret.btn_10.get() || jTurret.btn_12.get());
+    private Trigger manualFireTrigger = new Trigger(()-> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get()).and(new Trigger(() ->jTurret.btn_1.get()));
+    private ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
             new WaitCommand(FeederConstants.kAutoDelay),
             new Fire(m_shooterSubsystem, m_feederSubsystem)
     );
+
+    private ParallelCommandGroup m_manualFire = new Shoot(m_shooterSubsystem).alongWith(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, () -> jTurret.btn_9.get() || jTurret.btn_11.get(), () -> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get()}));
+
 
     private Command m_autoCommand = m_fire.andThen(new SimpleDrive(m_driveSubsystem, 6, 2));
 
@@ -92,7 +118,6 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
-       jLift.btn_11.whileHeld(new AnimateLiftUp(m_LEDSubsystem));
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
 
         jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem));
@@ -110,12 +135,13 @@ public class RobotContainer {
         jLift.btn_10.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 1));
         jLift.btn_8.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 2));
 
-        BeltDumpTriggerDown.whileActiveContinuous(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_12::get, jTurret.btn_10::get, jTurret.btn_8::get}));
-        BeltDumpTriggerUp.whileActiveContinuous(new BeltDump(m_feederSubsystem, -Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, jTurret.btn_9::get, jTurret.btn_7::get}));
+        BeltDumpTriggerDown.whileActiveContinuous(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, jTurret.btn_9::get, jTurret.btn_7::get}));
+        BeltDumpTriggerUp.whileActiveContinuous(new BeltDump(m_feederSubsystem, -Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_12::get, jTurret.btn_10::get, jTurret.btn_8::get}));
 
 
         jTurret.btn_2.whileHeld(m_aim);
-
+        manualFireTrigger.whileActiveContinuous(m_manualFire);
+        jTurret.btn_1.whileHeld(new IncrementLED(m_LEDSubsystem));
     }
 
 
