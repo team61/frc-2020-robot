@@ -219,7 +219,11 @@ public final class Constants {
         public static final int kLength = 23;
 
         public static final int kLiftSnakeSize = 7;
-        public static final double kLiftIncrementDelay = 0.02;
+
+        public static final double kIncrementDelay = 0.02;
+        public static final double kIntensityFactor = 0.02;
+        public static final double kDimFactor = 10;
+
         public static final double kLiftFlashDelay = 0.5;
         public static final double kShootChargeDelay = 0.05;
 
