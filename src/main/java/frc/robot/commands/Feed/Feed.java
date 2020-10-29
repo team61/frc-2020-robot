@@ -23,7 +23,7 @@ public class Feed extends CommandBase {
     public void initialize() {
         solenoid = FeederConstants.kSolenoidPorts.length - 1;
         for (int i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
-            m_feederSubsystem.setSolenoidState(i, false);
+            m_feederSubsystem.setSolenoidState(i, true);
         }
         m_timer.reset();
         m_timer.start();
@@ -31,14 +31,14 @@ public class Feed extends CommandBase {
 
     @Override
     public void execute() {
-        if (m_timer.get() >= FeederConstants.kBallDelays[solenoid]) {
-            m_feederSubsystem.setSolenoidState(solenoid, true);
-            if (solenoid > 0) {
-                solenoid--;
-            }
-            m_timer.reset();
-            m_timer.start();
-        }
+        // if (m_timer.get() >= FeederConstants.kBallDelays[solenoid]) {
+        //     m_feederSubsystem.setSolenoidState(solenoid, true);
+        //     if (solenoid > 0) {
+        //         solenoid--;
+        //     }
+        //     m_timer.reset();
+        //     m_timer.start();
+        // }
         m_feederSubsystem.set(1);
     }
 

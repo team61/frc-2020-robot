@@ -5,6 +5,9 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -35,12 +38,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     private static DriveSubsystem m_instance;
 
-    private final Spark m_leftMaster = new Spark(DriveConstants.kFrontLeftPort);
-    private final Spark m_leftSlave = new Spark(DriveConstants.kRearLeftPort);
+    private final CANSparkMax m_leftMaster = new CANSparkMax(DriveConstants.kFrontLeftPort, MotorType.kBrushless);
+    private final CANSparkMax m_leftSlave = new CANSparkMax(DriveConstants.kRearLeftPort,  MotorType.kBrushless);
     private final SpeedControllerGroup m_left = new SpeedControllerGroup(m_leftMaster, m_leftSlave);
 
-    private final Spark m_rightMaster = new Spark(DriveConstants.kFrontRightPort);
-    private final Spark m_rightSlave = new Spark(DriveConstants.kRearRightPort);
+    private final CANSparkMax m_rightMaster = new CANSparkMax(DriveConstants.kFrontRightPort, MotorType.kBrushless);
+    private final CANSparkMax m_rightSlave = new CANSparkMax(DriveConstants.kRearRightPort, MotorType.kBrushless);
     private final SpeedControllerGroup m_right = new SpeedControllerGroup(m_rightMaster, m_rightSlave);
 
 

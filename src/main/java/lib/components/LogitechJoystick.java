@@ -7,7 +7,7 @@ import java.util.function.DoubleSupplier;
 
 public class LogitechJoystick extends Joystick {
 
-    private final double JOYSTICK_BUFFER = .06;
+    private final double JOYSTICK_BUFFER = .08;
 
     public LogitechJoystick(int port) {
         super(port);

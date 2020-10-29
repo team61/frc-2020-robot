@@ -56,10 +56,10 @@ public final class Constants {
         public static final boolean kRightEncoderReversed = true;
 
         // Motor Ports
-        public static final int kFrontLeftPort = 3;
-        public static final int kRearLeftPort = 4;
-        public static final int kFrontRightPort = 1;
-        public static final int kRearRightPort = 2;
+        public static final int kFrontLeftPort = 1;
+        public static final int kRearLeftPort = 2;
+        public static final int kFrontRightPort = 3;
+        public static final int kRearRightPort = 4;
 
         // Encoder Ports
         public static final int[] kLeftEncoderPorts = {4, 5};

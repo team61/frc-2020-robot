@@ -100,11 +100,11 @@ public class RobotContainer {
     public RobotContainer() {
         m_driveSubsystem.setDefaultCommand(new TankDrive(m_driveSubsystem, jLeft::getYAxis, jRight::getYAxis));
         m_turretSubsystem.setDefaultCommand(new TurretWithJoysticks(m_turretSubsystem, jTurret::getZAxis));
-        m_LEDSubsystem.setDefaultCommand(new AnimateFeeder(m_LEDSubsystem, new BooleanSupplier[]{
-            () -> m_feederSubsystem.getSolenoidState(0),
-                () -> m_feederSubsystem.getSolenoidState(1),
-                () -> m_feederSubsystem.getSolenoidState(2)}
-                ));
+//        m_LEDSubsystem.setDefaultCommand(new AnimateFeeder(m_LEDSubsystem, new BooleanSupplier[]{
+//            () -> m_feederSubsystem.getSolenoidState(0),
+//                () -> m_feederSubsystem.getSolenoidState(1),
+//                () -> m_feederSubsystem.getSolenoidState(2)}
+//                ));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -141,7 +141,7 @@ public class RobotContainer {
 
         jTurret.btn_2.whileHeld(m_aim);
         manualFireTrigger.whileActiveContinuous(m_manualFire);
-        jTurret.btn_1.whileHeld(new IncrementLED(m_LEDSubsystem));
+       // jTurret.btn_1.whileHeld(new IncrementLED(m_LEDSubsystem));
     }
 
 
