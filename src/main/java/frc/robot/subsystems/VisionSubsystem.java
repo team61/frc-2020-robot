@@ -34,7 +34,10 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public void setYaw() {
-        yaw = yawEntry.getDouble(Double.NaN);
+        double tempYaw = yawEntry.getDouble(Double.NaN);
+        if (tempYaw != Double.NaN) {
+            yaw = tempYaw;
+        }
     }
 
     public void setWidth() {
