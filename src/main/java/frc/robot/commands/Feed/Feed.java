@@ -5,41 +5,35 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.subsystems.FeederSubsystem;
 
+import java.util.function.DoubleSupplier;
+
 public class Feed extends CommandBase {
 
     private FeederSubsystem m_feederSubsystem;
+    private DoubleSupplier speed;
+    public Feed(FeederSubsystem feederSubsystem, DoubleSupplier speed) {
+        m_feederSubsystem = feederSubsystem;
+        this.speed = speed;
 
-    private Timer m_timer = new Timer();
-
-    private int solenoid;
+        addRequirements(feederSubsystem);
+    }
 
     public Feed(FeederSubsystem feederSubsystem) {
         m_feederSubsystem = feederSubsystem;
-
+        speed = () -> 1;
         addRequirements(feederSubsystem);
     }
 
     @Override
     public void initialize() {
-        solenoid = FeederConstants.kSolenoidPorts.length - 1;
         for (int i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
             m_feederSubsystem.setSolenoidState(i, true);
         }
-        m_timer.reset();
-        m_timer.start();
     }
 
     @Override
     public void execute() {
-        // if (m_timer.get() >= FeederConstants.kBallDelays[solenoid]) {
-        //     m_feederSubsystem.setSolenoidState(solenoid, true);
-        //     if (solenoid > 0) {
-        //         solenoid--;
-        //     }
-        //     m_timer.reset();
-        //     m_timer.start();
-        // }
-        m_feederSubsystem.set(1);
+        m_feederSubsystem.set(speed.getAsDouble());
     }
 
     @Override

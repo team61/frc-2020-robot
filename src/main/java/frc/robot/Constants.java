@@ -38,10 +38,8 @@ public final class Constants {
     public static final class OIConstants {
 
         //Stick Ports
-        public static final int jLeft = 0;
-        public static final int jRight = 1;
-        public static final int jLift = 2;
-        public static final int jTurret = 3;
+        public static final int driveControllerPin = 0;
+        public static final int controlControllerPin = 1;
     }
 
     public static final class DriveConstants {
