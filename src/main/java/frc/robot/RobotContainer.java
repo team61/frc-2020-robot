@@ -65,11 +65,12 @@ public class RobotContainer {
         m_driveSubsystem.setDefaultCommand(new TankDrive(m_driveSubsystem, () -> driveController.getY(GenericHID.Hand.kLeft), () -> driveController.getY(GenericHID.Hand.kRight)));
         m_turretSubsystem.setDefaultCommand(new TurretWithJoysticks(m_turretSubsystem, () -> controlController.getX(GenericHID.Hand.kRight)));
         m_feederSubsystem.setDefaultCommand(new Feed(m_feederSubsystem, () -> controlController.getY(GenericHID.Hand.kLeft)));
-//        m_LEDSubsystem.setDefaultCommand(new AnimateFeeder(m_LEDSubsystem, new BooleanSupplier[]{
-//            () -> m_feederSubsystem.getSolenoidState(0),
-//                () -> m_feederSubsystem.getSolenoidState(1),
-//                () -> m_feederSubsystem.getSolenoidState(2)}
-//                ));
+        
+       m_LEDSubsystem.setDefaultCommand(new AnimateFeeder(m_LEDSubsystem, new BooleanSupplier[]{
+           () -> m_feederSubsystem.getSolenoidState(0),
+               () -> m_feederSubsystem.getSolenoidState(1),
+               () -> m_feederSubsystem.getSolenoidState(2)}
+               , new int[][]{{0, 20}, {21, 40}, {41, 60}}, new boolean[]{false, true, false}));
 
         // Configure the button bindings
         configureButtonBindings();

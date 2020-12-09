@@ -10,95 +10,72 @@ public class IncrementLED extends CommandBase {
     private LEDSubsystem m_ledSubsystem;
 
     private Timer m_timer = new Timer();
-    private int m_start;
     private int m_snakeSize;
-    private int m_length;
     private int m_intensityStart;
     private double m_intensityIncrement;
-    private double r;
-    private double g;
-    private double b;
-    private int head;
-    private int tail;
+    private Color m_color;
+    private int[] snakes;
     private double m_time;
+    private int[][] m_strips;
+    private boolean[] m_reverse;
+    private boolean m_isUp;
 
-    public IncrementLED(LEDSubsystem ledSubsystem, int start, int length, int snakeSize, double time, Color color, int intensityStart, double intensityIncrement) {
+    public IncrementLED(LEDSubsystem ledSubsystem, int[][] strips, boolean[] reverse, int snakeSize, double time, Color color, boolean isUp) {
         m_ledSubsystem = ledSubsystem;
         m_time = time;
-        m_start = start;
+        m_strips = strips;
+        m_reverse = reverse;
         m_snakeSize = snakeSize;
-        m_length = length;
-        m_intensityStart = intensityStart;
-        m_intensityIncrement = intensityIncrement;
-        r = color.red;
-        g = color.green;
-        b = color.blue;
-
-        addRequirements(ledSubsystem);
-    }
-
-    public IncrementLED(LEDSubsystem ledSubsystem, int start, int length, int snakeSize, double time, Color color) {
-        m_ledSubsystem = ledSubsystem;
-        m_time = time;
-        m_start = start;
-        m_snakeSize = snakeSize;
-        m_length = length;
-        m_intensityStart = 0;
-        m_intensityIncrement = 0;
-        r = color.red;
-        g = color.green;
-        b = color.blue;
+        m_color = color;
+        m_isUp = isUp;
 
         addRequirements(ledSubsystem);
     }
 
     @Override
     public void initialize() {
-        head = m_snakeSize - 1 + m_start;
-        tail = m_start;
+        for(int i = 0; i < m_strips.length; i++) {
+            snakes[i] = strips[i][0];
+        }
+    
         m_timer.reset();
         m_timer.start();
     }
 
     @Override
     public void execute() {
-            if (m_timer.get() >= m_time) {
-                m_ledSubsystem.turnOffLED(tail);
-                head++;
-                tail++;
-
-                if (head >= m_length + m_start) {
-                    head = m_start;
-                }
-                if (tail >= m_length + m_start) {
-                    tail = m_start;
-                }
-
-                m_timer.reset();
-                m_timer.start();
-            }
-            if (tail < head) {
-                int intensity = m_intensityStart;
-                for (int i = tail; i <= head + m_start; i++) {
-                    m_ledSubsystem.setLEDRGB(i, (int) (r * intensity), (int) (g * intensity), (int) (b * intensity));
-                    intensity += m_intensityIncrement;
-                }
-            } else if (tail > head) {
-                int intensity = m_intensityStart;
-                for (int i = tail; i < m_length + m_start; i++) {
-                    m_ledSubsystem.setLEDRGB(i, (int) (r * intensity), (int) (g * intensity), (int) (b * intensity));
-                    intensity += m_intensityIncrement;
-
-                }
-                intensity = m_intensityStart;
-                for (int i = m_start; i <= head; i++) {
-                    m_ledSubsystem.setLEDRGB(i, (int) (r * intensity), (int) (g * intensity), (int) (b * intensity));
-                    intensity += m_intensityIncrement;
-                }
+        if (m_timer.get() >= m_time) {
+            for(int i = 0; i < snakes.length; i++) {
+                snakes[i]++;
             }
 
-            m_ledSubsystem.setData();
+            m_timer.reset();
+            m_timer.start();
         }
+
+        for(int strip = 0; strip < m_strips.length; strip++) {
+            m_ledSubsystem.turnOffLEDs();
+            if(m_isUp) {
+                for(int i = snakes[strip]; i < snakes[strip] + length && i < m_strips[strip][1]; i++) {
+                    m_ledSubsystem.setLED(i, m_color);
+                }
+
+                for(int i = m_strips[strip][0]; i < length - m_strips[strip][0] + snakes[strip]; i++) {
+                    m_ledSubsystem.setLED(i, m_color);
+                }
+            } else {
+                for(int i = snakes[strip]; i > snakes[strip] + length && i >= m_strips[strip][0]; i--) {
+                    m_ledSubsystem.setLED(i, m_color);
+                }
+
+                for(int i = m_strips[strip][1] - 1; i < length - m_strips[strip][0] + snakes[strip]; i--) {
+                    m_ledSubsystem.setLED(i, m_color);
+                }
+            }
+        }
+
+        m_ledSubsystem.setData();
+    }
 
 
     @Override
