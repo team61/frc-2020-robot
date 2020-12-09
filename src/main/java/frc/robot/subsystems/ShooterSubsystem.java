@@ -33,7 +33,7 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         rpmEntry.setNumber(getVelocityRPM());
-        System.out.println(rpmEntry.getDouble(0));
+        //System.out.println(rpmEntry.getDouble(0));
         speed = velocityEntry.getDouble(0);
     }
 

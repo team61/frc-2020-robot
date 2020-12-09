@@ -10,50 +10,54 @@ import java.util.function.BooleanSupplier;
 public class AnimateFeeder extends CommandBase {
 
     private LEDSubsystem m_ledSubsystem;
-    private int m_start;
-    private int m_length;
     private BooleanSupplier[] m_solenoidStates;
+    private int[][] m_strips;
+    private boolean[] m_reverse;
 
-    public AnimateFeeder(LEDSubsystem ledSubsystem, int start, int length, BooleanSupplier[] solenoidStates) {
+    public AnimateFeeder(LEDSubsystem ledSubsystem, BooleanSupplier[] solenoidStates, int[][] strips, boolean[] reverse) {
         m_ledSubsystem = ledSubsystem;
-        m_start = start;
-        m_length = length;
         m_solenoidStates = solenoidStates;
+        m_strips = strips;
+        m_reverse = reverse;
 
         addRequirements(ledSubsystem);
     }
 
+    public void setBranchColor(int i, int strip, int solenoid) {
+        int section = 21 / m_solenoidStates.length;
+            
+        int start = i * section + m_strips[strip][0];
+        int end = (i + 1) * section + m_strips[strip][0] - 1;
+     //System.out.println("Start:" + start + " End: " + end);
+        // Set LEDs on branch green if false
+       if (!m_solenoidStates[solenoid].getAsBoolean()) {
+            for (int j = start; j < end && j < m_strips[strip][1]; j++) {
+                //System.out.println("LED: " + j + " ");
+                m_ledSubsystem.setLED(j, Color.kGreen);
+            }
+        } else {
+            for (int j =  start; j < end && j < m_strips[strip][1]; j++) {
+                m_ledSubsystem.turnOffLED(j);
+            }
+        }
+    //     System.out.print("LED: " + end + " ");
+        //m_ledSubsystem.setLED(end, Color.kWhite); // divider LED
+    }
+
     @Override
     public void execute() {
-        int section = m_length / 3;
-        if (!m_solenoidStates[0].getAsBoolean()) {
-            for (int i = m_start; i < section; i++) {
-                m_ledSubsystem.setLED(i, Color.kGreen);
-            }
-        } else {
-            for (int i = m_start; i < section; i++) {
-                m_ledSubsystem.turnOffLED(i);
-            }
-        }
-        m_ledSubsystem.setLED(section, Color.kWhite);
-        if (!m_solenoidStates[1].getAsBoolean()) {
-            for (int i = section + 1; i < 2 * section + 1; i++) {
-                m_ledSubsystem.setLED(i, Color.kGreen);
-            }
-        } else {
-            for (int i = section + 1; i < 2 * section + 1; i++) {
-                m_ledSubsystem.turnOffLED(i);
-            }
-        }
-        m_ledSubsystem.setLED(2 * section + 1, Color.kWhite);
-        if (!m_solenoidStates[2].getAsBoolean()) {
-            for (int i = 2 * section + 2; i < m_length; i++) {
-                m_ledSubsystem.setLED(i, Color.kGreen);
-            }
-        } else {
-            for (int i = 16; i < m_length; i++) {
-                m_ledSubsystem.turnOffLED(i);
-            }
+        
+       m_ledSubsystem.turnOffLEDs();
+        for(int strip = 0; strip < m_strips.length; strip++) {
+             // Loop through each strip
+           
+           
+                for (int i = 0; i < m_solenoidStates.length; i++) {
+                     // Loop through each branch
+                    setBranchColor(i, strip, !m_reverse[strip] ? i : m_solenoidStates.length - i - 1);
+                }
+                
+        
         }
 
         m_ledSubsystem.setData();

@@ -216,7 +216,7 @@ public final class Constants {
     }
     public static final class LEDContants {
         public static final int kLEDPort = 0;
-        public static final int kLength = 23;
+        public static final int kLength = 68;
 
         public static final int kLiftSnakeSize = 7;
 

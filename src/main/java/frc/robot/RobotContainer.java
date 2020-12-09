@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
@@ -82,7 +83,7 @@ public class RobotContainer {
     private Trigger manualFireTrigger = new Trigger(()-> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get()).and(new Trigger(() ->jTurret.btn_1.get()));
     private ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
             new WaitCommand(FeederConstants.kAutoDelay),
-            new Fire(m_shooterSubsystem, m_feederSubsystem)
+            new Fire(m_shooterSubsystem, m_feederSubsystem, m_LEDSubsystem)
     );
 
     private ParallelCommandGroup m_manualFire = new Shoot(m_shooterSubsystem).alongWith(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, () -> jTurret.btn_9.get() || jTurret.btn_11.get(), () -> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get()}));
@@ -100,11 +101,11 @@ public class RobotContainer {
     public RobotContainer() {
         m_driveSubsystem.setDefaultCommand(new TankDrive(m_driveSubsystem, jLeft::getYAxis, jRight::getYAxis));
         m_turretSubsystem.setDefaultCommand(new TurretWithJoysticks(m_turretSubsystem, jTurret::getZAxis));
-//        m_LEDSubsystem.setDefaultCommand(new AnimateFeeder(m_LEDSubsystem, new BooleanSupplier[]{
-//            () -> m_feederSubsystem.getSolenoidState(0),
-//                () -> m_feederSubsystem.getSolenoidState(1),
-//                () -> m_feederSubsystem.getSolenoidState(2)}
-//                ));
+        m_LEDSubsystem.setDefaultCommand(new AnimateFeeder(m_LEDSubsystem, new BooleanSupplier[]{
+           () -> m_feederSubsystem.getSolenoidState(0),
+               () -> m_feederSubsystem.getSolenoidState(1),
+               () -> m_feederSubsystem.getSolenoidState(2)}, new int[][]{{1, 22}, {23, 44}, {47, 68}}, new boolean[]{false, true, false}
+               ));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -119,8 +120,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
-
-        jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem));
+        jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{1, 22}, {23, 44}, {47, 68}}, new boolean[]{false, true, false}, 7, 0.1, Color.kPurple, true));
+        jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, m_LEDSubsystem));
 
         jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));
         jTurret.btn_5.whenPressed(new SmallAdjustment(m_turretSubsystem, -Constants.TurretConstants.kAdjustmentVoltage));
