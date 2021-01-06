@@ -77,11 +77,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_odometry = new DifferentialDriveOdometry(getHeading(), AutoConstants.kStartingPosition);
         m_differentialDrive.setSafetyEnabled(false);
         m_differentialDrive.setDeadband(0); // Dead band is done with joysticks directly
-
-        m_leftMaster.setInverted(true);
-        m_leftSlave.setInverted(true);
-        m_rightMaster.setInverted(true);
-        m_rightSlave.setInverted(true);
+     
 
         m_leftEncoder.setReverseDirection(false);
         m_rightEncoder.setReverseDirection(false);
@@ -111,11 +107,9 @@ public class DriveSubsystem extends SubsystemBase {
      * */
 
     public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
-       m_differentialDrive.tankDrive(leftSpeed, rightSpeed * DriveConstants.kFudgeFactor, squaredInputs);
+       m_differentialDrive.tankDrive(-leftSpeed, -rightSpeed * DriveConstants.kFudgeFactor, squaredInputs);
     }
-    public void test() {
-        m_rightMaster.set(0.4);
-    }
+  
     public void tankDrive(final double leftSpeed, final double rightSpeed) {
         tankDrive(leftSpeed, rightSpeed, false);
     }
@@ -129,8 +123,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        m_left.setVoltage(leftVolts);
-        m_right.setVoltage(rightVolts * DriveConstants.kFudgeFactor);
+        m_left.setVoltage(-leftVolts);
+        m_right.setVoltage(-rightVolts * DriveConstants.kFudgeFactor);
     }
 
 

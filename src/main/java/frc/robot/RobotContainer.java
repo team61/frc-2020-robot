@@ -10,7 +10,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -26,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Drive.DriveForDistance;
@@ -46,6 +49,7 @@ import frc.robot.commands.Turret.TurretWithJoysticks;
 import frc.robot.commands.WheelSpinner.SpinToColor;
 import frc.robot.commands.WheelSpinner.SpinWheel;
 import frc.robot.commands.led.AnimateFeeder;
+import frc.robot.trajectories.*;
 //import frc.robot.commands.led.IncrementLED;
 import frc.robot.commands.led.IncrementLED;
 import frc.robot.subsystems.*;
@@ -88,8 +92,61 @@ public class RobotContainer {
 
     private ParallelCommandGroup m_manualFire = new Shoot(m_shooterSubsystem).alongWith(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, () -> jTurret.btn_9.get() || jTurret.btn_11.get(), () -> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get()}));
 
+    // Create a voltage constraint to ensure we don't accelerate too fast
+  
+    DifferentialDriveVoltageConstraint autoVoltageConstraint =
+        new DifferentialDriveVoltageConstraint(
+            new SimpleMotorFeedforward(AutoConstants.kS,
+            AutoConstants.kV,
+            AutoConstants.kA),
+            AutoConstants.kDriveKinematics,
+            10);
 
-    private Command m_autoCommand = m_fire.andThen(new SimpleDrive(m_driveSubsystem, 6, 2));
+    // Create config for trajectory
+    TrajectoryConfig config =
+        new TrajectoryConfig(AutoConstants.kMaxVelocity,
+                             AutoConstants.kMaxAcceleration)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(AutoConstants.kDriveKinematics)
+            // Apply the voltage constraint
+            .addConstraint(autoVoltageConstraint);
+
+    // // An example trajectory to follow.  All units in meters.
+    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    //     // Start at the origin facing the +X direction
+    //     new Pose2d(0, 0, new Rotation2d(0)),
+    //     // Pass through these two interior waypoints, making an 's' curve path
+    //     List.of(
+    //         new Translation2d(2, 3),
+    //         new Translation2d(5, 5)
+    //     ),
+    //     // End 3 meters straight ahead of where we started, facing forward
+    //     new Pose2d(-5, 5, new Rotation2d(0)),
+    //     // Pass config
+    //     config
+    // );
+
+    
+    Trajectory exampleTrajectory = ExampleTrajectory.generateTrajectory();
+    
+
+    Command m_autoCommand = new RamseteCommand(
+        exampleTrajectory,
+        m_driveSubsystem::getPose2d,
+        new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+        new SimpleMotorFeedforward(AutoConstants.kS,
+        AutoConstants.kV,
+        AutoConstants.kA),
+        AutoConstants.kDriveKinematics,
+        m_driveSubsystem::getWheelSpeeds,
+        new PIDController(AutoConstants.kP, 0, 0),
+        new PIDController(AutoConstants.kP, 0, 0),
+        // RamseteCommand passes volts to the callback
+        m_driveSubsystem::tankDriveVolts,
+        m_driveSubsystem
+    ).andThen(m_driveSubsystem::stopTankDrive);
+
+    //private Command m_autoCommand = new SimpleDrive(m_driveSubsystem, 4, 2);
 
     private final TurretAutoAimVision m_aim = new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw);
 
@@ -120,7 +177,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
-        jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{1, 22}, {23, 44}, {47, 68}}, new boolean[]{false, true, false}, 7, 0.1, Color.kPurple, true));
+        jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{1, 22}, {22, 43}, {47, 68}}, new boolean[]{false, true, false}, 7, 0.05, Color.kPurple, true));
         jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, m_LEDSubsystem));
 
         jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));

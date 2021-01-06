@@ -24,13 +24,13 @@ public class SimpleDrive extends CommandBase {
 
     @Override
     public void initialize() {
-        m_driveSubsystem.resetEncoders();
+       
     }
 
     @Override
     public void execute() {
 
-        m_driveSubsystem.tankDriveVolts(m_speed, -m_speed);
+        m_driveSubsystem.tankDrive(0.2, .2);
     }
 
     // Returns true when the command should end.
