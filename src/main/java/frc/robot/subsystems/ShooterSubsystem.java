@@ -20,6 +20,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private WPI_TalonFX m_slave = new WPI_TalonFX(ShooterConstants.kSlavePort);
 
     private double speed = 0;
+    private double voltage = ShooterConstants.kMaxVoltage;
 
     private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
     private NetworkTableEntry velocityEntry = tab.add("Flywheel Velocity", 0).getEntry();
@@ -60,6 +61,14 @@ public class ShooterSubsystem extends SubsystemBase {
     public double getSpeed() {
         return speed;
     }
+
+public double getVoltage() {
+    return voltage;
+}
+
+public void setConfigVoltage(double voltage) {
+    this.voltage = voltage;
+}
 
     public void setVoltage(double voltage) {
         m_master.setVoltage(voltage);

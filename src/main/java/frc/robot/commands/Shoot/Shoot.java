@@ -25,7 +25,7 @@ public class Shoot extends CommandBase {
 
     @Override
     public void execute() {
-        m_shooterSubsystem.set(1);
+        m_shooterSubsystem.setVoltage(m_shooterSubsystem.getVoltage());
     }
 
     @Override
