@@ -139,8 +139,8 @@ public class RobotContainer {
         AutoConstants.kA),
         AutoConstants.kDriveKinematics,
         m_driveSubsystem::getWheelSpeeds,
-        new PIDController(AutoConstants.kP, 0, 0),
-        new PIDController(AutoConstants.kP, 0, 0),
+        new PIDController(0, 0, 0),
+        new PIDController(0, 0, 0),
         // RamseteCommand passes volts to the callback
         m_driveSubsystem::tankDriveVolts,
         m_driveSubsystem
@@ -161,7 +161,7 @@ public class RobotContainer {
         m_LEDSubsystem.setDefaultCommand(new AnimateFeeder(m_LEDSubsystem, new BooleanSupplier[]{
            () -> m_feederSubsystem.getSolenoidState(0),
                () -> m_feederSubsystem.getSolenoidState(1),
-               () -> m_feederSubsystem.getSolenoidState(2)}, new int[][]{{1, 22}, {23, 44}, {47, 68}}, new boolean[]{false, true, false}
+               () -> m_feederSubsystem.getSolenoidState(2)}, new int[][]{{1, 22}, {22, 44}, {47, 68}}, new boolean[]{false, true, false}
                ));
 
         // Configure the button bindings
@@ -177,7 +177,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
-        jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{1, 22}, {22, 43}, {47, 68}}, new boolean[]{false, true, false}, 7, 0.05, Color.kPurple, true));
+        jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{0, 22}, {23, 43}, {46, 68}}, new boolean[]{false, false, false}, 7, 0.05, Color.kPurple, true));
         jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, m_LEDSubsystem));
 
         jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));

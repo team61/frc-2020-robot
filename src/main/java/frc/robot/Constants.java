@@ -75,7 +75,7 @@ public final class Constants {
         // Constraints
         public static final double kMaxVelocity = 2; // Meters per second
         public static final double kMaxAcceleration = 1; // Meters per second squared
-        public static final double kMaxVoltage = 12;
+        public static final double kMaxVoltage = 6;
 
         public static final double kTrackWidth = 0.69; // Meters
         public static final double kWheelBase = 0.94; // Meters
