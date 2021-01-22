@@ -47,8 +47,8 @@ public class DriveSubsystem extends SubsystemBase {
     private final SpeedControllerGroup m_right = new SpeedControllerGroup(m_rightMaster, m_rightSlave);
 
 
-    private final Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
-    private final Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
+    public final Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
+    public final Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
 
     private AHRS m_ahrs; // NAVX
 
@@ -78,9 +78,6 @@ public class DriveSubsystem extends SubsystemBase {
         m_differentialDrive.setSafetyEnabled(false);
         m_differentialDrive.setDeadband(0); // Dead band is done with joysticks directly
      
-
-        m_leftEncoder.setReverseDirection(false);
-        m_rightEncoder.setReverseDirection(false);
     }
 
     @Override
@@ -107,7 +104,7 @@ public class DriveSubsystem extends SubsystemBase {
      * */
 
     public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
-       m_differentialDrive.tankDrive(-leftSpeed, -rightSpeed * DriveConstants.kFudgeFactor, squaredInputs);
+       m_differentialDrive.tankDrive(-leftSpeed, -rightSpeed, squaredInputs);
     }
   
     public void tankDrive(final double leftSpeed, final double rightSpeed) {
@@ -123,8 +120,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        m_left.setVoltage(-leftVolts);
-        m_right.setVoltage(-rightVolts * DriveConstants.kFudgeFactor);
+        m_left.setVoltage(leftVolts);
+        m_right.setVoltage(-rightVolts);
     }
 
 

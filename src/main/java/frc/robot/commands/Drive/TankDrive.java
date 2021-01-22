@@ -28,7 +28,7 @@ public class TankDrive extends CommandBase {
     @Override
     public void execute() {
 
-        m_driveSubsystem.tankDrive(-m_left.getAsDouble(), -m_right.getAsDouble(), true);
+        m_driveSubsystem.tankDrive(m_left.getAsDouble(), m_right.getAsDouble(), true);
     }
 
     // Returns true when the command should end.

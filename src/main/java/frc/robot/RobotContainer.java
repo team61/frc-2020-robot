@@ -42,6 +42,7 @@ import frc.robot.commands.Feed.ResetLimitSwitch;
 import frc.robot.commands.Lift.Climb;
 import frc.robot.commands.Shoot.Fire;
 import frc.robot.commands.Shoot.Shoot;
+import frc.robot.commands.Shoot.SetShootVoltage;
 import frc.robot.commands.Turret.MoveTurretToPosition;
 import frc.robot.commands.Turret.SmallAdjustment;
 import frc.robot.commands.Turret.TurretAutoAimVision;
@@ -85,10 +86,10 @@ public class RobotContainer {
     private Trigger BeltDumpTriggerDown = new Trigger(()-> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get());
     private Trigger BeltDumpTriggerUp = new Trigger(()-> jTurret.btn_8.get() || jTurret.btn_10.get() || jTurret.btn_12.get());
     private Trigger manualFireTrigger = new Trigger(()-> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get()).and(new Trigger(() ->jTurret.btn_1.get()));
-    private ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
-            new WaitCommand(FeederConstants.kAutoDelay),
-            new Fire(m_shooterSubsystem, m_feederSubsystem, m_LEDSubsystem)
-    );
+    // private ParallelDeadlineGroup m_fire = new ParallelDeadlineGroup(
+    //         new WaitCommand(FeederConstants.kAutoDelay),
+    //         new Fire(m_shooterSubsystem, m_feederSubsystem, 11)
+    // );
 
     private ParallelCommandGroup m_manualFire = new Shoot(m_shooterSubsystem).alongWith(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, () -> jTurret.btn_9.get() || jTurret.btn_11.get(), () -> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get()}));
 
@@ -130,21 +131,23 @@ public class RobotContainer {
     Trajectory exampleTrajectory = ExampleTrajectory.generateTrajectory();
     
 
-    Command m_autoCommand = new RamseteCommand(
-        exampleTrajectory,
-        m_driveSubsystem::getPose2d,
-        new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
-        new SimpleMotorFeedforward(AutoConstants.kS,
-        AutoConstants.kV,
-        AutoConstants.kA),
-        AutoConstants.kDriveKinematics,
-        m_driveSubsystem::getWheelSpeeds,
-        new PIDController(0, 0, 0),
-        new PIDController(0, 0, 0),
-        // RamseteCommand passes volts to the callback
-        m_driveSubsystem::tankDriveVolts,
-        m_driveSubsystem
-    ).andThen(m_driveSubsystem::stopTankDrive);
+    // Command m_autoCommand = new RamseteCommand(
+    //     exampleTrajectory,
+    //     m_driveSubsystem::getPose2d,
+    //     new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+    //     new SimpleMotorFeedforward(AutoConstants.kS,
+    //     AutoConstants.kV,
+    //     AutoConstants.kA),
+    //     AutoConstants.kDriveKinematics,
+    //     m_driveSubsystem::getWheelSpeeds,
+    //     new PIDController(0, 0, 0),
+    //     new PIDController(0, 0, 0),
+    //     // RamseteCommand passes volts to the callback
+    //     m_driveSubsystem::tankDriveVolts,
+    //     m_driveSubsystem
+    // ).andThen(m_driveSubsystem::stopTankDrive);
+
+    SimpleDrive m_autoCommand = new SimpleDrive(m_driveSubsystem, 0.5, 2);
 
     //private Command m_autoCommand = new SimpleDrive(m_driveSubsystem, 4, 2);
 
@@ -178,7 +181,7 @@ public class RobotContainer {
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
         jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{0, 22}, {23, 43}, {46, 68}}, new boolean[]{false, false, false}, 7, 0.05, Color.kPurple, true));
-        jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, m_LEDSubsystem));
+        //jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, m_LEDSubsystem));
 
         jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));
         jTurret.btn_5.whenPressed(new SmallAdjustment(m_turretSubsystem, -Constants.TurretConstants.kAdjustmentVoltage));
@@ -189,9 +192,12 @@ public class RobotContainer {
         //jLift.btn_2.whileHeld(new SpinWheel(m_wheelSpinner));
         //jLift.btn_3.whileHeld(new SpinToColor(m_wheelSpinner));
         jLift.btn_7.whileHeld(new Dump(m_feederSubsystem));
-        jLift.btn_12.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 0));
-        jLift.btn_10.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 1));
-        jLift.btn_8.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 2));
+        jLift.btn_9.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 0));
+        jLift.btn_11.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 1));
+
+        jLift.btn_8.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem,ShooterConstants.autoVoltages[0]));
+        jLift.btn_10.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem,ShooterConstants.autoVoltages[1]));
+        jLift.btn_12.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem,ShooterConstants.autoVoltages[2]));
 
         BeltDumpTriggerDown.whileActiveContinuous(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, jTurret.btn_9::get, jTurret.btn_7::get}));
         BeltDumpTriggerUp.whileActiveContinuous(new BeltDump(m_feederSubsystem, -Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_12::get, jTurret.btn_10::get, jTurret.btn_8::get}));

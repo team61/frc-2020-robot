@@ -12,7 +12,7 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class Fire extends ParallelRaceGroup {
-    public Fire(ShooterSubsystem shooterSubsystem, FeederSubsystem feederSubsystem, LEDSubsystem ledSubsystem) {
-        addCommands(new Shoot(shooterSubsystem), new WaitCommand(Constants.FeederConstants.kFeederDelay).andThen(new Feed(feederSubsystem), new IncrementLED(ledSubsystem, new int[][]{{1, 22}, {22, 43}, {47, 68}}, new boolean[]{false, true, false}, 7, 0.05, Color.kPurple, true)));
+    public Fire(ShooterSubsystem shooterSubsystem, FeederSubsystem feederSubsystem, double voltage) {
+        addCommands(new Shoot(shooterSubsystem, voltage), new WaitCommand(Constants.FeederConstants.kFeederDelay).andThen(new Feed(feederSubsystem)));
     }
 }

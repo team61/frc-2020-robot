@@ -30,7 +30,9 @@ public class SimpleDrive extends CommandBase {
     @Override
     public void execute() {
 
-        m_driveSubsystem.tankDrive(0.2, .2);
+        m_driveSubsystem.tankDriveVolts(4, 4);
+        System.out.println("Encoder" + m_driveSubsystem.m_rightEncoder.get());
+        
     }
 
     // Returns true when the command should end.

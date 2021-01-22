@@ -73,9 +73,9 @@ public final class Constants {
     public static final class AutoConstants {
 
         // Constraints
-        public static final double kMaxVelocity = 2; // Meters per second
-        public static final double kMaxAcceleration = 1; // Meters per second squared
-        public static final double kMaxVoltage = 6;
+        public static final double kMaxVelocity = 1; // Meters per second
+        public static final double kMaxAcceleration = 0.5; // Meters per second squared
+        public static final double kMaxVoltage = 4;
 
         public static final double kTrackWidth = 0.69; // Meters
         public static final double kWheelBase = 0.94; // Meters
@@ -160,8 +160,8 @@ public final class Constants {
 
         // Operation Data
         public static final double kMaxVoltage = 9;
-        public static final double kFeederDelay = 0.85;
-        public static final double[] kBallDelays = {1.15, 0.95, 0.8};
+        public static final double kFeederDelay = 1;
+        public static final double[] kBallDelays = {1.1, 1.1, 1.1};
         public static final double kAutoDelay = 5.1;
 
     }
@@ -173,8 +173,9 @@ public final class Constants {
 
         public static final int kEncoderCPR = 2048;
         // Operation Data
-        public static final double kMaxVoltage = 12;
+        public static final double kMaxVoltage = 11.5;
         public static final double kAutoVoltage = 11.3;
+        public static final double[] autoVoltages = {9.25, 8.90, 9.6};
         public static final double kVoltagePerDistance = 1.2 / 0.8; // Volts per meter
     }
 

@@ -17,12 +17,12 @@ public class ExampleTrajectory {
       // 2018 cross scale auto waypoints.
       Pose2d sideStart = new Pose2d(0, 0,
           Rotation2d.fromDegrees(0));
-          Pose2d crossScale = new Pose2d(Units.feetToMeters(6), Units.feetToMeters(6),
+          Pose2d crossScale = new Pose2d(Units.feetToMeters(5), Units.feetToMeters(5),
           Rotation2d.fromDegrees(0));
   
       var interiorWaypoints = new ArrayList<Translation2d>();
-      interiorWaypoints.add(new Translation2d(2, 2));
-      interiorWaypoints.add(new Translation2d(4, 3));
+       interiorWaypoints.add(new Translation2d(2, 4));
+       interiorWaypoints.add(new Translation2d(1, 2));
   
       TrajectoryConfig config = new TrajectoryConfig(AutoConstants.kMaxVelocity, AutoConstants.kMaxAcceleration);
      
