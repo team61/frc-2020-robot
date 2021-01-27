@@ -73,8 +73,8 @@ public final class Constants {
     public static final class AutoConstants {
 
         // Constraints
-        public static final double kMaxVelocity = 1; // Meters per second
-        public static final double kMaxAcceleration = 0.5; // Meters per second squared
+        public static final double kMaxVelocity = 0.3; // Meters per second
+        public static final double kMaxAcceleration = 0.2; // Meters per second squared
         public static final double kMaxVoltage = 4;
 
         public static final double kTrackWidth = 0.69; // Meters

@@ -47,8 +47,8 @@ public class DriveSubsystem extends SubsystemBase {
     private final SpeedControllerGroup m_right = new SpeedControllerGroup(m_rightMaster, m_rightSlave);
 
 
-    public final Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
-    public final Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
+    //public final Encoder m_leftEncoder = new Encoder(DriveConstants.kLeftEncoderPorts[0], DriveConstants.kLeftEncoderPorts[1], DriveConstants.kLeftEncoderReversed);
+    //public final Encoder m_rightEncoder = new Encoder(DriveConstants.kRightEncoderPorts[0], DriveConstants.kRightEncoderPorts[1], DriveConstants.kRightEncoderReversed);
 
     private AHRS m_ahrs; // NAVX
 
@@ -61,12 +61,13 @@ public class DriveSubsystem extends SubsystemBase {
 
     public DriveSubsystem() {
 
-        m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-        m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+        //m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+        //m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
 
-        m_leftEncoder.reset();
-        m_rightEncoder.reset();
-
+        //m_leftEncoder.reset();
+        //m_rightEncoder.reset();
+        
+        
         try {
             m_ahrs = new AHRS(SPI.Port.kMXP);
         } catch (RuntimeException ex) {
@@ -82,12 +83,19 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        updateOdometry();
+        // System.out.println("left: " + getLeftEncoderRate());
+        // System.out.println("right: " + getRightEncoderRate());
+        // System.out.println("total: " + getEncoderRate());
+       
+       updateOdometry();
         x = getPose2d().getTranslation().getX();
         y = getPose2d().getTranslation().getY();
+        //System.out.println("x: " + x + ", y: " + y);
+        System.out.println("angle: " + getPose2d());
+
         SmartDashboard.putNumber("X", x);
         SmartDashboard.putNumber("Y", y);
-        SmartDashboard.putNumber("Velocity", getEncoderRate());
+        //SmartDashboard.putNumber("Velocity", getEncoderRate());
         SmartDashboard.putNumber("Acceleration", getAccelerationX());
     }
 
@@ -133,33 +141,25 @@ public class DriveSubsystem extends SubsystemBase {
      * Methods for Encoder Data
      **/
 
-    public void setDistancePerPulse() {
-        m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-        m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-    }
+    // public void setDistancePerPulse() {
+    //     m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    //     m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    // }
 
     public double getLeftEncoderDistance() {
-        return m_leftEncoder.getDistance();
+        return (m_leftMaster.getEncoder().getPosition() + m_leftSlave.getEncoder().getPosition()) / 2 / 28.07;
     }
 
     public double getRightEncoderDistance() {
-        return m_rightEncoder.getDistance();
-    }
-
-    public int getRightEncoderValue() {
-        return m_rightEncoder.get();
-    }
-
-    public int getLeftEncoderValue() {
-        return m_leftEncoder.get();
+        return -(m_rightMaster.getEncoder().getPosition() + m_rightSlave.getEncoder().getPosition()) / 2 / 28.07;
     }
 
     public double getLeftEncoderRate() {
-        return m_leftEncoder.getRate();
+        return (m_leftMaster.getEncoder().getVelocity() + m_leftSlave.getEncoder().getVelocity()) / 2 / 1750;
     }
 
     public double getRightEncoderRate() {
-        return m_rightEncoder.getRate();
+        return -(m_rightMaster.getEncoder().getVelocity() + m_rightSlave.getEncoder().getVelocity()) / 2 / 1750;
     }
 
     public double getEncoderRate() {
@@ -167,11 +167,13 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void resetLeftEncoder() {
-        m_leftEncoder.reset();
+        m_leftMaster.getEncoder().setPosition(0);
+        m_leftSlave.getEncoder().setPosition(0);
     }
 
     public void resetRightEncoder() {
-        m_rightEncoder.reset();
+        m_rightMaster.getEncoder().setPosition(0);
+        m_rightSlave.getEncoder().setPosition(0);
     }
 
     public void resetEncoders() {
@@ -254,15 +256,16 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+        return new DifferentialDriveWheelSpeeds(getLeftEncoderRate(), getRightEncoderRate());
     }
 
     public void updateOdometry() {
-        m_odometry.update(getHeading(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+        m_odometry.update(getHeading(), getLeftEncoderDistance(), getRightEncoderDistance());
     }
 
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
+        m_ahrs.reset();
         m_odometry.resetPosition(pose, getHeading());
     }
 }

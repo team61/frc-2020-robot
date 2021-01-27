@@ -34,6 +34,8 @@ public class FeederSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+       // System.out.println("motor voltage:" + m_motor.getMotorOutputVoltage());
+        //System.out.println("bus voltage:" + m_motor.getBusVoltage());
         for(int i = 0; i < 3; i++) {
             SmartDashboard.putBoolean("Solenoid " + i, getSolenoidState(i));
             SmartDashboard.putBoolean("Limit Switch " + i, isSwitchSet(i));

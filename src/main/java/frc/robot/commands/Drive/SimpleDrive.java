@@ -24,18 +24,18 @@ public class SimpleDrive extends CommandBase {
 
     @Override
     public void initialize() {
-       
+       m_driveSubsystem.resetEncoders();
     }
 
     @Override
     public void execute() {
 
         m_driveSubsystem.tankDriveVolts(4, 4);
-        System.out.println("Encoder" + m_driveSubsystem.m_rightEncoder.get());
+        //System.out.println("Encoder" + m_driveSubsystem.m_rightEncoder.get());
         
     }
 
-    // Returns true when the command should end.
+    //Returns true when the command should end.
     @Override
     public boolean isFinished() {
         return Math.abs(m_driveSubsystem.getDistanceTraveled()) > Math.abs(m_distance);
