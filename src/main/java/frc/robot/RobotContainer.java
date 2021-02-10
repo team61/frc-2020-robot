@@ -33,6 +33,8 @@ import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.ShooterConstants;
 // import frc.robot.commands.Drive.DriveForDistance;
 // import frc.robot.commands.Drive.FollowTrajectory;
+import frc.robot.commands.Drive.RecordDrive;
+import frc.robot.commands.Drive.ResetOdometry;
 import frc.robot.commands.Drive.SimpleDrive;
 import frc.robot.commands.Drive.TankDrive;
 import frc.robot.commands.Feed.BeltDump;
@@ -95,22 +97,10 @@ public class RobotContainer {
 
     // Create a voltage constraint to ensure we don't accelerate too fast
   
-    DifferentialDriveVoltageConstraint autoVoltageConstraint =
-        new DifferentialDriveVoltageConstraint(
-            new SimpleMotorFeedforward(AutoConstants.kS,
-            AutoConstants.kV,
-            AutoConstants.kA),
-            AutoConstants.kDriveKinematics,
-            10);
+
 
     // Create config for trajectory
-    TrajectoryConfig config =
-        new TrajectoryConfig(AutoConstants.kMaxVelocity,
-                             AutoConstants.kMaxAcceleration)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(AutoConstants.kDriveKinematics)
-            // Apply the voltage constraint
-            .addConstraint(autoVoltageConstraint);
+
 
     // // An example trajectory to follow.  All units in meters.
     // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
@@ -131,7 +121,7 @@ public class RobotContainer {
     Trajectory exampleTrajectory = ExampleTrajectory.generateTrajectory();
     
 
-    Command m_autoCommand = new RamseteCommand(
+    Command m_autoCommand = new ResetOdometry(m_driveSubsystem, exampleTrajectory.getInitialPose()).andThen(new RamseteCommand(
         exampleTrajectory,
         m_driveSubsystem::getPose2d,
         new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
@@ -142,10 +132,9 @@ public class RobotContainer {
         m_driveSubsystem::getWheelSpeeds,
         new PIDController(0, 0, 0),
         new PIDController(0, 0, 0),
-        // RamseteCommand passes volts to the callback
         m_driveSubsystem::tankDriveVolts,
         m_driveSubsystem
-    ).andThen(m_driveSubsystem::stopTankDrive);
+    ).andThen(m_driveSubsystem::stopTankDrive));
 
     //SimpleDrive m_autoCommand = new SimpleDrive(m_driveSubsystem, 0.3, 15);
     
@@ -181,9 +170,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
-        jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{0, 22}, {23, 43}, {46, 68}}, new boolean[]{false, false, false}, 7, 0.05, Color.kPurple, true));
+        //jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{0, 22}, {23, 43}, {46, 68}}, new boolean[]{false, false, false}, 7, 0.05, Color.kPurple, true));
         //jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, m_LEDSubsystem));
-
+        jLeft.btn_1.whenPressed(new RecordDrive(m_driveSubsystem, "path.txt",jLeft::getYAxis, jRight::getYAxis, () -> jLeft.btn_1.get()));
         jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));
         jTurret.btn_5.whenPressed(new SmallAdjustment(m_turretSubsystem, -Constants.TurretConstants.kAdjustmentVoltage));
 

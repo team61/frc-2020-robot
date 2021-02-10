@@ -127,6 +127,14 @@ public class DriveSubsystem extends SubsystemBase {
         tankDrive(0);
     }
 
+    public double getLeftMotorOutput() {
+        return (m_leftMaster.getBusVoltage() + m_leftSlave.getBusVoltage()) / 2;
+    }
+
+    public double getRightMotorOutput() {
+        return (m_rightMaster.getBusVoltage() + m_rightSlave.getBusVoltage()) / 2;
+    }
+
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         m_left.setVoltage(leftVolts);
         m_right.setVoltage(-rightVolts);

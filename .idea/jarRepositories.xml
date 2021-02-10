@@ -24,7 +24,7 @@
     <remote-repository>
       <option name="id" value="WPILocal" />
       <option name="name" value="WPILocal" />
-      <option name="url" value="file:/C:/Public/wpilib/2020/maven/" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../../../Public/wpilib/2020/maven/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="WPIcb311d09-36e9-4143-a032-55bb2b94443b_0Release" />
@@ -60,6 +60,16 @@
       <option name="id" value="WPILocal" />
       <option name="name" value="WPILocal" />
       <option name="url" value="file:/$PROJECT_DIR$/../../../../../../Public/wpilib/2020/maven/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="WPI3f48eb8c-50fe-43a6-9cb7-44c86353c4cb_0Release" />
+      <option name="name" value="WPI3f48eb8c-50fe-43a6-9cb7-44c86353c4cb_0Release" />
+      <option name="url" value="http://www.revrobotics.com/content/sw/max/sdk/maven/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="WPILocal" />
+      <option name="name" value="WPILocal" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../../Public/wpilib/2020/maven" />
     </remote-repository>
   </component>
 </project>
