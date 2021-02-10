@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants.AutoConstants;
 
 
@@ -24,8 +23,8 @@ public class ExampleTrajectory {
           Rotation2d.fromDegrees(0));
   
       var interiorWaypoints = new ArrayList<Translation2d>();
-    //    interiorWaypoints.add(new Translation2d(2, 4));
-    //    interiorWaypoints.add(new Translation2d(1, 2));
+       interiorWaypoints.add(new Translation2d(20, 40));
+       interiorWaypoints.add(new Translation2d(10, 20));
 
         DifferentialDriveVoltageConstraint autoVoltageConstraint =
                 new DifferentialDriveVoltageConstraint(
@@ -37,11 +36,11 @@ public class ExampleTrajectory {
 
         TrajectoryConfig config =
                 new TrajectoryConfig(AutoConstants.kMaxVelocity,
-                        AutoConstants.kMaxAcceleration)
+                        AutoConstants.kMaxAcceleration);
                         // Add kinematics to ensure max speed is actually obeyed
-                        .setKinematics(AutoConstants.kDriveKinematics)
-                        // Apply the voltage constraint
-                        .addConstraint(autoVoltageConstraint);
+                        // .setKinematics(AutoConstants.kDriveKinematics)
+                        // // Apply the voltage constraint
+                        // .addConstraint(autoVoltageConstraint);
      
   
 

@@ -40,25 +40,27 @@ public class RecordDrive extends CommandBase {
             } else {
                 System.out.println("File already exists.");
             }
+            //fw = new FileWriter(fileName, true);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
 
     }
+    FileWriter fw;
 
     @Override
     public void execute() {
-
-            try {
-                FileWriter fw = new FileWriter(fileName, true);
-                fw.write(m_driveSubsystem.getLeftMotorOutput() + "," + m_driveSubsystem.getRightMotorOutput() + "\n");
-                fw.close();
-                System.out.println("Successfully wrote to the file.");
-            } catch (IOException e) {
-                System.out.println("An error occurred.");
-                e.printStackTrace();
-            }
+            // System.out.println("recording");
+            // try {
+               
+            //     fw.write(m_driveSubsystem.getLeftMotorOutput() + "," + m_driveSubsystem.getRightMotorOutput() + "\n");
+            
+            //     System.out.println("Successfully wrote to the file.");
+            // } catch (IOException e) {
+            //     System.out.println("An error occurred.");
+            //     e.printStackTrace();
+            // }
 
     }
 
@@ -71,6 +73,11 @@ public class RecordDrive extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        // try {
+        //     fw.close();
+        // } catch(IOException e) {
+        //     System.out.println(e);
+        // }
         m_driveSubsystem.stopTankDrive();
     }
 

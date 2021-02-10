@@ -41,7 +41,7 @@ public class Intake extends CommandBase {
                 m_feederSubsystem.setNumPowerCells(numPowerCells);
             }
         }
-        m_feederSubsystem.set(0.85);
+        m_feederSubsystem.setVoltage(9);
     }
 
     // Called once the command ends or is interrupted.

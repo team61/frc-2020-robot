@@ -160,9 +160,9 @@ public final class Constants {
 
         // Operation Data
         public static final double kMaxVoltage = 9;
-        public static final double kFeederDelay = 1;
-        public static final double[] kBallDelays = {1.1, 1.1, 1.1};
-        public static final double kAutoDelay = 5.1;
+        public static final double kFeederDelay = 0.4;
+        public static final double[] kBallDelays = {0.4, 0.4, 0.4};
+        public static final double kAutoDelay = 1.1;
 
     }
 

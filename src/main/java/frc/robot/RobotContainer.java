@@ -120,7 +120,7 @@ public class RobotContainer {
     
     Trajectory exampleTrajectory = ExampleTrajectory.generateTrajectory();
     
-
+//Command m_autoCommand = null;
     Command m_autoCommand = new ResetOdometry(m_driveSubsystem, exampleTrajectory.getInitialPose()).andThen(new RamseteCommand(
         exampleTrajectory,
         m_driveSubsystem::getPose2d,
@@ -150,7 +150,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         m_driveSubsystem.setDefaultCommand(new TankDrive(m_driveSubsystem, jLeft::getYAxis, jRight::getYAxis));
-        m_turretSubsystem.setDefaultCommand(new TurretWithJoysticks(m_turretSubsystem, jTurret::getZAxis));
+        m_turretSubsystem.setDefaultCommand(new TurretWithJoysticks(m_turretSubsystem, () -> jTurret.getZAxis(0.03)));
         m_LEDSubsystem.setDefaultCommand(new AnimateFeeder(m_LEDSubsystem, new BooleanSupplier[]{
            () -> m_feederSubsystem.getSolenoidState(0),
                () -> m_feederSubsystem.getSolenoidState(1),
@@ -172,7 +172,7 @@ public class RobotContainer {
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
         //jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{0, 22}, {23, 43}, {46, 68}}, new boolean[]{false, false, false}, 7, 0.05, Color.kPurple, true));
         //jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, m_LEDSubsystem));
-        jLeft.btn_1.whenPressed(new RecordDrive(m_driveSubsystem, "path.txt",jLeft::getYAxis, jRight::getYAxis, () -> !jLeft.btn_1.get()));
+        jLeft.btn_1.whenPressed(new RecordDrive(m_driveSubsystem, "C:\\path.txt",jLeft::getYAxis, jRight::getYAxis, () -> !jLeft.btn_1.get()));
         jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));
         jTurret.btn_5.whenPressed(new SmallAdjustment(m_turretSubsystem, -Constants.TurretConstants.kAdjustmentVoltage));
 

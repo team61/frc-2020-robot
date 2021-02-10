@@ -22,7 +22,7 @@ public class TurretWithJoysticks extends CommandBase {
 
     @Override
     public void execute() {
-        m_turretSubsystem.set(m_speed.getAsDouble());
+        m_turretSubsystem.set(Math.copySign(m_speed.getAsDouble() * m_speed.getAsDouble(), m_speed.getAsDouble()) * 0.5);
     }
 
     // Returns true when the command should end.

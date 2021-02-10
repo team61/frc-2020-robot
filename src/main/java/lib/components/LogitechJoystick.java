@@ -7,7 +7,7 @@ import java.util.function.DoubleSupplier;
 
 public class LogitechJoystick extends Joystick {
 
-    private final double JOYSTICK_BUFFER = .08;
+    private final double JOYSTICK_BUFFER = .07;
 
     public LogitechJoystick(int port) {
         super(port);
@@ -49,5 +49,5 @@ public class LogitechJoystick extends Joystick {
         return getAxis(getX());
     }
 
-    public double getZAxis() { return getAxis(getZ()); }
+    public double getZAxis(double buffer) { return getAxis(getZ(), buffer); }
 }

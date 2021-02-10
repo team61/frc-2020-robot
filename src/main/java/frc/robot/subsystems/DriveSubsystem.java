@@ -91,12 +91,12 @@ public class DriveSubsystem extends SubsystemBase {
         x = getPose2d().getTranslation().getX();
         y = getPose2d().getTranslation().getY();
         //System.out.println("x: " + x + ", y: " + y);
-        System.out.println("angle: " + getPose2d());
+        // System.out.println("angle: " + getPose2d());
 
-        SmartDashboard.putNumber("X", x);
-        SmartDashboard.putNumber("Y", y);
-        //SmartDashboard.putNumber("Velocity", getEncoderRate());
-        SmartDashboard.putNumber("Acceleration", getAccelerationX());
+        // SmartDashboard.putNumber("X", x);
+        // SmartDashboard.putNumber("Y", y);
+        // //SmartDashboard.putNumber("Velocity", getEncoderRate());
+        // SmartDashboard.putNumber("Acceleration", getAccelerationX());
     }
 
     public static DriveSubsystem getInstance() {
