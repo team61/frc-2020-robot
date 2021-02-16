@@ -23,8 +23,8 @@ public class ExampleTrajectory {
           Rotation2d.fromDegrees(0));
   
       var interiorWaypoints = new ArrayList<Translation2d>();
-       interiorWaypoints.add(new Translation2d(20, 40));
-       interiorWaypoints.add(new Translation2d(10, 20));
+    //    interiorWaypoints.add(new Translation2d(20, 40));
+    //    interiorWaypoints.add(new Translation2d(10, 20));
 
         DifferentialDriveVoltageConstraint autoVoltageConstraint =
                 new DifferentialDriveVoltageConstraint(

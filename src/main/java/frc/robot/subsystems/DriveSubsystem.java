@@ -140,6 +140,12 @@ public class DriveSubsystem extends SubsystemBase {
         m_right.setVoltage(-rightVolts);
     }
 
+  public void tankDriveVolt(double left, double right) {
+      left = Math.copySign(left * left, left);
+      right = Math.copySign(right * right, right);
+        m_left.setVoltage(-left * 12);
+        m_right.setVoltage(right * 12);
+    }
 
     public void setMaxOutput(double maxOutput) {
         m_differentialDrive.setMaxOutput(maxOutput);

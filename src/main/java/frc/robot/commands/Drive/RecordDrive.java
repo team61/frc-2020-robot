@@ -8,59 +8,50 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class RecordDrive extends CommandBase {
 
     private DriveSubsystem m_driveSubsystem;
-    final String fileName;
+
 
     private DoubleSupplier m_left;
     private DoubleSupplier m_right;
     private BooleanSupplier m_finished;
+    private ArrayList<double[]> coords = new ArrayList<double[]>();
 
-    public RecordDrive(DriveSubsystem driveSubsystem, String fileName, DoubleSupplier left, DoubleSupplier right, BooleanSupplier finished) {
+    public RecordDrive(DriveSubsystem driveSubsystem, DoubleSupplier left, DoubleSupplier right, BooleanSupplier finished) {
         m_driveSubsystem = driveSubsystem;
-        this.fileName = fileName;
+    
         m_left = left;
         m_right = right;
         m_finished = finished;
         addRequirements(m_driveSubsystem);
     }
 
-
     @Override
     public void initialize() {
-        m_driveSubsystem.tankDrive(m_left.getAsDouble(), m_right.getAsDouble(), true);
-        try {
-            File file = new File(fileName);
-            if (file.createNewFile()) {
-                System.out.println("File created: " + file.getName());
-            } else {
-                System.out.println("File already exists.");
-            }
-            //fw = new FileWriter(fileName, true);
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-
+        super.initialize();
+        System.out.println("Start");
     }
-    FileWriter fw;
 
     @Override
     public void execute() {
             // System.out.println("recording");
             // try {
-               
-            //     fw.write(m_driveSubsystem.getLeftMotorOutput() + "," + m_driveSubsystem.getRightMotorOutput() + "\n");
+              m_driveSubsystem.tankDriveVolt(m_left.getAsDouble(), m_right.getAsDouble());
+             
+               coords.add(new double[]{m_left.getAsDouble(), m_right.getAsDouble()});
+            //System.out.print(m_driveSubsystem.getLeftMotorOutput() + "," + m_driveSubsystem.getRightMotorOutput() + " ");
             
             //     System.out.println("Successfully wrote to the file.");
             // } catch (IOException e) {
             //     System.out.println("An error occurred.");
             //     e.printStackTrace();
             // }
+            System.out.println("Recording");
 
     }
 
@@ -78,6 +69,15 @@ public class RecordDrive extends CommandBase {
         // } catch(IOException e) {
         //     System.out.println(e);
         // }
+        // ArrayList<String> string = new ArrayList<String>();
+        String message = "";
+        System.out.println("Start");
+        for(double[] coord : coords) {
+            message = message + "new double[]{" + coord[0] +"," + coord[1] + "},";
+        }
+        
+        System.out.print(message);
+        System.out.println("End");
         m_driveSubsystem.stopTankDrive();
     }
 

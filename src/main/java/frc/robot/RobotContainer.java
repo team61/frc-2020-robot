@@ -31,6 +31,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.Drive.ReadDrive;
 // import frc.robot.commands.Drive.DriveForDistance;
 // import frc.robot.commands.Drive.FollowTrajectory;
 import frc.robot.commands.Drive.RecordDrive;
@@ -120,21 +121,21 @@ public class RobotContainer {
     
     Trajectory exampleTrajectory = ExampleTrajectory.generateTrajectory();
     
-//Command m_autoCommand = null;
-    Command m_autoCommand = new ResetOdometry(m_driveSubsystem, exampleTrajectory.getInitialPose()).andThen(new RamseteCommand(
-        exampleTrajectory,
-        m_driveSubsystem::getPose2d,
-        new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
-        new SimpleMotorFeedforward(AutoConstants.kS,
-        AutoConstants.kV,
-        AutoConstants.kA),
-        AutoConstants.kDriveKinematics,
-        m_driveSubsystem::getWheelSpeeds,
-        new PIDController(0, 0, 0),
-        new PIDController(0, 0, 0),
-        m_driveSubsystem::tankDriveVolts,
-        m_driveSubsystem
-    ).andThen(m_driveSubsystem::stopTankDrive));
+Command m_autoCommand = new ParallelCommandGroup(new ReadDrive(m_driveSubsystem, LoopA.speeds), new Intake(m_feederSubsystem));
+    // Command m_autoCommand = new ResetOdometry(m_driveSubsystem, exampleTrajectory.getInitialPose()).andThen(new RamseteCommand(
+    //     exampleTrajectory,
+    //     m_driveSubsystem::getPose2d,
+    //     new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+    //     new SimpleMotorFeedforward(AutoConstants.kS,
+    //     AutoConstants.kV,
+    //     AutoConstants.kA),
+    //     AutoConstants.kDriveKinematics,
+    //     m_driveSubsystem::getWheelSpeeds,
+    //     new PIDController(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD),
+    //     new PIDController(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD),
+    //     m_driveSubsystem::tankDriveVolts,
+    //     m_driveSubsystem
+    // ).andThen(m_driveSubsystem::stopTankDrive));
 
     //SimpleDrive m_autoCommand = new SimpleDrive(m_driveSubsystem, 0.3, 15);
     
@@ -172,7 +173,7 @@ public class RobotContainer {
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
         //jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{0, 22}, {23, 43}, {46, 68}}, new boolean[]{false, false, false}, 7, 0.05, Color.kPurple, true));
         //jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, m_LEDSubsystem));
-        jLeft.btn_1.whenPressed(new RecordDrive(m_driveSubsystem, "C:\\path.txt",jLeft::getYAxis, jRight::getYAxis, () -> !jLeft.btn_1.get()));
+        jLeft.btn_1.whenPressed(new RecordDrive(m_driveSubsystem,jLeft::getYAxis, jRight::getYAxis, () -> jLeft.btn_11.get()));
         jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));
         jTurret.btn_5.whenPressed(new SmallAdjustment(m_turretSubsystem, -Constants.TurretConstants.kAdjustmentVoltage));
 
