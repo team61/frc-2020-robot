@@ -72,6 +72,7 @@ public void setConfigVoltage(double voltage) {
 
     public void setVoltage(double voltage) {
         m_master.setVoltage(voltage);
+        this.voltage = voltage;
     }
 
     public void stop() {

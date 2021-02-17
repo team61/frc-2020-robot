@@ -121,7 +121,7 @@ public class RobotContainer {
     
     Trajectory exampleTrajectory = ExampleTrajectory.generateTrajectory();
     
-Command m_autoCommand = new ParallelCommandGroup(new ReadDrive(m_driveSubsystem, LoopA.speeds), new Intake(m_feederSubsystem));
+Command m_autoCommand = new ReadDrive(m_driveSubsystem, LoopC.speeds);
     // Command m_autoCommand = new ResetOdometry(m_driveSubsystem, exampleTrajectory.getInitialPose()).andThen(new RamseteCommand(
     //     exampleTrajectory,
     //     m_driveSubsystem::getPose2d,
@@ -172,7 +172,7 @@ Command m_autoCommand = new ParallelCommandGroup(new ReadDrive(m_driveSubsystem,
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
         //jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{0, 22}, {23, 43}, {46, 68}}, new boolean[]{false, false, false}, 7, 0.05, Color.kPurple, true));
-        //jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, m_LEDSubsystem));
+        jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, 13));
         jLeft.btn_1.whenPressed(new RecordDrive(m_driveSubsystem,jLeft::getYAxis, jRight::getYAxis, () -> jLeft.btn_11.get()));
         jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));
         jTurret.btn_5.whenPressed(new SmallAdjustment(m_turretSubsystem, -Constants.TurretConstants.kAdjustmentVoltage));
@@ -186,9 +186,10 @@ Command m_autoCommand = new ParallelCommandGroup(new ReadDrive(m_driveSubsystem,
         jLift.btn_9.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 0));
         jLift.btn_11.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 1));
 
-        jLift.btn_8.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[0]));
-        jLift.btn_10.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[1]));
-        jLift.btn_12.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[2]));
+        jLift.btn_3.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[0]));
+        jLift.btn_8.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[1]));
+        jLift.btn_10.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[2]));
+        jLift.btn_12.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[3]));
 
         BeltDumpTriggerDown.whileActiveContinuous(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, jTurret.btn_9::get, jTurret.btn_7::get}));
         BeltDumpTriggerUp.whileActiveContinuous(new BeltDump(m_feederSubsystem, -Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_12::get, jTurret.btn_10::get, jTurret.btn_8::get}));

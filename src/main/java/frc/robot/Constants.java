@@ -175,7 +175,7 @@ public final class Constants {
         // Operation Data
         public static final double kMaxVoltage = 11.5;
         public static final double kAutoVoltage = 11.3;
-        public static final double[] autoVoltages = {9.25, 8.90, 9.6};
+        public static final double[] autoVoltages = {12, 9.25, 8.90, 9.22};
         public static final double kVoltagePerDistance = 1.2 / 0.8; // Volts per meter
     }
 
