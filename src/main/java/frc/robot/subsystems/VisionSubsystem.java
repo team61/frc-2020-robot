@@ -29,8 +29,9 @@ public class VisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        setValues();
-        SmartDashboard.putNumber("Target Yaw", yaw);
+        //System.out.println("yaw" + yawEntry.getDouble(Double.NaN));
+        setYaw();
+        //SmartDashboard.putNumber("Target Yaw", yaw);
     }
 
     public void setYaw() {

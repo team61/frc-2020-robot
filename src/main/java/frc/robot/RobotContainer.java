@@ -120,8 +120,9 @@ public class RobotContainer {
 
     
     Trajectory exampleTrajectory = ExampleTrajectory.generateTrajectory();
-    
-Command m_autoCommand = new ReadDrive(m_driveSubsystem, LoopC.speeds);
+    private final TurretAutoAimVision m_aim = new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw);
+private final Command finalAutoFire = new ParallelCommandGroup(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[3]));
+Command m_autoCommand = new ParallelDeadlineGroup(new WaitCommand(3), m_aim,new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[1])).andThen(new ParallelDeadlineGroup(new ReadDrive(m_driveSubsystem, PickUpBallAuton.speeds), new Intake(m_feederSubsystem))).andThen(finalAutoFire);
     // Command m_autoCommand = new ResetOdometry(m_driveSubsystem, exampleTrajectory.getInitialPose()).andThen(new RamseteCommand(
     //     exampleTrajectory,
     //     m_driveSubsystem::getPose2d,
@@ -142,7 +143,6 @@ Command m_autoCommand = new ReadDrive(m_driveSubsystem, LoopC.speeds);
 
     //private Command m_autoCommand = new SimpleDrive(m_driveSubsystem, 4, 2);
 
-    private final TurretAutoAimVision m_aim = new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw);
 
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 

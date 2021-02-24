@@ -67,18 +67,14 @@ public class RecordDrive extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         System.out.println("End");
-        String message = "";
-        System.out.println("Start");
-        for(double[] coord : coords) {
-            message = message + "new double[]{" + coord[0] +"," + coord[1] + "},";
-        }
-        System.out.println("Start");
-        System.out.print(message);
-        System.out.println("End");
-
-        System.out.println("Start");
-        System.out.print(message);
-        System.out.println("End");
+        // String message = "";
+        // System.out.println("Start");
+        // for(double[] coord : coords) {
+        //     message = message + "new double[]{" + coord[0] +"," + coord[1] + "},";
+        // }
+        // System.out.println("Start");
+        // System.out.print(message);
+        // System.out.println("End");
 
         // System.out.println("Start");
         // System.out.print(message);

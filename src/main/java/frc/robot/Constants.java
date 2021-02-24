@@ -141,7 +141,7 @@ public final class Constants {
         public static final double kDefaultState = 0; // Distance from set point
         public static final double kMaxDistance = 50;
         public static final double kTurretTolerance = 2;
-        public static final double kVisionTolerance = 4; // Degrees
+        public static final double kVisionTolerance = 2; // Degrees
         public static final double kVisionVoltage = 7;
         public static final double kAdjustmentVoltage = 12;
         public static final double kAdjustmentDelay = 0.05;
@@ -175,7 +175,7 @@ public final class Constants {
         // Operation Data
         public static final double kMaxVoltage = 11.5;
         public static final double kAutoVoltage = 11.3;
-        public static final double[] autoVoltages = {12, 9.25, 8.90, 9.22};
+        public static final double[] autoVoltages = {12, 9.28, 8.90, 9.22};
         public static final double kVoltagePerDistance = 1.2 / 0.8; // Volts per meter
     }
 
