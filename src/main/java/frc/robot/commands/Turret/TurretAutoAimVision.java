@@ -15,20 +15,11 @@ public class TurretAutoAimVision extends CommandBase {
     private TurretSubsystem m_turretSubsystem;
 
     private DoubleSupplier m_yaw;
-    final private boolean m_endOnFinish;
-
-    public TurretAutoAimVision(TurretSubsystem turretSubsystem, DoubleSupplier yaw, boolean endOnFinish) {
-        m_turretSubsystem = turretSubsystem;
-        m_yaw = yaw;
-        m_endOnFinish = endOnFinish;
-
-        addRequirements(turretSubsystem);
-    }
 
     public TurretAutoAimVision(TurretSubsystem turretSubsystem, DoubleSupplier yaw) {
         m_turretSubsystem = turretSubsystem;
         m_yaw = yaw;
-        m_endOnFinish = false;
+    
 
         addRequirements(turretSubsystem);
     }

@@ -21,10 +21,11 @@ public class Feed extends CommandBase {
 
     @Override
     public void initialize() {
-        solenoid = FeederConstants.kSolenoidPorts.length - 1;
+        solenoid = FeederConstants.kSolenoidPorts.length - 2;
         for (int i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
             m_feederSubsystem.setSolenoidState(i, false);
         }
+        m_feederSubsystem.setSolenoidState(2, true);
         m_timer.reset();
         m_timer.start();
     }

@@ -44,6 +44,10 @@ public class Intake extends CommandBase {
         m_feederSubsystem.setVoltage(9);
     }
 
+public boolean isFinished() {
+ return m_feederSubsystem.getNumPowerCells() == 3;
+}
+
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {

@@ -1,8 +1,12 @@
 package frc.robot.commands.Drive;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.DriveSubsystem;
@@ -23,6 +27,7 @@ public class DriveForDistance extends CommandBase {
 
     private double m_goal;
     private double m_speed;
+
 
     public DriveForDistance(DriveSubsystem driveSubsystem, double goal, double speed) {
         m_driveSubsystem = driveSubsystem;

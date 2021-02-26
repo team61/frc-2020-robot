@@ -21,6 +21,9 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -30,8 +33,11 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AutoConstants;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.function.DoubleConsumer;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -58,16 +64,52 @@ public class DriveSubsystem extends SubsystemBase {
 
     private double x = 0;
     private double y = 0;
+    private boolean recording = false;
+    private ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+    private NetworkTableEntry fileName =
+    tab.add("File Name", "Output.txt").withWidget(BuiltInWidgets.kTextView)
+       .getEntry();
+       private NetworkTableEntry recordingState = tab.add("Recording", recording).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+
+  
+
+public void setRecording(boolean value) {
+    recording = value;
+}
+
+public boolean getRecording() {
+    return recording;
+}
+
+    public String getFileName() {
+        return fileName.getString("Output.txt");
+    
+    }
 
     public DriveSubsystem() {
-
+        
+      
         //m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
         //m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
 
         //m_leftEncoder.reset();
         //m_rightEncoder.reset();
         
-        
+        try {
+            
+            File listFile = new File(AutoConstants.directory + "listFile.txt");
+            Scanner reader = new Scanner(listFile);
+    
+            ArrayList<String> files = new ArrayList<String>();
+            while (reader.hasNextLine()) {
+              String data = reader.nextLine();
+            files.add(data);
+            }
+            reader.close();
+          } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+          }
         try {
             m_ahrs = new AHRS(SPI.Port.kMXP);
         } catch (RuntimeException ex) {
@@ -86,7 +128,7 @@ public class DriveSubsystem extends SubsystemBase {
         // System.out.println("left: " + getLeftEncoderRate());
         // System.out.println("right: " + getRightEncoderRate());
         // System.out.println("total: " + getEncoderRate());
-       
+       recordingState.setBoolean(recording);
        updateOdometry();
         x = getPose2d().getTranslation().getX();
         y = getPose2d().getTranslation().getY();
@@ -102,6 +144,7 @@ public class DriveSubsystem extends SubsystemBase {
     public static DriveSubsystem getInstance() {
         if (m_instance == null) {
             m_instance = new DriveSubsystem();
+            
         }
 
         return m_instance;

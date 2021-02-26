@@ -1,5 +1,6 @@
 package frc.robot.commands.Drive;
 
+import frc.robot.Constants.AutoConstants;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
@@ -12,11 +13,11 @@ public class ReadDrive extends CommandBase {
 
     private DriveSubsystem m_driveSubsystem;
     private int count;
-    private double[][] m_speeds;
-
-    public ReadDrive(DriveSubsystem driveSubsystem, double[][] speeds) {
+    private ArrayList<double[]> speeds = new ArrayList<double[]>();
+    final String m_fileName;
+    public ReadDrive(DriveSubsystem driveSubsystem, String fileName) {
         m_driveSubsystem = driveSubsystem;
-        m_speeds = speeds;
+        m_fileName = fileName;
 
         addRequirements(m_driveSubsystem);
     }
@@ -25,18 +26,40 @@ public class ReadDrive extends CommandBase {
     @Override
     public void initialize() {
         count = 0;
+        try {
+            File file = new File(AutoConstants.directory + m_fileName);
+           
+             if (file.createNewFile()) {
+                 System.out.println("File doesn't exsist: " + file.getName());
+                 end(true);
+               } 
+               Scanner reader = new Scanner(file);
+        
+            while (reader.hasNextLine()) {
+              String data = reader.nextLine();
+              String[] values = data.split(",");
+            //   System.out.println(data);
+            //   System.out.println(values[0] +  "," + values[1]);
+              speeds.add(new double[]{Double.parseDouble(values[0]), Double.parseDouble(values[1])});
+            
+            }
+            reader.close();
+     } catch (IOException e) {
+         System.out.println("An error occurred.");
+         e.printStackTrace();
+     }
     }
 
     @Override
     public void execute() {
-            m_driveSubsystem.tankDriveVolt(m_speeds[count][0], m_speeds[count][1]);
+            m_driveSubsystem.tankDriveVolt(speeds.get(count)[0], speeds.get(count)[1]);
     
             count++;
     }
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return count == m_speeds.length - 1;
+        return count == speeds.size() - 1;
     }
 
     // Called once the command ends or is interrupted.

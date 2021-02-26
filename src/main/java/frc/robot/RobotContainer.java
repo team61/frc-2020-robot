@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -17,7 +18,11 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -37,9 +42,11 @@ import frc.robot.commands.Drive.ReadDrive;
 import frc.robot.commands.Drive.RecordDrive;
 import frc.robot.commands.Drive.ResetOdometry;
 import frc.robot.commands.Drive.SimpleDrive;
+import frc.robot.commands.Drive.StopRecording;
 import frc.robot.commands.Drive.TankDrive;
 import frc.robot.commands.Feed.BeltDump;
 import frc.robot.commands.Feed.Dump;
+import frc.robot.commands.Feed.Feed;
 import frc.robot.commands.Feed.Intake;
 import frc.robot.commands.Feed.ResetLimitSwitch;
 import frc.robot.commands.Lift.Climb;
@@ -59,9 +66,13 @@ import frc.robot.commands.led.IncrementLED;
 import frc.robot.subsystems.*;
 import lib.components.LogitechJoystick;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -121,9 +132,14 @@ public class RobotContainer {
     
     Trajectory exampleTrajectory = ExampleTrajectory.generateTrajectory();
     private final TurretAutoAimVision m_aim = new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw);
-private final Command finalAutoFire = new ParallelCommandGroup(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[3]));
-Command m_autoCommand = new ParallelDeadlineGroup(new WaitCommand(3), m_aim,new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[1])).andThen(new ParallelDeadlineGroup(new ReadDrive(m_driveSubsystem, PickUpBallAuton.speeds), new Intake(m_feederSubsystem))).andThen(finalAutoFire);
-    // Command m_autoCommand = new ResetOdometry(m_driveSubsystem, exampleTrajectory.getInitialPose()).andThen(new RamseteCommand(
+private final Command finalAutoFire = new ParallelCommandGroup(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[3]), new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw));
+private Command normalAuton = new ParallelDeadlineGroup(new WaitCommand(3), m_aim,new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[1])).andThen(new ParallelDeadlineGroup(new ReadDrive(m_driveSubsystem, "Output.txt"), new Intake(m_feederSubsystem))).andThen(finalAutoFire);
+private Command minuteFire = new ParallelDeadlineGroup(new WaitCommand(3), new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[2]), new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw));
+// private Command driveFoward = new SimpleDrive(driveSubsystem, speed, distance))
+private ArrayList<Command> m_autoCommands = new ArrayList<Command>();
+
+  
+// Command m_autoCommand = new ResetOdometry(m_driveSubsystem, exampleTrajectory.getInitialPose()).andThen(new RamseteCommand(
     //     exampleTrajectory,
     //     m_driveSubsystem::getPose2d,
     //     new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
@@ -157,10 +173,37 @@ Command m_autoCommand = new ParallelDeadlineGroup(new WaitCommand(3), m_aim,new 
                () -> m_feederSubsystem.getSolenoidState(1),
                () -> m_feederSubsystem.getSolenoidState(2)}, new int[][]{{1, 22}, {22, 44}, {47, 68}}, new boolean[]{false, true, false}
                ));
-
+                
+                
         // Configure the button bindings
         configureButtonBindings();
-    }
+        ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+                
+               tab.add("Record Drive", new RecordDrive(m_driveSubsystem,jLeft::getYAxis, jRight::getYAxis, m_chooser)).withWidget(BuiltInWidgets.kCommand);
+               m_autoCommands.add(normalAuton);
+               ArrayList<String> files = new ArrayList<String>();
+
+               try {
+            
+            File listFile = new File(AutoConstants.directory + "listFile.txt");
+            Scanner reader = new Scanner(listFile);
+    
+            while (reader.hasNextLine()) {
+              String data = reader.nextLine();
+              files.add(data);
+            m_autoCommands.add(new ReadDrive(m_driveSubsystem, data));
+            }
+            reader.close();
+          } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+          }
+          m_chooser.addDefault("Default", m_autoCommands.get(0));
+          for (int i = 1; i < m_autoCommands.size(); i++) {
+            m_chooser.addOption(files.get(i - 1), m_autoCommands.get(i));
+          }
+          tab.add("Autonomous", m_chooser).withWidget(BuiltInWidgets.kComboBoxChooser);
+            }
 
     /**
      * Use this method to define your button->command mappings.  Buttons can be created by
@@ -172,10 +215,14 @@ Command m_autoCommand = new ParallelDeadlineGroup(new WaitCommand(3), m_aim,new 
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
         //jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{0, 22}, {23, 43}, {46, 68}}, new boolean[]{false, false, false}, 7, 0.05, Color.kPurple, true));
-        jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, 13));
-        jLeft.btn_1.whenPressed(new RecordDrive(m_driveSubsystem,jLeft::getYAxis, jRight::getYAxis, () -> jLeft.btn_11.get()));
-        jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));
-        jTurret.btn_5.whenPressed(new SmallAdjustment(m_turretSubsystem, -Constants.TurretConstants.kAdjustmentVoltage));
+        jTurret.btn_1.whileHeld(new Shoot(m_shooterSubsystem, ShooterConstants.autoVoltages[2]));
+        jLift.btn_4.whileHeld(new Feed(m_feederSubsystem));
+        jLeft.btn_1.whenPressed(new RecordDrive(m_driveSubsystem,jLeft::getYAxis, jRight::getYAxis, m_chooser));
+        jLeft.btn_2.whenPressed(new ReadDrive(m_driveSubsystem,"Output.txt"));
+
+        jLeft.btn_11.whenPressed(new StopRecording(m_driveSubsystem));
+        //jTurret.btn_3.whenPressed(new SmallAdjustment(m_turretSubsystem, Constants.TurretConstants.kAdjustmentVoltage));
+        //jTurret.btn_5.whenPressed(new SmallAdjustment(m_turretSubsystem, -Constants.TurretConstants.kAdjustmentVoltage));
 
         //jTurret.btn_4.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 0));
         //jTurret.btn_6.whileHeld(new MoveTurretToPosition(m_turretSubsystem, 180));
@@ -195,7 +242,7 @@ Command m_autoCommand = new ParallelDeadlineGroup(new WaitCommand(3), m_aim,new 
         BeltDumpTriggerUp.whileActiveContinuous(new BeltDump(m_feederSubsystem, -Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_12::get, jTurret.btn_10::get, jTurret.btn_8::get}));
 
 
-        jTurret.btn_2.whileHeld(m_aim);
+        jTurret.btn_2.whileHeld(new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw));
         manualFireTrigger.whileActiveContinuous(m_manualFire);
        // jTurret.btn_1.whileHeld(new IncrementLED(m_LEDSubsystem));
     }
@@ -208,6 +255,6 @@ Command m_autoCommand = new ParallelDeadlineGroup(new WaitCommand(3), m_aim,new 
      */
     public Command getAutonomousCommand() {
 
-        return m_autoCommand;
+        return m_chooser.getSelected();
     }
 }

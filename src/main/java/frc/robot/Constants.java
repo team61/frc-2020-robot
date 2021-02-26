@@ -50,10 +50,12 @@ public final class Constants {
 
         // Encoder Information
         public static final int kEncoderCPR = 360; // pulses per revolution
-        public static final double gearRatio = 1; // This is 1 if the encoder is directly mounted to the wheel shaft which it should to account for slip
+        public static final double gearRatio = 12.75; // This is 1 if the encoder is directly mounted to the wheel shaft which it should to account for slip
         public static final double kEncoderDistancePerPulse = (kWheelDiameter * Math.PI) / (gearRatio * kEncoderCPR);
         public static final boolean kLeftEncoderReversed = false;
         public static final boolean kRightEncoderReversed = true;
+
+
 
         // Motor Ports
         public static final int kFrontLeftPort = 1;
@@ -71,6 +73,8 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
+
+        public static final String directory = "/U/";
 
         // Constraints
         public static final double kMaxVelocity = 0.3; // Meters per second
@@ -161,7 +165,7 @@ public final class Constants {
         // Operation Data
         public static final double kMaxVoltage = 9;
         public static final double kFeederDelay = 0.4;
-        public static final double[] kBallDelays = {0.4, 0.4, 0.4};
+        public static final double[] kBallDelays = {0, 0.25};
         public static final double kAutoDelay = 1.1;
 
     }
