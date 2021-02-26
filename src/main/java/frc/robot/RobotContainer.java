@@ -134,7 +134,10 @@ public class RobotContainer {
     private final TurretAutoAimVision m_aim = new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw);
 private final Command finalAutoFire = new ParallelCommandGroup(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[3]), new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw));
 private Command normalAuton = new ParallelDeadlineGroup(new WaitCommand(3), m_aim,new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[1])).andThen(new ParallelDeadlineGroup(new ReadDrive(m_driveSubsystem, "Output.txt"), new Intake(m_feederSubsystem))).andThen(finalAutoFire);
-private Command minuteFire = new ParallelDeadlineGroup(new WaitCommand(3), new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[2]), new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw));
+//private Command minuteFire = new ParallelDeadlineGroup(new WaitCommand(3), new Fire(m_shooterSubsystem, ShooterConstants.autoVoltages[2]), new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw));
+private Command feed = new ParallelDeadlineGroup(new WaitCommand(2.5),new Feed(m_feederSubsystem));
+private Command intakeAndMove = new Intake(m_feederSubsystem).andThen(new ParallelDeadlineGroup(new SimpleDrive(m_driveSubsystem, 4, 2).andThen(feed),new Shoot(m_shooterSubsystem, ShooterConstants.autoVoltages[2]), new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw))).andThen(new SimpleDrive(m_driveSubsystem, -4, -2));
+private Command intakeAndShootLoop = new SequentialCommandGroup(intakeAndMove, intakeAndMove, intakeAndMove, intakeAndMove, intakeAndMove, intakeAndMove, intakeAndMove);
 // private Command driveFoward = new SimpleDrive(driveSubsystem, speed, distance))
 private ArrayList<Command> m_autoCommands = new ArrayList<Command>();
 
@@ -181,6 +184,7 @@ private ArrayList<Command> m_autoCommands = new ArrayList<Command>();
                 
                tab.add("Record Drive", new RecordDrive(m_driveSubsystem,jLeft::getYAxis, jRight::getYAxis, m_chooser)).withWidget(BuiltInWidgets.kCommand);
                m_autoCommands.add(normalAuton);
+               m_autoCommands.add(intakeAndMove);
                ArrayList<String> files = new ArrayList<String>();
 
                try {
@@ -198,9 +202,10 @@ private ArrayList<Command> m_autoCommands = new ArrayList<Command>();
             System.out.println("An error occurred.");
             e.printStackTrace();
           }
-          m_chooser.addDefault("Default", m_autoCommands.get(0));
-          for (int i = 1; i < m_autoCommands.size(); i++) {
-            m_chooser.addOption(files.get(i - 1), m_autoCommands.get(i));
+          m_chooser.addOption("Competition", m_autoCommands.get(0));
+          m_chooser.setDefaultOption("Intake and Foward", m_autoCommands.get(1));
+          for (int i = 2; i < m_autoCommands.size(); i++) {
+            m_chooser.addOption(files.get(i - 2), m_autoCommands.get(i));
           }
           tab.add("Autonomous", m_chooser).withWidget(BuiltInWidgets.kComboBoxChooser);
             }
