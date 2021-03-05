@@ -4,6 +4,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.PIDBase;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,19 +27,53 @@ public class ShooterSubsystem extends SubsystemBase {
     private double voltage = ShooterConstants.kMaxVoltage;
 
     private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
-    private NetworkTableEntry velocityEntry = tab.add("Flywheel Velocity", 0).getEntry();
-    private NetworkTableEntry rpmEntry = tab.add("Flywheel RPM", 0).getEntry();
+    private NetworkTableEntry targetEntry = tab.add("Tagret RPM", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+    private NetworkTableEntry actualEntry = tab.add("Actual RPM", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+  
+    NetworkTableEntry sEntry = tab.add("kS", ShooterConstants.kS).withWidget(BuiltInWidgets.kTextView).getEntry();
+    NetworkTableEntry vEntry = tab.add("kV", ShooterConstants.kV).withWidget(BuiltInWidgets.kTextView).getEntry();
+    NetworkTableEntry aEntry = tab.add("kA", ShooterConstants.kA).withWidget(BuiltInWidgets.kTextView).getEntry();
     public ShooterSubsystem() {
         m_master.configFactoryDefault();
-        m_master.setInverted(true);
+        m_slave.setInverted(true);
         m_slave.follow(m_master);
+        m_master.setSelectedSensorPosition(0);
+        m_slave.setSelectedSensorPosition(0);
+        
     }
 
     @Override
     public void periodic() {
-        rpmEntry.setNumber(getVelocityRPM());
+        actualEntry.setNumber(getVelocityRPM());
         //System.out.println(rpmEntry.getDouble(0));
-        speed = velocityEntry.getDouble(0);
+        speed = targetEntry.getDouble(0);
+    }
+
+    public double getS() {
+        return sEntry.getDouble(ShooterConstants.kS);
+    }
+ 
+    public double getV() {
+     return vEntry.getDouble(ShooterConstants.kV);
+ }
+ 
+ public double getA() {
+     return aEntry.getDouble(ShooterConstants.kA);
+ }
+
+    public double getFowardOutput(double targetVelocity) {
+        SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(getS(), getV(), getA());
+        return feedforward.calculate(targetVelocity);
+    }
+
+    public double getPIDOutput(double targetVelocity) {
+        PIDController pid = new PIDController(ShooterConstants.kP, 0, 0);
+        return pid.calculate(targetVelocity);
+    }
+
+    public double getOutput(double targetVelocity) {
+return getFowardOutput(targetVelocity);
+// + getPIDOutput(targetVelocity);
     }
 
     public double getVelocityRaw() {
@@ -43,7 +81,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getVelocityRPM() {
-        return getVelocityRaw() / ShooterConstants.kEncoderCPR * 10 * 60;
+        return getVelocityRaw() / ShooterConstants.kEncoderCPR;
     }
 
     public static ShooterSubsystem getInstance() {

@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
@@ -44,12 +45,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     private static DriveSubsystem m_instance;
 
-    private final CANSparkMax m_leftMaster = new CANSparkMax(DriveConstants.kFrontLeftPort, MotorType.kBrushless);
-    private final CANSparkMax m_leftSlave = new CANSparkMax(DriveConstants.kRearLeftPort,  MotorType.kBrushless);
+    private final WPI_TalonFX m_leftMaster = new WPI_TalonFX(DriveConstants.kFrontLeftPort);
+    private final WPI_TalonFX m_leftSlave = new WPI_TalonFX(DriveConstants.kRearLeftPort);
     private final SpeedControllerGroup m_left = new SpeedControllerGroup(m_leftMaster, m_leftSlave);
 
-    private final CANSparkMax m_rightMaster = new CANSparkMax(DriveConstants.kFrontRightPort, MotorType.kBrushless);
-    private final CANSparkMax m_rightSlave = new CANSparkMax(DriveConstants.kRearRightPort, MotorType.kBrushless);
+    private final WPI_TalonFX m_rightMaster = new WPI_TalonFX(DriveConstants.kFrontRightPort);
+    private final WPI_TalonFX m_rightSlave = new WPI_TalonFX(DriveConstants.kRearRightPort);
     private final SpeedControllerGroup m_right = new SpeedControllerGroup(m_rightMaster, m_rightSlave);
 
 
@@ -86,9 +87,7 @@ public boolean getRecording() {
     
     }
 
-    public DriveSubsystem() {
-        
-      
+    public DriveSubsystem() {  
         //m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
         //m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
 
@@ -204,19 +203,19 @@ public boolean getRecording() {
     // }
 
     public double getLeftEncoderDistance() {
-        return (m_leftMaster.getEncoder().getPosition() + m_leftSlave.getEncoder().getPosition()) / 2 / 28.07;
+        return (m_leftMaster.getSelectedSensorPosition() + m_leftSlave.getSelectedSensorPosition()) / 2;
     }
 
     public double getRightEncoderDistance() {
-        return -(m_rightMaster.getEncoder().getPosition() + m_rightSlave.getEncoder().getPosition()) / 2 / 28.07;
+        return -(m_rightMaster.getSelectedSensorPosition() + m_rightSlave.getSelectedSensorPosition()) / 2;
     }
 
     public double getLeftEncoderRate() {
-        return (m_leftMaster.getEncoder().getVelocity() + m_leftSlave.getEncoder().getVelocity()) / 2 / 1750;
+        return (m_leftMaster.getSelectedSensorVelocity() + m_leftSlave.getSelectedSensorVelocity()) / 2;
     }
 
     public double getRightEncoderRate() {
-        return -(m_rightMaster.getEncoder().getVelocity() + m_rightSlave.getEncoder().getVelocity()) / 2 / 1750;
+        return -(m_rightMaster.getSelectedSensorVelocity() + m_rightSlave.getSelectedSensorVelocity()) / 2;
     }
 
     public double getEncoderRate() {
@@ -224,13 +223,13 @@ public boolean getRecording() {
     }
 
     public void resetLeftEncoder() {
-        m_leftMaster.getEncoder().setPosition(0);
-        m_leftSlave.getEncoder().setPosition(0);
+        m_leftMaster.setSelectedSensorPosition(0);
+        m_leftSlave.setSelectedSensorPosition(0);
     }
 
     public void resetRightEncoder() {
-        m_rightMaster.getEncoder().setPosition(0);
-        m_rightSlave.getEncoder().setPosition(0);
+        m_rightMaster.setSelectedSensorPosition(0);
+        m_leftSlave.setSelectedSensorPosition(0);
     }
 
     public void resetEncoders() {

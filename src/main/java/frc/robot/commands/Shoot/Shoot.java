@@ -7,25 +7,18 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class Shoot extends CommandBase {
 
     private ShooterSubsystem m_shooterSubsystem;
-    private double m_voltage;
+    private double m_velocity;
 
-    public Shoot(ShooterSubsystem shooterSubsystem, double voltage) {
+    public Shoot(ShooterSubsystem shooterSubsystem, double velocity) {
         m_shooterSubsystem = shooterSubsystem;
-        m_voltage = voltage;
-
-        addRequirements(shooterSubsystem);
-    }
-
-    public Shoot(ShooterSubsystem shooterSubsystem) {
-        m_shooterSubsystem = shooterSubsystem;
-        m_voltage = ShooterConstants.kMaxVoltage;
+        m_velocity = velocity;
 
         addRequirements(shooterSubsystem);
     }
 
     @Override
     public void execute() {
-        m_shooterSubsystem.setVoltage(m_voltage);
+        m_shooterSubsystem.setVoltage(m_shooterSubsystem.getOutput(m_velocity));
     }
 
     @Override

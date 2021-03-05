@@ -117,6 +117,7 @@ public final class Constants {
         public static final int kMotorPort = 7;
         public static final int[] kEncoderPorts = {8, 9};
         public static final int kLimitSwitchPort = 3;
+        public static final double kMaxSpeed = 20;
 
         // Encoder Information
         public static final double kWheelDiameter = 0.15; // Meters
@@ -129,9 +130,9 @@ public final class Constants {
         /* Characterization */
 
         // Feedforward
-        public static final double kS = 0.451; // Volts
-        public static final double kV = 1.57; // Volts seconds per meters
-        public static final double kA = -0.00143; // Volts seconds per meters squared
+        public static final double kS = 0.535; // Volts
+        public static final double kV = 0.407; // Volts seconds per meters
+        public static final double kA = 0.000143; // Volts seconds per meters squared
 
         // Feedback
         public static final double kP = 3.08; // Volts seconds per meter
@@ -179,8 +180,19 @@ public final class Constants {
         // Operation Data
         public static final double kMaxVoltage = 11.5;
         public static final double kAutoVoltage = 11.3;
+        public static final double[] kSpeeds = {10.5, 6.1, 7.7, 8};
         public static final double[] autoVoltages = {12, 9.28, 8.90, 9.22};
         public static final double kVoltagePerDistance = 1.2 / 0.8; // Volts per meter
+
+        public static final double kS = 1.524; // Volts
+        public static final double kV = 0.95; // Volts seconds per meters
+        public static final double kA = 0.04; // Volts seconds per meters squared
+
+        // Feedback
+        public static final double kP = .164; // Volts seconds per meter
+        public static final double kI = 0; // Volts seconds per meter
+        public static final double kD = 0; // Volts per seconds per meter
+
     }
 
     public static final class LiftConstants {

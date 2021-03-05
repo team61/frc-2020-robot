@@ -1,7 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
@@ -19,12 +25,47 @@ public class TurretSubsystem extends SubsystemBase {
 
    private double position = 0;
 
+   ShuffleboardTab tab = Shuffleboard.getTab("Turret");
+   NetworkTableEntry sEntry = tab.add("kS", TurretConstants.kS).withWidget(BuiltInWidgets.kTextView).getEntry();
+   NetworkTableEntry vEntry = tab.add("kV", TurretConstants.kV).withWidget(BuiltInWidgets.kTextView).getEntry();
+   NetworkTableEntry aEntry = tab.add("kA", TurretConstants.kA).withWidget(BuiltInWidgets.kTextView).getEntry();
+   NetworkTableEntry maxSpeedEntry = tab.add("Max Speed", TurretConstants.kMaxSpeed).withWidget(BuiltInWidgets.kTextView).getEntry();
+   NetworkTableEntry angleEntry = tab.add("Angle", position * TurretConstants.kDistanceToDegrees).withWidget(BuiltInWidgets.kDial).getEntry();
+
+public double getAngle() {
+return angleEntry.getDouble(position * TurretConstants.kDistanceToDegrees);
+}
+
+public double getOutput(double targetVelocity) {
+    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(getS(), getV(), getA());
+    return feedforward.calculate(targetVelocity);
+}
+
+   public double getS() {
+       return sEntry.getDouble(TurretConstants.kS);
+   }
+
+   public double getV() {
+    return vEntry.getDouble(TurretConstants.kV);
+}
+
+public double getA() {
+    return aEntry.getDouble(TurretConstants.kA);
+}
+
+public double getMaxSpeed() {
+    return maxSpeedEntry.getDouble(TurretConstants.kS);
+}
+
    public TurretSubsystem() {
+   
        m_encoder.setDistancePerPulse(TurretConstants.kEncoderDistancePerPulse);
    }
 
     @Override
     public void periodic() {
+       
+
         if (isSwitchSet()) {
             position = 0;
         }

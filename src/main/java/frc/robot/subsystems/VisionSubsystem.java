@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -18,7 +19,9 @@ public class VisionSubsystem extends SubsystemBase {
 
     private double yaw = 0;
     private double width = 0;
-
+public VisionSubsystem() {
+    CameraServer.getInstance().startAutomaticCapture();
+}
     public static VisionSubsystem getInstance() {
         if (m_instance == null) {
             m_instance = new VisionSubsystem();

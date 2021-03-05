@@ -106,7 +106,6 @@ public class RobotContainer {
     //         new Fire(m_shooterSubsystem, m_feederSubsystem, 11)
     // );
 
-    private ParallelCommandGroup m_manualFire = new Shoot(m_shooterSubsystem).alongWith(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, () -> jTurret.btn_9.get() || jTurret.btn_11.get(), () -> jTurret.btn_7.get() || jTurret.btn_9.get() || jTurret.btn_11.get()}));
 
     // Create a voltage constraint to ensure we don't accelerate too fast
   
@@ -172,11 +171,11 @@ private ArrayList<Command> m_autoCommands = new ArrayList<Command>();
     public RobotContainer() {
         m_driveSubsystem.setDefaultCommand(new TankDrive(m_driveSubsystem, jLeft::getYAxis, jRight::getYAxis));
         m_turretSubsystem.setDefaultCommand(new TurretWithJoysticks(m_turretSubsystem, () -> jTurret.getZAxis(0.03)));
-        m_LEDSubsystem.setDefaultCommand(new AnimateFeeder(m_LEDSubsystem, new BooleanSupplier[]{
-           () -> m_feederSubsystem.getSolenoidState(0),
-               () -> m_feederSubsystem.getSolenoidState(1),
-               () -> m_feederSubsystem.getSolenoidState(2)}, new int[][]{{1, 22}, {22, 44}, {47, 68}}, new boolean[]{false, true, false}
-               ));
+        // m_LEDSubsystem.setDefaultCommand(new AnimateFeeder(m_LEDSubsystem, new BooleanSupplier[]{
+        //    () -> m_feederSubsystem.getSolenoidState(0),
+        //        () -> m_feederSubsystem.getSolenoidState(1),
+        //        () -> m_feederSubsystem.getSolenoidState(2)}, new int[][]{{1, 22}, {22, 44}, {47, 68}}, new boolean[]{false, true, false}
+        //        ));
                 
                 
         // Configure the button bindings
@@ -236,20 +235,18 @@ private ArrayList<Command> m_autoCommands = new ArrayList<Command>();
         //jLift.btn_2.whileHeld(new SpinWheel(m_wheelSpinner));
         //jLift.btn_3.whileHeld(new SpinToColor(m_wheelSpinner));
         jLift.btn_7.whileHeld(new Dump(m_feederSubsystem));
-        jLift.btn_9.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 0));
-        jLift.btn_11.whileHeld(new ResetLimitSwitch(m_feederSubsystem, 1));
+     
 
-        jLift.btn_3.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[0]));
-        jLift.btn_8.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[1]));
-        jLift.btn_10.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[2]));
-        jLift.btn_12.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[3]));
+        jLift.btn_11.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kSpeeds[0]));
+        jLift.btn_12.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kSpeeds[1]));
+        jLift.btn_10.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kSpeeds[2]));
+        jLift.btn_8.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kSpeeds[3]));
 
         BeltDumpTriggerDown.whileActiveContinuous(new BeltDump(m_feederSubsystem, Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_11::get, jTurret.btn_9::get, jTurret.btn_7::get}));
         BeltDumpTriggerUp.whileActiveContinuous(new BeltDump(m_feederSubsystem, -Constants.FeederConstants.kMaxVoltage, new BooleanSupplier[] {jTurret.btn_12::get, jTurret.btn_10::get, jTurret.btn_8::get}));
 
 
         jTurret.btn_2.whileHeld(new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw));
-        manualFireTrigger.whileActiveContinuous(m_manualFire);
        // jTurret.btn_1.whileHeld(new IncrementLED(m_LEDSubsystem));
     }
 

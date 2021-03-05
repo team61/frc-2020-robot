@@ -22,15 +22,20 @@ public class Dump extends CommandBase {
     @Override
     public void initialize() {
         solenoid = 0;
+        for (int i = 1; i < FeederConstants.kSolenoidPorts.length; i++) {
+            m_feederSubsystem.setSolenoidState(i, false);
+        }
+        m_feederSubsystem.setSolenoidState(solenoid, true);
+        solenoid++;
         m_timer.reset();
         m_timer.start();
     }
 
     @Override
     public void execute() {
-        if (m_timer.get() >= FeederConstants.kBallDelays[solenoid]) {
+        if (m_timer.get() >= 0.3) {
             m_feederSubsystem.setSolenoidState(solenoid, true);
-            if (solenoid < FeederConstants.kSolenoidPorts.length - 1) {
+            if (solenoid > 0) {
                 solenoid++;
             }
             m_timer.reset();

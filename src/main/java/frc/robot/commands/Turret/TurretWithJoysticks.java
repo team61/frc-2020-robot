@@ -1,7 +1,10 @@
 package frc.robot.commands.Turret;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.TurretSubsystem;
 
@@ -12,7 +15,6 @@ public class TurretWithJoysticks extends CommandBase {
     private TurretSubsystem m_turretSubsystem;
 
     private DoubleSupplier m_speed;
-
     public TurretWithJoysticks(TurretSubsystem turretSubsystem, DoubleSupplier speed) {
         m_turretSubsystem = turretSubsystem;
         m_speed = speed;
@@ -22,7 +24,10 @@ public class TurretWithJoysticks extends CommandBase {
 
     @Override
     public void execute() {
-        m_turretSubsystem.set(Math.copySign(m_speed.getAsDouble() * m_speed.getAsDouble(), m_speed.getAsDouble()) * 0.5);
+
+        double targetSpeed =m_turretSubsystem.getMaxSpeed() * m_speed.getAsDouble();
+        //m_turretSubsystem.set(Math.copySign(m_speed.getAsDouble() * m_speed.getAsDouble(), m_speed.getAsDouble()) * 0.5);
+   m_turretSubsystem.setVoltage(m_turretSubsystem.getOutput(targetSpeed));
     }
 
     // Returns true when the command should end.
