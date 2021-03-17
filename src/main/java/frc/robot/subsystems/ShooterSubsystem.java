@@ -35,7 +35,7 @@ public class ShooterSubsystem extends SubsystemBase {
     NetworkTableEntry aEntry = tab.add("kA", ShooterConstants.kA).withWidget(BuiltInWidgets.kTextView).getEntry();
     public ShooterSubsystem() {
         m_master.configFactoryDefault();
-        m_slave.setInverted(true);
+        m_master.setInverted(true);
         m_slave.follow(m_master);
         m_master.setSelectedSensorPosition(0);
         m_slave.setSelectedSensorPosition(0);

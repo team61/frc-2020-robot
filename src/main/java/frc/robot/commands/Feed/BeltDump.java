@@ -22,6 +22,18 @@ public class BeltDump extends CommandBase {
         addRequirements(feederSubsystem);
     }
 
+@Override
+public void initialize() {
+    super.initialize();
+    for (int i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
+        if (m_solenoids[i].getAsBoolean()) {
+            m_feederSubsystem.setSolenoidState(i, true);
+        } else {
+            m_feederSubsystem.setSolenoidState(i, false);
+        }
+    }
+}
+
     @Override
     public void execute() {
         for (int i = 0; i < FeederConstants.kSolenoidPorts.length; i++) {
