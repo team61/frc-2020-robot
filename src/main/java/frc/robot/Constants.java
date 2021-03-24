@@ -79,7 +79,7 @@ public final class Constants {
         // Constraints
         public static final double kMaxVelocity = 0.3; // Meters per second
         public static final double kMaxAcceleration = 0.2; // Meters per second squared
-        public static final double kMaxVoltage = 4;
+        public static final double kMaxVoltage = 6;
 
         public static final double kTrackWidth = 0.69; // Meters
         public static final double kWheelBase = 0.94; // Meters
@@ -88,12 +88,12 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints kConstraints = new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
         // Feedforward
-        public static final double kS = 1.48; // Volts
-        public static final double kV = 2.11; // Volts seconds per meters
-        public static final double kA = -0.00802; // Volts seconds per meters squared
+        public static final double kS = 0.762; // Volts
+        public static final double kV = 5.99; // Volts seconds per meters
+        public static final double kA = 0.751; // Volts seconds per meters squared
 
         // Feedback
-        public static final double kP = 4.14; // Volts seconds per meter
+        public static final double kP = 0.987; // Volts seconds per meter
         public static final double kI = 0; // Volts seconds per meter
         public static final double kD = 0; // Volts per seconds per meter
 

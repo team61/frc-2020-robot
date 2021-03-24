@@ -131,6 +131,7 @@ public class RobotContainer {
 
     
     Trajectory exampleTrajectory = ExampleTrajectory.generateTrajectory();
+   
     private final TurretAutoAimVision m_aim = new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw);
 private final Command finalAutoFire = new ParallelCommandGroup(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[3]), new TurretAutoAimVision(m_turretSubsystem,m_visionSubsystem::getYaw));
 private Command normalAuton = new ParallelDeadlineGroup(new WaitCommand(3), m_aim,new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.autoVoltages[1])).andThen(new ParallelDeadlineGroup(new ReadDrive(m_driveSubsystem, "Output.txt"), new Intake(m_feederSubsystem))).andThen(finalAutoFire);
@@ -142,20 +143,20 @@ private Command shootAndBack = new ParallelDeadlineGroup(new WaitCommand(3), new
 private ArrayList<Command> m_autoCommands = new ArrayList<Command>();
 
   
-// Command m_autoCommand = new ResetOdometry(m_driveSubsystem, exampleTrajectory.getInitialPose()).andThen(new RamseteCommand(
-    //     exampleTrajectory,
-    //     m_driveSubsystem::getPose2d,
-    //     new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
-    //     new SimpleMotorFeedforward(AutoConstants.kS,
-    //     AutoConstants.kV,
-    //     AutoConstants.kA),
-    //     AutoConstants.kDriveKinematics,
-    //     m_driveSubsystem::getWheelSpeeds,
-    //     new PIDController(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD),
-    //     new PIDController(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD),
-    //     m_driveSubsystem::tankDriveVolts,
-    //     m_driveSubsystem
-    // ).andThen(m_driveSubsystem::stopTankDrive));
+Command m_autoCommand = new ResetOdometry(m_driveSubsystem, exampleTrajectory.getInitialPose()).andThen(new RamseteCommand(
+        exampleTrajectory,
+        m_driveSubsystem::getPose2d,
+        new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+        new SimpleMotorFeedforward(AutoConstants.kS,
+        AutoConstants.kV,
+        AutoConstants.kA),
+        AutoConstants.kDriveKinematics,
+        m_driveSubsystem::getWheelSpeeds,
+        new PIDController(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD),
+        new PIDController(AutoConstants.kP, AutoConstants.kI, AutoConstants.kD),
+        m_driveSubsystem::tankDriveVolts,
+        m_driveSubsystem
+    ).andThen(m_driveSubsystem::stopTankDrive));
 
     //SimpleDrive m_autoCommand = new SimpleDrive(m_driveSubsystem, 0.3, 15);
     
@@ -203,6 +204,7 @@ private ArrayList<Command> m_autoCommands = new ArrayList<Command>();
             e.printStackTrace();
           }
           m_chooser.addOption("Competition", m_autoCommands.get(0));
+          //m_chooser.setDefaultOption("Default", m_autoCommand);
           m_chooser.setDefaultOption("Minute Challenge", new SequentialCommandGroup(shootAndBack, new IntakeAndShoot(), new IntakeAndShoot(), new IntakeAndShoot(), new IntakeAndShoot(), new IntakeAndShoot()));
           for (int i = 1; i < m_autoCommands.size(); i++) {
             m_chooser.addOption(files.get(i - 2), m_autoCommands.get(i));
@@ -220,7 +222,8 @@ private ArrayList<Command> m_autoCommands = new ArrayList<Command>();
         jRight.btn_1.whileHeld(new Intake(m_feederSubsystem));
         jLift.btn_1.whenPressed(new Climb(m_liftSubsystem));
         //jLeft.btn_1.whenHeld(new IncrementLED(m_LEDSubsystem, new int[][]{{0, 22}, {23, 43}, {46, 68}}, new boolean[]{false, false, false}, 7, 0.05, Color.kPurple, true));
-        jTurret.btn_1.whileHeld(new Shoot(m_shooterSubsystem, ShooterConstants.autoVoltages[2]));
+        jTurret.btn_1.whileHeld(new Fire(m_shooterSubsystem, m_feederSubsystem, ShooterConstants.kSpeeds[2]));
+
         jLift.btn_4.whileHeld(new Feed(m_feederSubsystem));
         jLeft.btn_1.whenPressed(new RecordDrive(m_driveSubsystem,jLeft::getYAxis, jRight::getYAxis, m_chooser));
         jLeft.btn_2.whenPressed(new ReadDrive(m_driveSubsystem,"Output.txt"));

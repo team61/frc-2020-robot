@@ -19,12 +19,12 @@ public class ExampleTrajectory {
       // 2018 cross scale auto waypoints.
       Pose2d start = new Pose2d(0, 0,
           Rotation2d.fromDegrees(0));
-          Pose2d end = new Pose2d(0, 100,
+          Pose2d end = new Pose2d(0, 1,
           Rotation2d.fromDegrees(0));
   
       var interiorWaypoints = new ArrayList<Translation2d>();
-    //    interiorWaypoints.add(new Translation2d(20, 40));
-    //    interiorWaypoints.add(new Translation2d(10, 20));
+       interiorWaypoints.add(new Translation2d(2, 4));
+       interiorWaypoints.add(new Translation2d(1, 2));
 
         DifferentialDriveVoltageConstraint autoVoltageConstraint =
                 new DifferentialDriveVoltageConstraint(
@@ -32,11 +32,11 @@ public class ExampleTrajectory {
                                 AutoConstants.kV,
                                 AutoConstants.kA),
                         AutoConstants.kDriveKinematics,
-                        10);
+                        AutoConstants.kMaxVoltage);
 
         TrajectoryConfig config =
                 new TrajectoryConfig(AutoConstants.kMaxVelocity,
-                        AutoConstants.kMaxAcceleration);
+                        AutoConstants.kMaxAcceleration).setKinematics(AutoConstants.kDriveKinematics).addConstraint(autoVoltageConstraint);
                         // Add kinematics to ensure max speed is actually obeyed
                         // .setKinematics(AutoConstants.kDriveKinematics)
                         // // Apply the voltage constraint

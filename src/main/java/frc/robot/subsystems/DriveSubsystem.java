@@ -178,8 +178,8 @@ public boolean getRecording() {
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        m_left.setVoltage(leftVolts);
-        m_right.setVoltage(-rightVolts);
+        m_left.setVoltage(-leftVolts);
+        m_right.setVoltage(rightVolts);
     }
 
   public void tankDriveVolt(double left, double right) {
